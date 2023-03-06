@@ -1,0 +1,41 @@
+{% extends 'student_module/indexlog.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+<link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+<link href="{% static 'css/custom.css' %}" rel="stylesheet" />
+
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="titulo-pag">
+            Información del alumno
+        </div>
+        <br>
+        <form method="POST" action="{% url 'student_module:student_info'%}">
+            <div class="form-group row">
+                <div class="col">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                
+                    {% buttons %}
+                    <button class="btn btn-outline-info" type="submit", name="guardar">Guardar</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </form>
+    {% endblock %}

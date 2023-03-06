@@ -1,0 +1,185 @@
+h3, .h3 {
+    font-family: "Almarai";
+    color: white;
+    font-size: 15px;
+    text-transform: none;
+    margin-top: 0.5rem;
+}
+
+.titulo-navbar {
+    padding: 0rem 1rem;
+}
+
+.img-navbar {
+    padding-bottom: 0;
+}
+
+body {
+    padding-left: 0;
+    height: 100vh;
+}
+
+.img-principal {
+    justify-content: center;
+}
+
+.img-sse {
+    justify-content: center;
+}
+
+@media only screen and (max-width: 1080px) {
+    .img-sse {
+        display: none;
+    }
+  }
+
+.center-middle {
+    display: flex;
+    align-items: center;
+}
+
+.titulo-principal {
+    font-size: 45px;
+}
+
+.subtitulo-principal {
+    display: flex;
+    justify-content: center;
+}
+
+.fill {
+    height: 100%;
+}
+
+.center {
+    display: flex;
+}
+
+.row-1 {
+    height: 8vh;
+    margin-right: 0%;
+    margin-left: 0%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row-2 {
+    height: 92vh;
+    margin-right: 0%;
+    margin-left: 0%;
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 8%;
+}
+
+@media only screen and (max-width: 1080px) {
+    .col-display {
+        display: none;
+    }
+    .col-center {
+        justify-content: center;
+        text-align: center;
+    }
+    .form-block {
+        display: block;
+    }
+    .row-nav {
+        height: 0vh;
+    }
+    .navbar {
+        justify-content: left;
+    }
+    .d-lg-block {
+        display: block !important;
+    }
+  }
+
+.bottom_banner_login[_ngcontent-c2] {
+    position: fixed;
+    bottom: 0px;
+    right: 20px;
+    color: #666;
+    font-size: 15px;
+}
+
+.submit-button {
+    background-color: #149d3e;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.row-form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
+.aviso-content {
+    padding-left: 12rem;
+    padding-right: 12rem;
+    color: #666;
+    justify-content: center;
+}
+
+.uv-navbar {
+    color: white;
+    font-family: "Almarai";
+    position: absolute;
+    top: 0px;
+    font-size: 15px;
+    right: 6px;
+}
+
+.titulo-logout {
+    font-size: 45px;
+    text-align: center;
+}
+
+.nav-minwindow {
+    display: flex;
+}
+
+.dropdown-view {
+    color: white;
+    padding: 0rem 0rem;
+    display: inline;
+}
+
+.pad-content {
+    display: block;
+    padding-top: 2rem;
+}
+
+.titulo-pag {
+    font-size: 40px;
+}
+
+.subtitulo-pag {
+    font-size: 30px;
+}
+
+.aviso {
+    font-size: 15px;
+    color: red;
+}
+
+.nav-login:hover {
+    color: #ffbc48;
+    text-decoration: underline;
+}
+
+.text-bold{
+    font-weight: bold;
+    text-transform: none;
+}
+
+.nav-logged {
+    color: white;
+}

@@ -1,0 +1,54 @@
+{% extends "admin_module/indexlog.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="titulo-logout">
+    Consulta de estudiantes
+  </div>
+  <br>
+  <input type="text" class="form-control mb-2" id="busqueda" placeholder="Buscar...">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Matrícula</th>
+        <th>Nombre</th>
+        <th>Licenciatura</th>
+        <th>Correo UV</th>
+        <th>Correo personal</th>
+        <th>Estatus</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td>{{ student.matricula }}</td>
+        <td>{{ student.apellido_paterno }} {{ student.apellido_materno }} {{ student.nombre }}</td>
+        <td>Ingeniería de Software</td>
+        <td>{{ student.correo_uv }}</td>
+        <td>{{ student.correo }}</td>
+        <td>EGRESADO</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">No se encontraron resultados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#busqueda").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("table tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+
+{% endblock %}

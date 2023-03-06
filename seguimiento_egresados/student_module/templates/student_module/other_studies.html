@@ -1,0 +1,21 @@
+{% extends 'student_module/indexlog.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+{% block content %}
+<div class="titulo-pag">
+    Otros estudios
+</div>
+<br>
+<form method="POST" action="{% url 'student_module:other_studies'%}">
+    <div class="form-group row">
+        <div class="col">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            <button class="btn btn-outline-info" type="submit", name="guardar">Guardar</button>
+            {% endbuttons %}
+        </div>
+    
+</form>
+{% endblock %}
