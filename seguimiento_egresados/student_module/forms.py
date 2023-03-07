@@ -5,8 +5,14 @@ from .models import *
 from django.forms import ModelForm
 
 class SignupUserForm(UserCreationForm):
+    first_name = forms.CharField()
+    first_name.label = 'Nombre(s):'
+    
+    last_name = forms.CharField()
+    last_name.label = 'Apellidos:'
+    
     username = forms.CharField()
-    username.label = 'Usuario:'
+    username.label = 'Matrícula:'
     username.help_text = 'El nombre de usuario deber ser tu matrícula en formato: s12345678'
 
     password1= forms.CharField(widget=forms.PasswordInput())
@@ -20,7 +26,7 @@ class SignupUserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(label= 'Usuario:', max_length=254)
@@ -29,7 +35,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 class CrearUsuarioForm(UserCreationForm):
 	class Meta:
 		model = User
-		fields = ['username', 'email', 'password1', 'password2']
+		fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 class StudentForm(ModelForm):
 	class Meta:
@@ -51,11 +57,11 @@ class StudentForm(ModelForm):
 			'celular': 'Celular', 
 			'twitter': 'Twitter', 
 			'facebook': 'Facebook', 
-			'calle': 'Calle', 
-			'colonia': 'Colonia', 
-			'numero': 'Número', 
-			'codigo_postal': 'CP', 
-        	'id_estado': 'Estado', 
+			'calle': 'Calle',
+			'colonia': 'Colonia',
+			'numero': 'Número',
+			'codigo_postal': 'CP',
+        	'id_estado': 'Estado',
         	'id_municipio': 'Municipio',
 		}
 		widgets={
