@@ -35,28 +35,29 @@ class StudentForm(ModelForm):
 	class Meta:
 		model = Student
 		exclude = ('matricula',)
-		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'genero', 
-		'fecha_nacimiento', 'estado_civil', 'correo', 'correo_uv', 'celular', 'twitter', 
-		'facebook', 'calle', 'colonia', 'numero', 'codigo_postal', 'id_estado', 'id_municipio')
+		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
+		'fecha_nacimiento',  'correo', 'correo_uv', 'celular', 'celular_auxiliar','twitter', 
+		'facebook', 'linkedin','calle', 'colonia', 'numero', 'codigo_postal', 'id_estado', 'id_municipio')
 		labels = {
 			'matricula': 'Matrícula',
-			'nombre': 'Nombre',
-			'apellido_paterno': 'Apellido paterno', 
-			'apellido_materno': 'Apellido materno', 
-			'genero': 'Género',
-			'fecha_nacimiento': 'Fecha de nacimiento',
-			'estado_civil': 'Estado civil', 
-			'correo': 'Correo electronico', 
-			'correo_uv': 'Correo UV', 
-			'celular': 'Celular', 
+			'nombre': 'Nombre*',
+			'apellido_paterno': 'Apellido paterno*', 
+			'apellido_materno': 'Apellido materno*', 
+			'sexo': 'Sexo*',
+			'fecha_nacimiento': 'Fecha de nacimiento*',
+			'correo': 'Correo electronico*', 
+			'correo_uv': 'Correo UV*', 
+			'celular': 'Celular*',
+			'celular_auxiliar': 'Celular Auxiliar',
 			'twitter': 'Twitter', 
-			'facebook': 'Facebook', 
-			'calle': 'Calle', 
-			'colonia': 'Colonia', 
-			'numero': 'Número', 
-			'codigo_postal': 'CP', 
-        	'id_estado': 'Estado', 
-        	'id_municipio': 'Municipio',
+			'facebook': 'Facebook',
+			'linkedin': 'Linkedin*', 
+			'calle': 'Calle*', 
+			'colonia': 'Colonia*', 
+			'numero': 'Número*', 
+			'codigo_postal': 'Código Postal*', 
+        	'id_estado': 'Estado*', 
+        	'id_municipio': 'Municipio*',
 		}
 		widgets={
 			'id_estado': forms.Select(attrs={'id':'id_estado', 'name': 'id_estado'}),
@@ -69,11 +70,13 @@ class StudentForm(ModelForm):
 			'correo': TextInput(attrs={'placeholder': ''}),
 			'correo_uv': TextInput(attrs={'placeholder': ''}),
 			'celular': TextInput(attrs={'placeholder': ''}),
+			'celular_auxiliar': TextInput(attrs={'placeholder': ''}),
+			'facebook': TextInput(attrs={'placeholder': ''}),
 			'twitter': TextInput(attrs={'placeholder': ''}),
+			'linkedin': TextInput(attrs={'placeholder': '', 'required' : 'true'}),
 			'calle': TextInput(attrs={'placeholder': ''}),
 			'colonia': TextInput(attrs={'placeholder': ''}),
 			'numero': TextInput(attrs={'placeholder': ''}),
-			'facebook': TextInput(attrs={'placeholder': ''}),
 			'codigo_postal': TextInput(attrs={'placeholder': ''}),
         }
 
