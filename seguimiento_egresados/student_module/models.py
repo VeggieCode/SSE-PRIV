@@ -15,8 +15,8 @@ from django.db.models.deletion import DO_NOTHING
 
 #OPCIONES PARA PREGUNTAS DE SELECCIÓN
 
-GENEROS = (
-    ('', 'Seleccione género'),
+SEXOS = (
+    ('', 'Seleccione sexo'),
     ('M', 'Masculino'), #First one is the value of select option and second is the displayed value in option
     ('F', 'Femenino'),
     )
@@ -306,14 +306,15 @@ class Student(models.Model):
     nombre = models.CharField(max_length=45, blank=True, null=True)
     apellido_paterno = models.CharField(max_length=45, blank=True, null=True)
     apellido_materno = models.CharField(max_length=45, blank=True, null=True)
-    genero = models.CharField(max_length=10, choices=GENEROS, blank=True, null=True)
+    sexo = models.CharField(max_length=10, choices=SEXOS, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
-    estado_civil = models.CharField(max_length=45, choices=ESTADO_CIVIL, null=True, blank=True)
     correo = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
-    celular = models.CharField(max_length=10, blank=True, null=True, validators=[only_phone_number_mx])
+    celular = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
+    celular_auxiliar = models.CharField(max_length=10, blank=True, null=True, validators=[only_phone_number_mx])
     twitter = models.CharField(max_length=45, blank=True, null=True)
     facebook = models.CharField(max_length=45, blank=True, null=True)
+    linkedin= models.CharField(max_length=45, default='')
     calle = models.CharField(max_length=45, blank=True, null=True)
     colonia = models.CharField(max_length=45, blank=True, null=True)
     numero = models.CharField(max_length=10, blank=True, null=True)
@@ -374,7 +375,7 @@ class EmpleoDuranteEstudios(models.Model):
     coincidencia_estudios_trabajo = models.CharField(max_length=45, choices=MEDIDA_COINCIDENCIA_ESTUDIOS, null=True, blank=True)
     horas_laboradas_semanales = models.CharField(max_length=45, blank=True, null=True, validators=[just_number])
     matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
-
+    
     
 class BusquedaEmpleo(models.Model):
     #id_busqueda_empleo = models.IntegerField(primary_key=True)
