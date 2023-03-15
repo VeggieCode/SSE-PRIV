@@ -41,13 +41,8 @@ class SignupUserForm(UserCreationForm):
         user.email = self.cleaned_data.get('email')
         if commit:
             user.save()
-        student = Student.objects.create(
-            matricula=self.cleaned_data.get('username'),
-            nombre=self.cleaned_data.get('first_name'),
-            apellido_paterno=self.cleaned_data.get('last_name'),
-            apellido_materno=self.cleaned_data.get('apellido_materno'),
-        )
-        return user, student
+       
+        return user
 
 
 class CustomAuthenticationForm(AuthenticationForm):

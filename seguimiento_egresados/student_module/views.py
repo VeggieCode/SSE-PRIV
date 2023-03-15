@@ -103,8 +103,8 @@ def signup(request):
             user = form.save()
             # Crear el objeto estudiante y asignar el usuario
             alumno = Student(matricula=form.cleaned_data.get('username'),
-                              nombre=form.cleaned_data.get('nombre'),
-                              apellido_paterno=form.cleaned_data.get('apellido_paterno'),
+                              nombre=form.cleaned_data.get('first_name'),
+                              apellido_paterno=form.cleaned_data.get('last_name'),
                               apellido_materno=form.cleaned_data.get('apellido_materno'))
             alumno.save()
 

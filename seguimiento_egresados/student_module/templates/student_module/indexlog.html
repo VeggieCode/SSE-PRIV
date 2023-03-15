@@ -10,6 +10,8 @@
         <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+        <script src="js/bootnavbar.js" ></script>
+
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
@@ -30,20 +32,24 @@
                             </span>
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                        
+                        
+                  
                         <li class="nav-item dropdown">
                             <a class="dropdown-view nav-link dropdown-toggle nav-login" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Sistema de Seguimiento de Egresados LIS
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">                                               
                                 <a class="dropdown-item" href="{% url 'student_module:student_info'%}">Información del alumno</a>
+                                <a class="dropdown-item" href="{% url 'student_module:job_during_school'%}">Empleo durante estudios</a>                                             
                                 <a class="dropdown-item" href="{% url 'student_module:career_selection'%}">Selección de carrera</a>
                                 <a class="dropdown-item" href="{% url 'student_module:bachelors_degree'%}">Licenciatura</a>
                                 <a class="dropdown-item" href="{% url 'student_module:other_studies'%}">Otros estudios</a>
-                                <a class="dropdown-item" href="{% url 'student_module:job_during_school'%}">Empleo durante estudios</a>
                                 <a class="dropdown-item" href="{% url 'student_module:job_search'%}">Búsqueda de empleo</a>
                                 <a class="dropdown-item" href="{% url 'student_module:job_after_grad'%}">Empleo inmediato</a>
                                 <a class="dropdown-item" href="{% url 'student_module:current_job'%}">Empleo actual</a>
                                 <a class="dropdown-item" href="{% url 'student_module:recommendations'%}">Recomendaciones</a>
+
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'student_module:logout'%}">Cerrar sesión</a>
                             </div>
@@ -74,4 +80,5 @@
             </div>
         </div>
     </body>
+ 
 </html>
