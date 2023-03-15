@@ -22,7 +22,12 @@ def privacy_notice(request):
 
 @login_required
 def home(request):
-        return render(request, 'student_module/home.html')
+        student = Student.objects.filter(matricula=request.user).first()
+        name = student.nombre
+        context = {'name': name}
+        full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
+        context = {'full_name': full_name, 'name': name}
+        return render(request, 'student_module/home.html', context)
 
 def logout_view(request):
     logout(request)
@@ -63,14 +68,15 @@ def student_info(request):
                     alumno.nombre = form.cleaned_data.get('nombre')
                     alumno.apellido_paterno = form.cleaned_data.get('apellido_paterno')
                     alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
-                    alumno.genero = form.cleaned_data.get('genero')
+                    alumno.sexo = form.cleaned_data.get('sexo')
                     alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
-                    alumno.estado_civil = form.cleaned_data.get('estado_civil')
+                    alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
                     alumno.correo =  form.cleaned_data.get('correo')
-                    alumno.correo_uv = form.cleaned_data.get('correo_uv')
                     alumno.celular = form.cleaned_data.get('celular')
+                    alumno.telefono = form.cleaned_data.get('telefono')
                     alumno.twitter = form.cleaned_data.get('twitter')
                     alumno.facebook = form.cleaned_data.get('facebook')
+                    alumno.linkedin = form.cleaned_data.get('linkedin')
                     alumno.calle = form.cleaned_data.get('calle')
                     alumno.colonia = form.cleaned_data.get('colonia')
                     alumno.numero = form.cleaned_data.get('numero')
@@ -78,7 +84,7 @@ def student_info(request):
                     alumno.id_estado = form.cleaned_data.get('id_estado')
                     alumno.id_municipio = form.cleaned_data.get('id_municipio')
                     alumno.save(update_fields=["nombre", "apellido_paterno", "apellido_materno", "genero", "fecha_nacimiento",
-                                                "estado_civil", "correo", "correo_uv", "celular", "twitter", "facebook", "calle",
+                                                "fecha_ingreso_lic", "correo", "correo_uv", "celular", "telefono", "twitter", "facebook", "calle",
                                                 "colonia", "numero", "codigo_postal", "id_estado", "id_municipio"])
                     return render(request, "student_module/student_info.html", contexto)
                 else:
@@ -93,23 +99,21 @@ def signup(request):
     if request.method == 'POST':
         form = SignupUserForm(request.POST)
         if form.is_valid():
-            alumno = Student(matricula=form.cleaned_data.get('username'))
-            if Student.objects.filter(matricula=form.cleaned_data.get('username')):
-                form.save()
-                username = form.cleaned_data.get('username')
-                messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
-                return redirect ('student_module:login')
-            else:
-                form.save()
-                alumno.save()
-                username = form.cleaned_data.get('username')
-                messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
-                return redirect ('student_module:login')
+            # Guardar el usuario
+            user = form.save()
+            # Crear el objeto estudiante y asignar el usuario
+            alumno = Student(matricula=form.cleaned_data.get('username'),
+                              nombre=form.cleaned_data.get('nombre'),
+                              apellido_paterno=form.cleaned_data.get('apellido_paterno'),
+                              apellido_materno=form.cleaned_data.get('apellido_materno'))
+            alumno.save()
 
+            messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
+            return redirect('student_module:login')
     else:
         form = SignupUserForm()
-
-    return render (request, 'student_module/signup.html', {'form':form})
+    
+    return render(request, 'student_module/signup.html', {'form': form})
 
 @login_required
 def career_selection(request):

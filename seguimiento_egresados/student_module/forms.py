@@ -5,26 +5,54 @@ from .models import *
 from django.forms import ModelForm
 
 class SignupUserForm(UserCreationForm):
-    username = forms.CharField()
-    username.label = 'Usuario:'
-    username.help_text = 'El nombre de usuario deber ser tu matrícula en formato: s12345678'
+    username = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 's12345678'}))
+    username.label = 'Matrícula:'
+    
+    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
+    first_name.label = 'Nombre(s):'
 
-    password1= forms.CharField(widget=forms.PasswordInput())
+    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
+    last_name.label = 'Apellido paterno:'
+
+    apellido_materno = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
+    apellido_materno.label = 'Apellido materno:'
+
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'rafaelhernandez@icloud.com'}))
+    email.label = 'Correo electrónico personal:'
+    
+    password1= forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ''}))
     password1.label= 'Contraseña:'
 
-    password2 = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ''}))
     password2.label = 'Confirmar contraseña:'
-    
-    email = forms.EmailField()
-    email.label = 'Correo electrónico:'
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'apellido_materno']
+
+    def clean_matricula(self):
+        matricula = self.cleaned_data.get('matricula')
+        return matricula
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        user.email = self.cleaned_data.get('email')
+        if commit:
+            user.save()
+        student = Student.objects.create(
+            matricula=self.cleaned_data.get('username'),
+            nombre=self.cleaned_data.get('first_name'),
+            apellido_paterno=self.cleaned_data.get('last_name'),
+            apellido_materno=self.cleaned_data.get('apellido_materno'),
+        )
+        return user, student
+
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(label= 'Usuario:', max_length=254)
-    password = forms.CharField(label=("Contraseña:"), widget=forms.PasswordInput)
+    username = forms.CharField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
+    password = forms.CharField(label=("Contraseña:"), widget=forms.PasswordInput(attrs={'placeholder': ''}))
 
 class CrearUsuarioForm(UserCreationForm):
 	class Meta:
@@ -36,7 +64,7 @@ class StudentForm(ModelForm):
 		model = Student
 		exclude = ('matricula',)
 		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
-		'fecha_nacimiento',  'correo', 'correo_uv', 'celular', 'celular_auxiliar','twitter', 
+		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo', 'celular', 'telefono','twitter', 
 		'facebook', 'linkedin','calle', 'colonia', 'numero', 'codigo_postal', 'id_estado', 'id_municipio')
 		labels = {
 			'matricula': 'Matrícula',
@@ -45,18 +73,18 @@ class StudentForm(ModelForm):
 			'apellido_materno': 'Apellido materno*', 
 			'sexo': 'Sexo*',
 			'fecha_nacimiento': 'Fecha de nacimiento*',
-			'correo': 'Correo electronico*', 
-			'correo_uv': 'Correo UV*', 
+			'fecha_ingreso_lic': 'Fecha de ingreso a la licenciatura*',
+			'correo': 'Correo electronico*',
 			'celular': 'Celular*',
-			'celular_auxiliar': 'Celular Auxiliar',
+			'telefono': 'Teléfono',
 			'twitter': 'Twitter', 
 			'facebook': 'Facebook',
-			'linkedin': 'Linkedin*', 
+			'linkedin': 'LinkedIn*', 
 			'calle': 'Calle*', 
 			'colonia': 'Colonia*', 
 			'numero': 'Número*', 
-			'codigo_postal': 'Código Postal*', 
-        	'id_estado': 'Estado*', 
+			'codigo_postal': 'Código Postal*',
+        	'id_estado': 'Estado*',
         	'id_municipio': 'Municipio*',
 		}
 		widgets={
@@ -67,10 +95,10 @@ class StudentForm(ModelForm):
 			'apellido_paterno': TextInput(attrs={'placeholder': ''}),
 			'apellido_materno': TextInput(attrs={'placeholder': ''}),
 			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date'}),
+			'fecha_ingreso_lic': DateInput(attrs={'class':'form-control', 'type':'date'}),
 			'correo': TextInput(attrs={'placeholder': ''}),
-			'correo_uv': TextInput(attrs={'placeholder': ''}),
 			'celular': TextInput(attrs={'placeholder': ''}),
-			'celular_auxiliar': TextInput(attrs={'placeholder': ''}),
+			'telefono': TextInput(attrs={'placeholder': ''}),
 			'facebook': TextInput(attrs={'placeholder': ''}),
 			'twitter': TextInput(attrs={'placeholder': ''}),
 			'linkedin': TextInput(attrs={'placeholder': '', 'required' : 'true'}),
