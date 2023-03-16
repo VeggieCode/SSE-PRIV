@@ -16,13 +16,24 @@
     </div>
     <br>
     <div >
-        <p text-align="justify">Como requisito para tu egreso de la licenciatura, te solicitamos responder la ficha de
-            pre-egreso, la cual consta de
+        <p text-align="justify">Bienvenido al Sistema de Seguimiento de Egresados de la Facultad de Estadística e Informática (FEI).
+            Como requisito previo a tu egreso, se te solicita llenar la ficha de pre-egreso que se presenta a 
+            continuación.
+            <br><br>
+            Los datos que ingreses en el formulario serán utilizados exclusivamente para cumplir con los objetivos 
+            y obligaciones de la Universidad Veracruzana, principalmente conformar un directorio institucional de Egresados UV, 
+            con el fin de mantener contacto con ellos, gestionar su perfil en la bolsa de trabajo institucional, 
+            así como aplicar evaluaciones para mejorar la calidad del servicio educativo.
+            <br><br>
+            Para iniciar, da clic en el botón “Iniciar cuestionario”.
         </p>
-        <div class="center" style="margin-left: 30%;">
-            <button class="col-6 btn submit-button btn-block" type="submit" >
-                Iniciar el cuestionario
-            </button>
+        <br>
+        <div class="subtitulo-principal">
+            <a href="{% url 'student_module:student_info'%}">
+                <button class="btn submit-button btn-block">
+                    Iniciar cuestionario
+                </button>
+            </a>
         </div>
     </div>
 </body>

@@ -58,7 +58,7 @@ def student_info(request):
     if request.method == 'POST':
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
-        form = StudentForm(request.POST)
+        form = StudentForm(request.POST, instance=alumno)
         contexto = {'form':form}
         try:
             if alumno:
@@ -84,7 +84,7 @@ def student_info(request):
                     alumno.id_estado = form.cleaned_data.get('id_estado')
                     alumno.id_municipio = form.cleaned_data.get('id_municipio')
                     alumno.save(update_fields=["nombre", "apellido_paterno", "apellido_materno", "genero", "fecha_nacimiento",
-                                                "fecha_ingreso_lic", "correo", "correo_uv", "celular", "telefono", "twitter", "facebook", "calle",
+                                                "fecha_ingreso_lic", "correo", "celular", "telefono", "twitter", "facebook", "linkedin", "calle",
                                                 "colonia", "numero", "codigo_postal", "id_estado", "id_municipio"])
                     return render(request, "student_module/student_info.html", contexto)
                 else:
@@ -93,6 +93,7 @@ def student_info(request):
                     return render(request, "student_module/student_info.html", contexto)           
         except:
             messages.error(request, f'No se guardaron los cambios.')
+            print(form.errors)
     return render(request, "student_module/student_info.html", contexto)
 
 def signup(request):

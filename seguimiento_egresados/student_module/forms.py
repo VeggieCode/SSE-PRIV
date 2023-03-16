@@ -96,7 +96,7 @@ class StudentForm(ModelForm):
 			'telefono': TextInput(attrs={'placeholder': ''}),
 			'facebook': TextInput(attrs={'placeholder': ''}),
 			'twitter': TextInput(attrs={'placeholder': ''}),
-			'linkedin': TextInput(attrs={'placeholder': '', 'required' : 'true'}),
+			'linkedin': TextInput(attrs={'placeholder': '',}),
 			'calle': TextInput(attrs={'placeholder': ''}),
 			'colonia': TextInput(attrs={'placeholder': ''}),
 			'numero': TextInput(attrs={'placeholder': ''}),
