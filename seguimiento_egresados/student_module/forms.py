@@ -17,8 +17,13 @@ class SignupUserForm(UserCreationForm):
     apellido_materno = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
     apellido_materno.label = 'Apellido materno:'
 
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'rafaelhernandez@icloud.com'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'rafaelhernandez@ejemplo.com'}))
     email.label = 'Correo electrónico personal:'
+    
+    licenciatura_fei = forms.ChoiceField(
+		widget=forms.Select,
+		choices=CARRERAS_FEI, 
+		label='Licenciatura')
     
     password1= forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ''}))
     password1.label= 'Contraseña:'
@@ -28,7 +33,7 @@ class SignupUserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'apellido_materno']
+        fields = ['username', 'email', 'password1', 'password2', 'licenciatura_fei', 'first_name', 'last_name', 'apellido_materno']
 
     def clean_matricula(self):
         matricula = self.cleaned_data.get('matricula')
@@ -43,7 +48,6 @@ class SignupUserForm(UserCreationForm):
             user.save()
        
         return user
-
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
@@ -68,7 +72,6 @@ class StudentForm(ModelForm):
 			'apellido_materno': 'Apellido materno*', 
 			'sexo': 'Sexo*',
 			'fecha_nacimiento': 'Fecha de nacimiento*',
-			'fecha_ingreso_lic': 'Fecha de ingreso a la licenciatura*',
 			'correo': 'Correo electronico*',
 			'celular': 'Celular*',
 			'telefono': 'Teléfono',
@@ -79,8 +82,8 @@ class StudentForm(ModelForm):
 			'colonia': 'Colonia*', 
 			'numero': 'Número*', 
 			'codigo_postal': 'Código Postal*',
-        	'id_estado': 'Estado*',
-        	'id_municipio': 'Municipio*',
+        	'id_estado': 'Estado',
+        	'id_municipio': 'Municipio',
 		}
 		widgets={
 			'id_estado': forms.Select(attrs={'id':'id_estado', 'name': 'id_estado'}),
@@ -90,13 +93,14 @@ class StudentForm(ModelForm):
 			'apellido_paterno': TextInput(attrs={'placeholder': ''}),
 			'apellido_materno': TextInput(attrs={'placeholder': ''}),
 			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date'}),
-			'fecha_ingreso_lic': DateInput(attrs={'class':'form-control', 'type':'date'}),
+			'month': forms.IntegerField(min_value=1, max_value=12),
+			'year': forms.IntegerField(min_value=1900, max_value=2100),
 			'correo': TextInput(attrs={'placeholder': ''}),
 			'celular': TextInput(attrs={'placeholder': ''}),
 			'telefono': TextInput(attrs={'placeholder': ''}),
 			'facebook': TextInput(attrs={'placeholder': ''}),
 			'twitter': TextInput(attrs={'placeholder': ''}),
-			'linkedin': TextInput(attrs={'placeholder': '',}),
+			'linkedin': TextInput(attrs={'placeholder': ''}),
 			'calle': TextInput(attrs={'placeholder': ''}),
 			'colonia': TextInput(attrs={'placeholder': ''}),
 			'numero': TextInput(attrs={'placeholder': ''}),

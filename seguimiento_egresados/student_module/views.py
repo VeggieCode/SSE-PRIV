@@ -13,6 +13,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse, request
 from .forms import *
 from django.contrib import messages
+from datetime import date
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
@@ -35,7 +36,6 @@ def logout_view(request):
 
 @login_required
 def student_info(request):
-    user = request.user
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -43,23 +43,20 @@ def student_info(request):
         try:
             alumno = Student.objects.filter(matricula=usuario).first()
         except Student.ObjectDoesNotExist:
-            form = StudentForm(request.POST)
-            contexto = {'form':form}
-            return render(request, 'student_module/student_info.html', contexto)
+                form = StudentForm(request.POST)
+                return render(request, 'student_module/student_info.html', {'form':form})
 
         form = StudentForm(instance=alumno)
-        contexto = {'form':form}
         if alumno:
             form.fields['codigo_postal'].widget.attrs['maxlength'] = '5'
-            return render(request, 'student_module/student_info.html', contexto)
+            return render(request, 'student_module/student_info.html', {'form':form})
         else:
-            return render(request, 'student_module/student_info.html', contexto)
+            return render(request, 'student_module/student_info.html', {'form':form})
     
     if request.method == 'POST':
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
-        form = StudentForm(request.POST, instance=alumno)
-        contexto = {'form':form}
+        form = StudentForm(request.POST)
         try:
             if alumno:
                 print("usuario ya existe, actualizar")
@@ -70,10 +67,11 @@ def student_info(request):
                     alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
                     alumno.sexo = form.cleaned_data.get('sexo')
                     alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
-                    alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
+                    month = form.cleaned_data['month']
+                    year = form.cleaned_data['year']
+                    alumno.fecha_ingreso_lic = date(year=year, month=month, day=1)
                     alumno.correo =  form.cleaned_data.get('correo')
                     alumno.celular = form.cleaned_data.get('celular')
-                    alumno.telefono = form.cleaned_data.get('telefono')
                     alumno.twitter = form.cleaned_data.get('twitter')
                     alumno.facebook = form.cleaned_data.get('facebook')
                     alumno.linkedin = form.cleaned_data.get('linkedin')
@@ -83,18 +81,15 @@ def student_info(request):
                     alumno.codigo_postal = form.cleaned_data.get('codigo_postal')
                     alumno.id_estado = form.cleaned_data.get('id_estado')
                     alumno.id_municipio = form.cleaned_data.get('id_municipio')
-                    alumno.save(update_fields=["nombre", "apellido_paterno", "apellido_materno", "genero", "fecha_nacimiento",
-                                                "fecha_ingreso_lic", "correo", "celular", "telefono", "twitter", "facebook", "linkedin", "calle",
-                                                "colonia", "numero", "codigo_postal", "id_estado", "id_municipio"])
-                    return render(request, "student_module/student_info.html", contexto)
+                    alumno.save()
+                    return redirect('student_module:job_during_school')
                 else:
                     print("Formulario no válido")
                     print(form.errors)
-                    return render(request, "student_module/student_info.html", contexto)           
+                    return render(request, "student_module/student_info.html", {"form":form})           
         except:
             messages.error(request, f'No se guardaron los cambios.')
-            print(form.errors)
-    return render(request, "student_module/student_info.html", contexto)
+    return render(request, "student_module/student_info.html", {"form":form})
 
 def signup(request):
     if request.method == 'POST':
@@ -106,7 +101,8 @@ def signup(request):
             alumno = Student(matricula=form.cleaned_data.get('username'),
                               nombre=form.cleaned_data.get('first_name'),
                               apellido_paterno=form.cleaned_data.get('last_name'),
-                              apellido_materno=form.cleaned_data.get('apellido_materno'))
+                              apellido_materno=form.cleaned_data.get('apellido_materno'),
+                              licenciatura_fei=form.cleaned_data.get('licenciatura_fei'))
             alumno.save()
 
             messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
