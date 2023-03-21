@@ -9,6 +9,7 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
     path('logout_view/', views.logout_view, name='logout'),
     path('home/', views.home, name='home'),
+    path('finish/', views.finish, name='finish'),
     path('signup/', views.signup, name='signup'),
     path('privacy/', views.privacy_notice, name='privacy_notice'),
     path('student-info/', views.student_info, name='student_info'),

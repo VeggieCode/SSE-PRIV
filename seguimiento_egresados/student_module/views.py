@@ -7,13 +7,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib import messages
-import re
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, request
 from .forms import *
 from django.contrib import messages
-from datetime import date
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
@@ -29,6 +25,15 @@ def home(request):
         full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
         context = {'full_name': full_name, 'name': name}
         return render(request, 'student_module/home.html', context)
+
+@login_required
+def finish(request):
+        student = Student.objects.filter(matricula=request.user).first()
+        name = student.nombre
+        context = {'name': name}
+        full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
+        context = {'full_name': full_name, 'name': name}
+        return render(request, 'student_module/finish.html', context)
 
 def logout_view(request):
     logout(request)
@@ -67,9 +72,6 @@ def student_info(request):
                     alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
                     alumno.sexo = form.cleaned_data.get('sexo')
                     alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
-                    month = form.cleaned_data['month']
-                    year = form.cleaned_data['year']
-                    alumno.fecha_ingreso_lic = date(year=year, month=month, day=1)
                     alumno.correo =  form.cleaned_data.get('correo')
                     alumno.celular = form.cleaned_data.get('celular')
                     alumno.twitter = form.cleaned_data.get('twitter')
@@ -89,7 +91,7 @@ def student_info(request):
                     return render(request, "student_module/student_info.html", {"form":form})           
         except:
             messages.error(request, f'No se guardaron los cambios.')
-    return render(request, "student_module/student_info.html", {"form":form})
+            return render(request, "student_module/student_info.html", {"form":form})
 
 def signup(request):
     if request.method == 'POST':
@@ -304,7 +306,7 @@ def job_during_school(request):
                 horas_laboradas_semanales=horas_laboradas_semanales)
             empleo_durante_estudios_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, "student_module/job_during_school.html", {"form":form})
+    return redirect('student_module:finish')
 
 @login_required
 def job_search(request):

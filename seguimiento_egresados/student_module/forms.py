@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.forms.widgets import DateInput, TextInput
 from .models import *
+from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 
 class SignupUserForm(UserCreationForm):
@@ -105,7 +106,7 @@ class StudentForm(ModelForm):
 			'colonia': TextInput(attrs={'placeholder': ''}),
 			'numero': TextInput(attrs={'placeholder': ''}),
 			'codigo_postal': TextInput(attrs={'placeholder': ''}),
-        }
+		}
 
 class SeleccionCarreraForm(forms.ModelForm):
 
@@ -205,14 +206,14 @@ class EmpleoDuranteEstudiosForm(forms.ModelForm):
 		confirmacion_empleo = forms.ChoiceField(
 		widget=forms.RadioSelect, 
 		choices=SI_NO_CHOICES_NUMERIC, 
-		label='¿Trabajó usted durante el último año de sus estudios de licenciatura?')
+		label='¿Trabajó usted durante el transcurso de sus estudios en la licenciatura?')
 
 		class Meta:
 			model= EmpleoDuranteEstudios
 			fields = ('confirmacion_empleo', 'coincidencia_estudios_trabajo', 'horas_laboradas_semanales')
 			labels ={
 				'matricula':'Matrícula',
-				'confirmacion_empleo': '¿Trabajó usted durante el último año de sus estudios de licenciatura?',
+				'confirmacion_empleo': '¿Trabajó usted durante el transcurso de sus estudios en la licenciatura?',
 				'coincidencia_estudios_trabajo': '¿En qué medida coincidía su trabajo con sus estudios de licenciatura?',
 				'horas_laboradas_semanales':'Número de horas en promedio que laboraba a la semana:'
 			}
