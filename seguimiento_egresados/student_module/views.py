@@ -72,6 +72,7 @@ def student_info(request):
                     alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
                     alumno.sexo = form.cleaned_data.get('sexo')
                     alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
+                    alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
                     alumno.correo =  form.cleaned_data.get('correo')
                     alumno.celular = form.cleaned_data.get('celular')
                     alumno.twitter = form.cleaned_data.get('twitter')
