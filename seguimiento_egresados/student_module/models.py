@@ -11,6 +11,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.db.models.deletion import DO_NOTHING
+import datetime
 
 
 #OPCIONES PARA PREGUNTAS DE SELECCIÓN
@@ -298,6 +299,17 @@ only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z
 only_postal_code_mx = RegexValidator(r'^\d{5}$', 'Sólo se permiten códigos postales válidos.')
 only_phone_number_mx = RegexValidator(r'^\d{10}$', 'Sólo se permiten números de teléfono de 10 dígitos.')
 
+
+def validator_enrollment(value): 
+     year = int(value[1:2]) + 2000
+     today = datetime.date.today()
+     yearCurrently = today.strftime("%Y")
+     
+     if year - yearCurrently < -3:
+        raise ValidationError(
+            _('%(value)s no es una matricula valida'),
+            params={'value': value},
+        )
 #COMIENZAN MODELOS DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
 
 class Student(models.Model):
