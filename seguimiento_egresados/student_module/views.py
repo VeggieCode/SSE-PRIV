@@ -21,7 +21,10 @@ def privacy_notice(request):
 def home(request):
         student = Student.objects.filter(matricula=request.user).first()
         name = student.nombre
-        context = {'name': name}
+        clicPreForm= False
+        if name is not None:
+            clicPreForm= True
+        context = {'name': name , 'clicForm': clicPreForm}
         full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
         context = {'full_name': full_name, 'name': name}
         return render(request, 'student_module/home.html', context)
@@ -38,6 +41,9 @@ def finish(request):
 def logout_view(request):
     logout(request)
     return redirect('/login')
+
+
+
 
 @login_required
 def student_info(request):
@@ -57,16 +63,14 @@ def student_info(request):
             return render(request, 'student_module/student_info.html', {'form':form})
         else:
             return render(request, 'student_module/student_info.html', {'form':form})
-    
+
     if request.method == 'POST':
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
         form = StudentForm(request.POST)
         try:
             if alumno:
-                print("usuario ya existe, actualizar")
                 if form.is_valid():
-                    print("actualizando...")
                     alumno.nombre = form.cleaned_data.get('nombre')
                     alumno.apellido_paterno = form.cleaned_data.get('apellido_paterno')
                     alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
@@ -93,6 +97,7 @@ def student_info(request):
         except:
             messages.error(request, f'No se guardaron los cambios.')
             return render(request, "student_module/student_info.html", {"form":form})
+
 
 def signup(request):
     if request.method == 'POST':

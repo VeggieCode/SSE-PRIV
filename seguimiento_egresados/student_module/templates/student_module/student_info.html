@@ -25,6 +25,7 @@
         <div class="titulo-pag">
             Cuestionario de pre-egreso
         </div>
+          
         <br>
         <form method="POST" action="{% url 'student_module:student_info'%}">
             <div class="form-group row">
@@ -33,8 +34,12 @@
                     {% bootstrap_form form %}
                     {% buttons %}
                     <button class="btn btn-outline-info" type="submit", name="guardar">Siguiente</button>
+                    <a href="{% url 'student_module:home'%}" class="btn btn-secondary">  Regresar </a>
+
                     {% endbuttons %}
+
                 </div>
+                
             </div>
         </form>
     {% endblock %}

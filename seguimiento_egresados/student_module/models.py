@@ -20,6 +20,7 @@ SEXOS = (
     ('', 'Seleccione sexo'),
     ('M', 'Masculino'), #First one is the value of select option and second is the displayed value in option
     ('F', 'Femenino'),
+    ('O', 'Prefiero no decirlo')
     )
 
 ESTADO_CIVIL = (

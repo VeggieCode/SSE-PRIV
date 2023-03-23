@@ -40,11 +40,10 @@
                               Sistema de Seguimiento de Egresados LIS
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{% url 'student_module:logout'%}">Cerrar sesión</a>
                             </div>
                         </li>
                         <div class="col text-right nav-logged">
-                           <a href="{% url 'student_module:logout'%}" title="Cerrar sesión"> <img  id="img-logout" class=" img-fluid mx-auto " src="{% static 'assets/img/box-arrow-right.svg' %}" width="24" alt="..." /></a>
+                           <a href="{% url 'student_module:logout'%}" title="Cerrar sesión"> <img  class=" img-fluid mx-auto " src="{% static 'assets/img/box-arrow-right.svg' %}" width="24" alt="..." /></a>
                             {% if user.is_authenticated %}
                                 {{ full_name }}
                             {% endif %}
