@@ -35,13 +35,13 @@
                         
                         
                   
-                        <li class="nav-item dropdown">
+                        <div class="nav-item ">
                             <a class="dropdown-view nav-link dropdown-toggle nav-login" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Sistema de Seguimiento de Egresados LIS
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            </div>
-                        </li>
+                           <!--- <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            </div>--->
+                        </div>
                         <div class="col text-right nav-logged">
                            <a href="{% url 'student_module:logout'%}" title="Cerrar sesión"> <img  class=" img-fluid mx-auto " src="{% static 'assets/img/box-arrow-right.svg' %}" width="24" alt="..." /></a>
                             {% if user.is_authenticated %}

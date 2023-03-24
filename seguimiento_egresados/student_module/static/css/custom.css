@@ -1,4 +1,8 @@
 
+p{
+    text-align: justify;
+    text-justify: inter-word;
+}
 
 h3, .h3 {
     font-family: "Almarai";
