@@ -21,12 +21,17 @@ def privacy_notice(request):
 def home(request):
         student = Student.objects.filter(matricula=request.user).first()
         name = student.nombre
-        clicPreForm= False
-        if name is not None:
-            clicPreForm= True
-        context = {'name': name , 'clicForm': clicPreForm}
+        pre_graduation= student.pre_egreso_abierto
+        start = 'block'
+        continue_form= 'none'
+        if pre_graduation == True:
+               start = 'none'
+               continue_form= 'block'
+        print(start)
+        print(continue_form)
+        context = {'name': name }
         full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
-        context = {'full_name': full_name, 'name': name}
+        context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
         return render(request, 'student_module/home.html', context)
 
 @login_required
@@ -88,6 +93,7 @@ def student_info(request):
                     alumno.codigo_postal = form.cleaned_data.get('codigo_postal')
                     alumno.id_estado = form.cleaned_data.get('id_estado')
                     alumno.id_municipio = form.cleaned_data.get('id_municipio')
+                    alumno.pre_egreso_abierto = True
                     alumno.save()
                     return redirect('student_module:job_during_school')
                 else:

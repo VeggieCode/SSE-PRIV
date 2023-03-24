@@ -11,11 +11,12 @@
     <title>SSE | Inicio</title>
 </head>
 <body>
+   
     <div class="titulo-logout">
         Bienvenido(a), {{ name }}
     </div>
     <br>
-    <div hidden="{{clicForm}}">
+    <div id="start_pre_form" style="display: {{start}};">
         <p text-align="justify">Bienvenido al Sistema de Seguimiento de Egresados de la Facultad de Estadística e Informática (FEI).
             Como requisito previo a tu egreso, se te solicita llenar la ficha de pre-egreso que se presenta a 
             continuación.
@@ -37,7 +38,8 @@
         </div>
     </div>
 
-    <div visible="{{clicForm}}">
+    <div id="continue_pre_form" style="display: {{continue_form}};" >
+        
         <p text-align="justify">Bienvenido al Sistema de Seguimiento de Egresados de la Facultad de Estadística e Informática (FEI).
             <br><br>
             Los datos que ingreses en el sistema serán utilizados exclusivamente para cumplir con los objetivos 
@@ -56,6 +58,8 @@
             </a>
         </div>
     </div>
+
 </body>
+
 </html>
 {% endblock %}

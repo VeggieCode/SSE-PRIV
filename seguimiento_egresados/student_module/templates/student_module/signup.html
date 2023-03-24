@@ -15,9 +15,10 @@
                             {% bootstrap_form form %}
                             {% buttons %}
                             <button class="btn btn-outline-info" type="submit", name="guardar">Completar registro</button>
+                            <a href="{% url 'student_module:login'%}" class="btn btn-secondary">  Regresar </a>
                             <div class="aviso">
                                 <br>
-                                Al momento de registrarte en el sistema estás aceptando el <a href="{% url 'student_module:privacy_notice'%}"> aviso de privacidad</a>
+                                Al momento de registrarte en el sistema estás aceptando el <a href="{% url 'student_module:privacy_notice'%}" target="_blank"> aviso de privacidad</a>
                             </div>
                             {% endbuttons %}
                         </div>

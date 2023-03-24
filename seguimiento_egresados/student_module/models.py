@@ -37,6 +37,8 @@ CARRERAS_FEI = (
     ('Ingeniería de Software','Ingeniería de Software'),
     ('Ingeniería en Sistemas y Tecnologías de la Información','Ingeniería en Sistemas y Tecnologías de la Información'),
     ('Ingeniería de Ciberseguridad e Infraestructura de Cómputo','Ingeniería de Ciberseguridad e Infraestructura de Cómputo'),
+    ('Tecnologías Computacionales ','Tecnologías Computacionales'),
+    ('Redes y Servicios de Cómputo ','Redes y Servicios de Cómputo'),
     )
 
 TIPO_INSTITUCION = (
@@ -334,6 +336,7 @@ class Student(models.Model):
     colonia = models.CharField(max_length=45, blank=True, null=True)
     numero = models.CharField(max_length=10, blank=True, null=True)
     codigo_postal = models.CharField(max_length=5, blank=True, null=True, validators=[only_postal_code_mx])
+    pre_egreso_abierto= models.BooleanField(default=False)
     id_estado = models.ForeignKey('Estados', models.DO_NOTHING, db_column='id_estado', blank=True, null=True)
     id_municipio = models.ForeignKey('Municipios', models.DO_NOTHING, db_column='id_municipio', blank=True, null=True)
 
