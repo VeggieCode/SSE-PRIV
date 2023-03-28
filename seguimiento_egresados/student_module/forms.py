@@ -6,7 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 
 class SignupUserForm(UserCreationForm):
-    username = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 's12345678'}))
+    matricula_validator = RegexValidator(
+        r'^S(0[0-9]|[1][0-9])\d{6}$',
+        'La matrícula no es válida'
+    )
+    
+    username = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 's12345678'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
@@ -35,7 +40,7 @@ class SignupUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'licenciatura_fei', 'first_name', 'last_name', 'apellido_materno']
-
+	
     def clean_matricula(self):
         matricula = self.cleaned_data.get('matricula')
         return matricula

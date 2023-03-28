@@ -302,7 +302,6 @@ only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z
 only_postal_code_mx = RegexValidator(r'^\d{5}$', 'Sólo se permiten códigos postales válidos.')
 only_phone_number_mx = RegexValidator(r'^\d{10}$', 'Sólo se permiten números de teléfono de 10 dígitos.')
 
-
 def validator_enrollment(value): 
      year = int(value[1:2]) + 2000
      today = datetime.date.today()
@@ -317,7 +316,7 @@ def validator_enrollment(value):
 
 class Student(models.Model):
     #id_alumno = models.IntegerField(primary_key=True)
-    matricula = models.CharField(max_length=10, validators=[alphanumeric])
+    matricula = models.CharField(max_length=9, validators=[alphanumeric])
     nombre = models.CharField(max_length=45, blank=True, null=True)
     apellido_paterno = models.CharField(max_length=45, blank=True, null=True)
     apellido_materno = models.CharField(max_length=45, blank=True, null=True)
