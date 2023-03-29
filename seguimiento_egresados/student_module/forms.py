@@ -7,7 +7,7 @@ from django.forms import ModelForm
 
 class SignupUserForm(UserCreationForm):
     matricula_validator = RegexValidator(
-        r'^S(0[0-9]|[1][0-9])\d{6}$',
+        r'S(1[4-9]|1[0-9]|19)\d{6}$',
         'La matrícula no es válida'
     )
     
@@ -70,7 +70,7 @@ class StudentForm(ModelForm):
 		exclude = ('matricula',)
 		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
 		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo', 'celular', 'telefono','twitter', 
-		'facebook', 'linkedin','calle', 'colonia', 'numero', 'codigo_postal', 'id_estado', 'id_municipio')
+		'facebook', 'linkedin','calle', 'colonia', 'numero', 'codigo_postal', 'estado', 'municipio')
 		labels = {
 			'matricula': 'Matrícula',
 			'nombre': 'Nombre*',
@@ -89,12 +89,12 @@ class StudentForm(ModelForm):
 			'colonia': 'Colonia*', 
 			'numero': 'Número*', 
 			'codigo_postal': 'Código Postal*',
-        	'id_estado': 'Estado',
-        	'id_municipio': 'Municipio',
+        	'estado': 'Estado',
+        	'municipio': 'Municipio',
 		}
 		widgets={
-			'id_estado': forms.Select(attrs={'id':'id_estado', 'name': 'id_estado'}),
-			'id_municipio': forms.Select(attrs={'id':'id_municipio', 'name': 'id_municipio'}),
+			'estado': TextInput(attrs={'placeholder': ''}),
+			'municipio': TextInput(attrs={'placeholder': ''}),
 			#'matricula':TextInput(attrs={'placeholder': ''}),
 			'nombre': TextInput(attrs={'placeholder': ''}),
 			'apellido_paterno': TextInput(attrs={'placeholder': ''}),
@@ -212,7 +212,7 @@ class EmpleoDuranteEstudiosForm(forms.ModelForm):
 
 		confirmacion_empleo = forms.ChoiceField(
 		widget=forms.RadioSelect, 
-		choices=SI_NO_CHOICES_NUMERIC, 
+		choices=SI_NO_CHOICES_NUMERIC,
 		label='¿Trabajó usted durante el transcurso de sus estudios en la licenciatura?')
 
 		class Meta:

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     {% load static %}
+    {% load bootstrap4 %}
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -8,12 +9,12 @@
         <meta name="author" content="" />
         <title>Sistema de Seguimiento de Egresados FEI</title>
         <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}" />
+        <link rel="apple-touch-icon" href="{% static 'assets/img/favicon.ico' %}" color="#000000" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
-        <script src="js/bootnavbar.js" ></script>
-
         <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300&display=swap" rel="stylesheet" type="text/css">
+        <!--<link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />-->
         <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
@@ -32,22 +33,14 @@
                             </span>
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                        
-                        
-                  
-                        <div class="nav-item ">
-                            <a class="dropdown-view nav-link dropdown-toggle nav-login" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Sistema de Seguimiento de Egresados LIS
-                            </a>
-                           <!--- <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            </div>--->
-                        </div>
-                        <div class="col text-right nav-logged">
-                           <a href="{% url 'student_module:logout'%}" title="Cerrar sesión"> <img  class=" img-fluid mx-auto " src="{% static 'assets/img/box-arrow-right.svg' %}" width="24" alt="..." /></a>
+                        <h3>Sistema de Seguimiento de Egresados FEI</h3>
+                        <div class="col text-right nav-logged js-scroll-trigger">
                             {% if user.is_authenticated %}
                                 {{ full_name }}
                             {% endif %}
                         </div>
+                            <a href="{% url 'student_module:logout'%}" title="Cerrar sesión"> <img  class=" img-fluid mx-auto " src="{% static 'assets/img/box-arrow-right.svg' %}" width="20" alt="..." /></a>
+                        
                         
                     </nav>
                 </div>
