@@ -5,13 +5,22 @@ from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 
+
+
+class UpperField(forms.CharField):
+
+    def to_python(self, value):
+        return value.upper()
+    
 class SignupUserForm(UserCreationForm):
     matricula_validator = RegexValidator(
         r'S(1[4-9]|1[0-9]|19)\d{6}$',
         'La matrícula no es válida'
     )
     
-    username = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 's12345678'}), validators=[matricula_validator])
+	
+    
+    username = UpperField(required=True, widget=forms.TextInput(attrs={'placeholder': 'S12345678'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
@@ -56,7 +65,7 @@ class SignupUserForm(UserCreationForm):
         return user
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
+    username = UpperField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
     password = forms.CharField(label=("Contraseña:"), widget=forms.PasswordInput(attrs={'placeholder': ''}))
 
 class CrearUsuarioForm(UserCreationForm):

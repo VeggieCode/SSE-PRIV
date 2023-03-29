@@ -1,3 +1,4 @@
+from numbers import Number
 from django.shortcuts import render
 from student_module.forms import SignupUserForm
 from .forms import CustomAuthenticationForm
@@ -10,9 +11,19 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import *
 from django.contrib import messages
+from django.forms.models import model_to_dict
+
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
+
+
+def returnFullName(request):
+    student = Student.objects.filter(matricula=request.user).first()
+    full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
+    return full_name
+        
+
 
 def privacy_notice(request):
     return render(request, 'student_module/privacy_notice.html')
@@ -24,30 +35,28 @@ def home(request):
         pre_graduation= student.pre_egreso_abierto
         start = 'block'
         continue_form= 'none'
-        if pre_graduation == False:
-               start = 'block'
-               print(start)
-               print(continue_form)
-               context = { 'name': name }
-               full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
-               context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
-               student.pre_egreso_abierto = True
-               student.save()
-               return render(request, 'student_module/home.html', context)
-        else:
-            print(start)
-            print(continue_form)
-            context = { 'name': name }
-            full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
-            context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
+        context = { 'name': name }
+        full_name = returnFullName(request)
+        context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
+        finishPreForm = student.pre_egreso_terminado
+        if finishPreForm:
+            return redirect('/finish')
+        if pre_graduation:           
             return redirect('/student-info')
+        else:
+            start = 'block'
+            context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
+            student.pre_egreso_abierto = True
+            student.save()
+            return render(request, 'student_module/home.html', context)
+ 
 
 @login_required
 def finish(request):
         student = Student.objects.filter(matricula=request.user).first()
         name = student.nombre
-        context = {'name': name}
-        full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
+        context = { 'name': name }
+        full_name = returnFullName(request)
         context = {'full_name': full_name, 'name': name}
         return render(request, 'student_module/finish.html', context)
 
@@ -57,10 +66,8 @@ def logout_view(request):
 
 @login_required
 def student_info(request):
-    student = Student.objects.filter(matricula=request.user).first()
-    name = student.nombre
-    context = {'name': name}
-    full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
+ 
+    full_name = returnFullName(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -254,6 +261,7 @@ def bachelors_degree(request):
     
 @login_required
 def other_studies(request):
+
     #Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
@@ -295,26 +303,48 @@ def other_studies(request):
                 duracion_estudios_meses = duracion_estudios_meses)
             continuacion_estudios_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, "student_module/other_studies.html", {"form":form})
+    return render(request, "student_module/other_studies.html", {'full_name': full_name,"form":form})
+
+
+def validateStudentForm(request):
+    usuario = request.user
+    alumno = Student.objects.filter(matricula=usuario).first()
+    attrStudentList=alumno.__dict__
+    contAttributeStudent= 0
+    print(alumno.__dict__)
+    del attrStudentList['_state']
+    for attribute in attrStudentList.values():
+      if isinstance(attribute, int):
+          contAttributeStudent = contAttributeStudent + 1
+      else:
+        if  attribute is not None:
+            contAttributeStudent= contAttributeStudent + 1
+   
+    return contAttributeStudent>11 
+
+    
 
 @login_required
 def job_during_school(request):
     #Ver comentarios en seleccion_carrera.
+    full_name = returnFullName(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
+        alumno = Student.objects.filter(matricula=usuario).first()
+
         try:
             empleo_durante_estudios = EmpleoDuranteEstudios.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = EmpleoDuranteEstudiosForm(request.POST)
-            return render(request, "student_module/job_during_school.html", {"form":form})
+            return render(request, "student_module/job_during_school.html", {'full_name': full_name,"form":form})
 
         form = EmpleoDuranteEstudiosForm(instance=empleo_durante_estudios)
         if empleo_durante_estudios:
-            return render(request, "student_module/job_during_school.html", {"form":form})
+            return render(request, "student_module/job_during_school.html", {'full_name': full_name, "form":form})
         else:
-            return render(request, 'student_module/job_during_school.html', {'form':form})
+            return render(request, 'student_module/job_during_school.html', {'full_name': full_name,'form':form})
     
     #Ver comentarios en seleccion_carrera.
     if request.method == "POST":
@@ -334,6 +364,9 @@ def job_during_school(request):
                 coincidencia_estudios_trabajo=coincidencia_estudios_trabajo,
                 horas_laboradas_semanales=horas_laboradas_semanales)
             empleo_durante_estudios_obj.save()
+            if not confirmacion_empleo  is None:
+                alumno.pre_egreso_terminado= validateStudentForm(request) 
+                alumno.save()
             messages.success(request, f'Se guardaron los cambios.')
     return redirect('student_module:finish')
 

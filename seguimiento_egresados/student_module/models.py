@@ -336,7 +336,7 @@ class Student(models.Model):
     pre_egreso_abierto= models.BooleanField(default=False)
     estado = models.CharField(max_length=50, blank=True, null=True)
     municipio = models.CharField(max_length=50, blank=True, null=True)
-
+    pre_egreso_terminado = models.BooleanField(default=False)
 class Coordinador(models.Model):
     #id_coordinador = models.IntegerField(primary_key=True)
     matricula = models.CharField(max_length=10, validators=[alphanumeric])
