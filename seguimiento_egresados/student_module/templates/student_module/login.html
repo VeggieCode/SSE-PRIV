@@ -17,6 +17,7 @@
                 <div class="subtitulo-principal" width="50">
                     Facultad de Estadística e Informática
                 </div>
+               
                 <br>
                 <div class="form-login form-group row-form">
                     <div class="col">
@@ -26,9 +27,6 @@
                         <br>
                         <button class="btn submit-button btn-block" type="submit", name="guardar">Iniciar sesión</button>
                         {% endbuttons %}
-                        <div class="subtitulo-principal">
-                            <a href="{% url 'admin_module:loginadmin'%}">Iniciar sesión como coordinador</a>
-                        </div>
                         <div class="subtitulo-principal">
                             <a href="{% url 'student_module:signup'%}">Registrar egresado</a>
                         </div>
