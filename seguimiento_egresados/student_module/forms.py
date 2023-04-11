@@ -20,7 +20,7 @@ class SignupUserForm(UserCreationForm):
     
 	
     
-    username = UpperField(required=True, widget=forms.TextInput(attrs={'placeholder': 'S12345678'}), validators=[matricula_validator])
+    username = UpperField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ejemplo: S12345678'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
@@ -79,7 +79,8 @@ class StudentForm(ModelForm):
 		exclude = ('matricula',)
 		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
 		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo', 'celular', 'telefono','twitter', 
-		'facebook', 'linkedin','calle', 'colonia', 'numero', 'codigo_postal', 'estado', 'municipio')
+		'facebook', 'linkedin','calle', 'colonia', 'numero_exterior', 'numero_interior', 'codigo_postal',
+		  'estado', 'municipio', 'localidad')
 		labels = {
 			'matricula': 'Matrícula',
 			'nombre': 'Nombre*',
@@ -87,19 +88,22 @@ class StudentForm(ModelForm):
 			'apellido_materno': 'Apellido materno*', 
 			'sexo': 'Sexo*',
 			'fecha_nacimiento': 'Fecha de nacimiento*',
-			'fecha_ingreso_lic': 'Fecha de ingreso a la licenciatura',
+			'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
 			'correo': 'Correo electronico*',
 			'celular': 'Celular*',
 			'telefono': 'Teléfono',
 			'twitter': 'Twitter', 
 			'facebook': 'Facebook',
-			'linkedin': 'LinkedIn*', 
+			'linkedin': 'LinkedIn', 
 			'calle': 'Calle*', 
+			'numero_exterior':'Número exterior*',
+			'numero_interior':'Número interior*',
 			'colonia': 'Colonia*', 
 			'numero': 'Número*', 
 			'codigo_postal': 'Código Postal*',
         	'estado': 'Estado',
         	'municipio': 'Municipio',
+			'localidad': 'Localidad'
 		}
 		widgets={
 			'estado': TextInput(attrs={'placeholder': ''}),
@@ -109,9 +113,7 @@ class StudentForm(ModelForm):
 			'apellido_paterno': TextInput(attrs={'placeholder': ''}),
 			'apellido_materno': TextInput(attrs={'placeholder': ''}),
 			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date'}),
-			'fecha_ingreso_lic': DateInput(attrs={'class':'form-control', 'type':'date'}),
-			'month': forms.IntegerField(min_value=1, max_value=12),
-			'year': forms.IntegerField(min_value=1900, max_value=2100),
+			'fecha_ingreso_lic': TextInput(attrs={'type':'number' ,'placeholder': '', 'min': '2014'  }),
 			'correo': TextInput(attrs={'placeholder': ''}),
 			'celular': TextInput(attrs={'placeholder': ''}),
 			'telefono': TextInput(attrs={'placeholder': ''}),
@@ -119,9 +121,11 @@ class StudentForm(ModelForm):
 			'twitter': TextInput(attrs={'placeholder': ''}),
 			'linkedin': TextInput(attrs={'placeholder': ''}),
 			'calle': TextInput(attrs={'placeholder': ''}),
+			'numero_exterior': TextInput(attrs={'type':'number' ,'placeholder': '', 'min': '1'}),
+			'numero_interior': TextInput(attrs={'type':'number','placeholder': '', 'min': '1'}),
 			'colonia': TextInput(attrs={'placeholder': ''}),
-			'numero': TextInput(attrs={'placeholder': ''}),
 			'codigo_postal': TextInput(attrs={'placeholder': ''}),
+			'localidad': TextInput(attrs={'placeholder': ''}),
 		}
 
 class SeleccionCarreraForm(forms.ModelForm):
