@@ -115,6 +115,10 @@ def student_info(request):
                     alumno.estado = form.cleaned_data.get('estado')
                     alumno.municipio = form.cleaned_data.get('municipio')
                     alumno.localidad = form.cleaned_data.get('localidad')
+                    alumno.nombre_referencia_principal = form.cleaned_data.get('nombre_ref_principal')
+                   # alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
+                    #alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
+                    #alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
                     alumno.pre_egreso_abierto = True
                     alumno.save()
                     return redirect('student_module:job_during_school')

@@ -78,9 +78,10 @@ class StudentForm(ModelForm):
 		model = Student
 		exclude = ('matricula',)
 		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
-		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo', 'celular', 'telefono','twitter', 
+		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo','correo_alterno' , 'celular', 'telefono','twitter', 
 		'facebook', 'linkedin','calle', 'colonia', 'numero_exterior', 'numero_interior', 'codigo_postal',
-		  'estado', 'municipio', 'localidad')
+		  'estado', 'municipio', 'localidad' , 'nombre_ref_principal', 'celular_ref_principal' ,
+            'nombre_ref_auxiliar', 'celular_ref_auxiliar')
 		labels = {
 			'matricula': 'Matrícula',
 			'nombre': 'Nombre*',
@@ -90,6 +91,7 @@ class StudentForm(ModelForm):
 			'fecha_nacimiento': 'Fecha de nacimiento*',
 			'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
 			'correo': 'Correo electronico*',
+			'correo_alterno': 'Correo electronico alterno',
 			'celular': 'Celular*',
 			'telefono': 'Teléfono',
 			'twitter': 'Twitter', 
@@ -103,7 +105,12 @@ class StudentForm(ModelForm):
 			'codigo_postal': 'Código Postal*',
         	'estado': 'Estado',
         	'municipio': 'Municipio',
-			'localidad': 'Localidad'
+			'localidad': 'Localidad',
+			'nombre_ref_principal': 'Nombre completo de tu referencia principal* ',
+            'celular_ref_principal': 'Celular* ',
+            'nombre_ref_auxiliar' : 'Nombre completo de tu referencia auxiliar',
+			'celular_ref_auxiliar': 'Celular   '
+			
 		}
 		widgets={
 			'estado': TextInput(attrs={'placeholder': ''}),
@@ -115,6 +122,7 @@ class StudentForm(ModelForm):
 			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date'}),
 			'fecha_ingreso_lic': TextInput(attrs={'type':'number' ,'placeholder': '', 'min': '2014'  }),
 			'correo': TextInput(attrs={'placeholder': ''}),
+			'correo_alterno':  TextInput(attrs={'placeholder': ''}),
 			'celular': TextInput(attrs={'placeholder': ''}),
 			'telefono': TextInput(attrs={'placeholder': ''}),
 			'facebook': TextInput(attrs={'placeholder': ''}),
@@ -126,7 +134,11 @@ class StudentForm(ModelForm):
 			'colonia': TextInput(attrs={'placeholder': ''}),
 			'codigo_postal': TextInput(attrs={'placeholder': ''}),
 			'localidad': TextInput(attrs={'placeholder': ''}),
-		}
+			'nombre_ref_principal': TextInput(attrs={'placeholder': ''}),
+            'celular_ref_principal': TextInput(attrs={'placeholder': ''}),
+            'nombre_ref_auxiliar': TextInput(attrs={'placeholder': ''}),
+	    	'celular_ref_auxiliar':TextInput(attrs={'placeholder': ''}),
+	}
 
 class SeleccionCarreraForm(forms.ModelForm):
 

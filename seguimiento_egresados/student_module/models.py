@@ -320,7 +320,7 @@ class Student(models.Model):
     apellido_materno = models.CharField(max_length=45, blank=True, null=True)
     sexo = models.CharField(max_length=10, choices=SEXOS, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
-    fecha_ingreso_lic = models.IntegerField(null=True)
+    fecha_ingreso_lic = models.IntegerField(null=True, validators=[])
     licenciatura_fei = models.CharField(max_length=100, choices=CARRERAS_FEI, blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
@@ -333,13 +333,24 @@ class Student(models.Model):
     numero_exterior= models.IntegerField(null=True)
     numero_interior= models.IntegerField(null=True)
     colonia = models.CharField(max_length=45, blank=True, null=True)
-    numero = models.CharField(max_length=10, blank=True, null=True)
     codigo_postal = models.CharField(max_length=5, blank=True, null=True, validators=[only_postal_code_mx])
+    correo_alterno= models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     pre_egreso_abierto= models.BooleanField(default=False)
+    post_egreso_abierto= models.BooleanField(default=False)
+    nombre_ref_principal = models.CharField(max_length=100, blank=True, null=True)
+    celular_ref_principal = models.CharField( max_length=10, validators=[only_phone_number_mx], blank=True, null=True)    
+    nombre_ref_auxiliar= models.CharField(max_length=100, blank=True, null=True)
+    celular_ref_auxiliar= models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
     estado = models.CharField(max_length=50, blank=True, null=True)
     municipio = models.CharField(max_length=50, blank=True, null=True)
     localidad = models.CharField(max_length=50, blank=True, null=True)
     pre_egreso_terminado = models.BooleanField(default=False)
+    
+	
+
+
+
+
 class Coordinador(models.Model):
     #id_coordinador = models.IntegerField(primary_key=True)
     matricula = models.CharField(max_length=10, validators=[alphanumeric])

@@ -15,4 +15,24 @@ class Migration(migrations.Migration):
             name='fecha_ingreso_lic',
             field=models.IntegerField(null=True),
         ),
+         migrations.AddField(
+            model_name='student',
+            name='nombre_referencia_principal',
+            field=models.CharField(blank=True, max_length=50, null=True),
+        ),
+           migrations.AddField(
+            model_name='student',
+            name='celular_referencia_principal',
+            field=models.CharField(blank=True, max_length=50, null=True),
+        ),
+           migrations.AddField(
+            model_name='student',
+            name='nombre_referencia_auxiliar',
+            field=models.CharField(blank=True, max_length=50, null=True),
+        ),
+           migrations.AddField(
+            model_name='student',
+            name='celular_referencia_auxiliar',
+            field=models.CharField(blank=True, max_length=50, null=True),
+        ),
     ]
