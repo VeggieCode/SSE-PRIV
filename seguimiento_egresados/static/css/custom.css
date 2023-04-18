@@ -47,6 +47,11 @@ body {
     justify-content: center;
 }
 
+.matricula-container {
+    display: inline-flex;
+    margin-right: 10px;
+}
+
 .fill {
     height: 100%;
 }
