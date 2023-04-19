@@ -20,7 +20,6 @@ CLIENT_ID = "420182330273-7js2ngtd7kgpk9mcouvc1i4rlcjlqlig.apps.googleuserconten
 CLIENT_SECRET = "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"
 REDIRECT_URI = 'http://127.0.0.1:8000/'
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
