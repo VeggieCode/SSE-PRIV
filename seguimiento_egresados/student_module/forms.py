@@ -4,10 +4,32 @@ from django.forms.widgets import DateInput, TextInput
 from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
-from django import forms
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
-from django.utils.translation import gettext_lazy as _
 
+class MatriculaWidget(forms.MultiWidget):
+    def __init__(self, attrs=None):
+        widgets = [
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'}),
+	    	TextInput(attrs={'size': '1', 'maxlength': '1'}),
+            TextInput(attrs={'size': '1', 'maxlength': '1'})
+        ]
+        super().__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            return list(value)
+        else:
+            return [None] * 9
+
+    def as_widget(self, attrs=None, **kwargs):
+        attrs = attrs or {}
+        attrs['class'] = 'matricula-container'
+        return super().as_widget(attrs, **kwargs)
 
 class UpperField(forms.CharField):
 
@@ -16,13 +38,11 @@ class UpperField(forms.CharField):
     
 class SignupUserForm(UserCreationForm):
     matricula_validator = RegexValidator(
-        r'S(1[4-9]|1[0-9]|19)\d{6}$',
-        'La matrícula no es válida'
+        r'S(1[4-9]|[2-9][0-9])\d{6}$',
+        'Por favor ingrese una matrícula válida'
     )
     
-	
-    
-    username = UpperField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Ejemplo: S12345678'}), validators=[matricula_validator])
+    username = UpperField(required=True, widget=MatriculaWidget(attrs={'placeholder': '', 'class': 'matricula-container'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
