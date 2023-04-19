@@ -15,8 +15,25 @@ import pymysql
 pymysql.install_as_MySQLdb()
 import MySQLdb
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Credenciales de OAuth2
+CLIENT_ID = "420182330273-7js2ngtd7kgpk9mcouvc1i4rlcjlqlig.apps.googleusercontent.com"
+CLIENT_SECRET = "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"
+REDIRECT_URI = 'http://127.0.0.1:8000/'
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER_OAUTH2 = ""
+
+# Opciones adicionales para enviar correos electrónicos con OAuth2
+EMAIL_MESSAGE_ID_FQDN = 'your.domain.com'
+EMAIL_SUBJECT_PREFIX = '[My App] '
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -85,7 +102,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'control_egresados',
         'USER': 'root',
-        'PASSWORD': 'seguimiento_egresados_FEI',
+        'PASSWORD': 'Fairy59Atomic12',
         'HOST': 'localhost',
         'PORT': '3306',
     }

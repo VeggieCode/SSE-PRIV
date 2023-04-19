@@ -488,6 +488,8 @@ class Estados(models.Model):
     def __str__(self):
         return self.estado
 
+
+
 #TERMINAN CLASES DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
 
 #COMIENZAN CLASES DE DJANGO#

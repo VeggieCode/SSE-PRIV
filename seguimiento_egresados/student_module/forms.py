@@ -4,7 +4,9 @@ from django.forms.widgets import DateInput, TextInput
 from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
-
+from django import forms
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.utils.translation import gettext_lazy as _
 
 
 class UpperField(forms.CharField):
@@ -63,6 +65,32 @@ class SignupUserForm(UserCreationForm):
             user.save()
        
         return user
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        label=_("Email"),
+        max_length=254,
+        widget=forms.EmailInput(attrs={'autocomplete': 'email', 'class': 'form-control'}),
+        error_messages={
+            'required': _("Por favor escribe un correo correcto"),
+            'invalid': _("Por favor escribe un correo incorrecto"),
+        }
+    )
+
+class CustomSetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label=_("Nueva contraseña"),
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
+        strip=False,
+        help_text=_("Tu contraseña debe tener al menos 8 caracteres"),
+        validators=[],
+    )
+    new_password2 = forms.CharField(
+        label=_("Confirmación de nueva contraseña"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
+    )
+
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = UpperField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))

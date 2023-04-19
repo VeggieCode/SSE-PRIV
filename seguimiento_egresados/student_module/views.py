@@ -12,10 +12,44 @@ from django.shortcuts import redirect, render
 from .forms import *
 from django.contrib import messages
 from django.forms.models import model_to_dict
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.urls import reverse_lazy
+from .forms import CustomPasswordResetForm, CustomSetPasswordForm
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.conf import settings 
 
+def check_email(email):
+    user = User.objects.filter(email=email).first()
+    return user != None         
+
+
+
+class CustomPasswordResetView(PasswordResetView):
+    email_template_name = 'student_module/password_reset_email.html'
+    form_class = CustomPasswordResetForm
+    success_url = reverse_lazy('password_reset_done')
+    template_name = 'student_module/password_reset_form.html'
+
+
+
+    
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'student_module/password_reset_done.html'
+    
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomSetPasswordForm
+    post_reset_login = True
+    success_url = reverse_lazy('password_reset_complete')
+    template_name = 'student_module/password_reset_confirm.html'
+    
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'student_module/password_reset_complete.html'
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
+
 
 
 def returnFullName(request):

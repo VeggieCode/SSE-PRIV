@@ -1,6 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import CustomLoginView
+from django.contrib.auth.views import (
+    LogoutView, 
+    PasswordResetView, 
+    PasswordResetDoneView, 
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
 from seguimiento_egresados import settings
 
 app_name = 'student_module'
@@ -21,4 +28,7 @@ urlpatterns = [
     path('job-after-grad/', views.job_after_grad, name='job_after_grad'),
     path('current-job/', views.current_job, name='current_job'),
     path('recommendations/', views.recommendations, name='recommendations'),
+    path('^', include('django.contrib.auth.urls')),
+   
+
 ]

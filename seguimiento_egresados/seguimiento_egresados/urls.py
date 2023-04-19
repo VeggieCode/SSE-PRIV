@@ -18,9 +18,15 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from student_module.views import CustomPasswordResetCompleteView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetView
+
 urlpatterns = [
     path('admin/clearcache/', include('clearcache.urls')),
     path('admin/', admin.site.urls),
     path('', include('student_module.urls')),
     path('', include('admin_module.urls')),
+    path('password-reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset/confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset/complete/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
