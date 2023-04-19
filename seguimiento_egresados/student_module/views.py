@@ -19,10 +19,11 @@ from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.conf import settings 
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 
-def check_email(email):
-    user = User.objects.filter(email=email).first()
-    return user != None         
+ 
 
 
 
@@ -642,3 +643,4 @@ def recommendations(request):
             desempenio_recomendaciones_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, 'student_module/recommendations.html', {'form':form})
+

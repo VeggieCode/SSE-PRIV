@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm,SetPasswordForm ,UserCreationForm, PasswordResetForm
 from django.forms.widgets import DateInput, TextInput
 from .models import *
 from django.utils.translation import gettext_lazy as _

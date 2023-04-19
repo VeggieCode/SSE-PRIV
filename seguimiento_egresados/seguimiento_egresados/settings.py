@@ -16,22 +16,21 @@ pymysql.install_as_MySQLdb()
 import MySQLdb
 
 # Credenciales de OAuth2
-CLIENT_ID = "420182330273-7js2ngtd7kgpk9mcouvc1i4rlcjlqlig.apps.googleusercontent.com"
-CLIENT_SECRET = "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"
-REDIRECT_URI = 'http://127.0.0.1:8000/'
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER_OAUTH2 = ""
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST_USER = 'sistemagresadosfei@outlook.com'
+EMAIL_HOST_PASSWORD = '&s00ftecHA'
+EMAIL_USE_AUTH = True
+DEFAULT_FROM_EMAIL = 'sistemagresadosfei@outlook.com'
+SERVER_EMAIL = 'sistemagresadosfei@outlook.com'
 
-# Opciones adicionales para enviar correos electrónicos con OAuth2
-EMAIL_MESSAGE_ID_FQDN = 'your.domain.com'
-EMAIL_SUBJECT_PREFIX = '[My App] '
 
 
 

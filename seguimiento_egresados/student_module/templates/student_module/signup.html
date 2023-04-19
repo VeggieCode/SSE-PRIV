@@ -1,4 +1,4 @@
-{% extends 'student_module/index.html' %}
+{% extends 'student_module/nav_bar_principal.html' %}
 {% load bootstrap4 %}
 
 {% block content %}
@@ -21,7 +21,7 @@
                                 Al momento de registrarte en el sistema estás aceptando el <a href="{% url 'student_module:privacy_notice'%}" target="_blank"> aviso de privacidad</a>
                             </div>
                             {% endbuttons %}
-                        </div>
+                    </div>
             </form>
     </div>
 {% endblock %}

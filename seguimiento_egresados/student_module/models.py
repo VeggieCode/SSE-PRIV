@@ -8,7 +8,7 @@
 from re import T
 from django import forms
 from django.db import models
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.db.models.deletion import DO_NOTHING
 import datetime
@@ -299,7 +299,7 @@ just_letters = RegexValidator(r'^[a-zA-Z ]*$')
 only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', 'Sólo se permiten direcciones de e-mail válidas.')
 only_postal_code_mx = RegexValidator(r'^\d{5}$', 'Sólo se permiten códigos postales válidos.')
 only_phone_number_mx = RegexValidator(r'^\d{10}$', 'Sólo se permiten números de teléfono de 10 dígitos.')
-
+MAX_YEAR = datetime.datetime.now().year - 4
 def validator_enrollment(value): 
      year = int(value[1:2]) + 2000
      today = datetime.date.today()
@@ -320,7 +320,7 @@ class Student(models.Model):
     apellido_materno = models.CharField(max_length=45, blank=True, null=True)
     sexo = models.CharField(max_length=10, choices=SEXOS, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
-    fecha_ingreso_lic = models.IntegerField(null=True, validators=[])
+    fecha_ingreso_lic = models.IntegerField(null=True, validators=[MaxValueValidator(MAX_YEAR)])
     licenciatura_fei = models.CharField(max_length=100, choices=CARRERAS_FEI, blank=True, null=True)
     correo = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])

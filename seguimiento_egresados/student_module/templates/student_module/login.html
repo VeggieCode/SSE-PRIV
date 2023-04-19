@@ -25,7 +25,7 @@
                         {% bootstrap_form form %}
                         {% buttons %}
                         <div>
-                            <a>¿Olvidaste tu contraseña?</a>
+                            <a href="{% url 'student_module:password_reset'%}">¿Olvidaste tu contraseña?</a>
                         </div>
                         <br>
                         <button class="btn submit-button btn-block" type="submit", name="guardar">Iniciar sesión</button>
