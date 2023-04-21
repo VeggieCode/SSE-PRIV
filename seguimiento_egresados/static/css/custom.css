@@ -52,6 +52,12 @@ body {
     margin-right: 10px;
 }
 
+.mat-input input {
+    display: inline-block;
+    width: 30px; /* Opcional, ajusta el ancho de los campos según tus necesidades */
+    margin-right: 10px; /* Opcional, agrega un espacio entre los campos */
+}
+
 .fill {
     height: 100%;
 }

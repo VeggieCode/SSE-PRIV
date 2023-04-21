@@ -7,11 +7,13 @@ from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import *
 from django.contrib import messages
 from django.forms.models import model_to_dict
+<<<<<<< Updated upstream
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
@@ -47,12 +49,20 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'student_module/password_reset_complete.html'
+=======
+from pdfrw import PdfReader, PdfWriter, IndirectPdfDict
+from django.http import FileResponse
+import io
+>>>>>>> Stashed changes
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 def returnFullName(request):
     student = Student.objects.filter(matricula=request.user).first()
     full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
@@ -168,17 +178,21 @@ def student_info(request):
 
 def signup(request):
     if request.method == 'POST':
+        print('ya entro')
         form = SignupUserForm(request.POST)
         if form.is_valid():
+            print('ya jalo el form')
             # Guardar el usuario
             user = form.save()
             # Crear el objeto estudiante y asignar el usuario
-            alumno = Student(matricula=form.cleaned_data.get('username').upper(),
+            print (form.cleaned_data.get('username'))
+            alumno = Student(matricula=form.cleaned_data.get('username'),
                               nombre=form.cleaned_data.get('first_name'),
                               apellido_paterno=form.cleaned_data.get('last_name'),
                               apellido_materno=form.cleaned_data.get('apellido_materno'),
                               licenciatura_fei=form.cleaned_data.get('licenciatura_fei'),
                               correo=form.cleaned_data.get('email'))
+            print(alumno.matricula)
             alumno.save()
 
             messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')

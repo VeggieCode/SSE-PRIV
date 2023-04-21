@@ -12,6 +12,12 @@ h3, .h3 {
     margin-top: 0.5rem;
 }
 
+.prueba {
+    display: inline-block;
+    width: 30px; /* Opcional, ajusta el ancho de los campos según tus necesidades */
+    margin-right: 5px; /* Opcional, agrega un espacio entre los campos */
+}
+
 .titulo-navbar {
     padding: 0rem 1rem;
 }
