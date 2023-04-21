@@ -539,6 +539,12 @@ class AuthUser(models.Model):
         managed = False
         db_table = 'auth_user'
 
+    def save(self, *args, **kwargs):
+            # Convert the username value to uppercase before saving
+            self.username = self.username.upper()
+
+            super().save(*args, **kwargs)
+
 
 class AuthUserGroups(models.Model):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)

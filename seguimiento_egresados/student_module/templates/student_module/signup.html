@@ -25,15 +25,3 @@
             </form>
     </div>
 {% endblock %}
-
-{% block scripts %}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('input[name="matricula[]"]').keyup(function() {
-                if ($(this).val().length == $(this).attr('maxlength')) {
-                    $(this).next().focus();
-                }
-            });
-        });
-    </script>
-{% endblock %}
