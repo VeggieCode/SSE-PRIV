@@ -1,5 +1,6 @@
 from numbers import Number
 from django.shortcuts import render
+from seguimiento_egresados.utils import render_to_pdf
 from student_module.forms import SignupUserForm
 from .forms import CustomAuthenticationForm
 from django.contrib.auth.views import LoginView
@@ -21,9 +22,13 @@ from django.http import JsonResponse
 from django.conf import settings 
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.template.loader import render_to_string
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from datetime import datetime
+from django.views.generic import View
 
- 
 
 
 
@@ -32,9 +37,6 @@ class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     success_url = reverse_lazy('password_reset_done')
     template_name = 'student_module/password_reset_form.html'
-
-
-
     
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'student_module/password_reset_done.html'
@@ -51,14 +53,10 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
-
-
 def returnFullName(request):
     student = Student.objects.filter(matricula=request.user).first()
     full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
     return full_name
-        
-
 
 def privacy_notice(request):
     return render(request, 'student_module/privacy_notice.html')
@@ -644,3 +642,24 @@ def recommendations(request):
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, 'student_module/recommendations.html', {'form':form})
 
+
+class GeneratePDF(View):
+     def get(self, request, *args, **kwargs): 
+        template = get_template('student_module/invoice.html') 
+        context = { 
+            "invoice_id": 123,
+            "customer_name": "John Cooper", 
+            "amount": 1399.99,
+            "today": "Today", }
+        html = template.render(context) 
+        pdf = render_to_pdf('invoice.html', context) 
+        if pdf:
+             response = HttpResponse(pdf, content_type='application/pdf') 
+             filename = "Invoice_%s.pdf" %("12341231") 
+             content = "inline; filename='%s'" %(filename) 
+             download = request.GET.get("download") 
+             if download:
+                 content = "attachment; filename='%s'" %(filename) 
+                 response['Content-Disposition'] = content 
+                 return response 
+             return HttpResponse("Not found")

@@ -1,8 +1,7 @@
 from django.urls import path, include
 from . import views
-from .views import CustomLoginView, CustomPasswordResetCompleteView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetView
+from .views import CustomLoginView, CustomPasswordResetCompleteView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetView, GeneratePDF
 from django.contrib.auth.views import (
-    LogoutView, 
     PasswordResetView, 
     PasswordResetDoneView, 
     PasswordResetConfirmView,
@@ -28,6 +27,7 @@ urlpatterns = [
     path('job-after-grad/', views.job_after_grad, name='job_after_grad'),
     path('current-job/', views.current_job, name='current_job'),
     path('recommendations/', views.recommendations, name='recommendations'),
+    path('generate-pdf/', GeneratePDF.as_view(), name='generate-pdf'),
     path('password-reset/', CustomPasswordResetView.as_view(), name='password_reset'),
     path('password-reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password-reset/confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
