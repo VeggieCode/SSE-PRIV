@@ -50,7 +50,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'student_module/password_reset_complete.html'
-=======
+
 from pdfrw import PdfReader, PdfWriter, IndirectPdfDict
 from django.http import FileResponse
 import io
