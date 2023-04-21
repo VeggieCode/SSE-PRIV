@@ -54,7 +54,7 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 from pdfrw import PdfReader, PdfWriter, IndirectPdfDict
 from django.http import FileResponse
 import io
->>>>>>> Stashed changes
+
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
@@ -157,9 +157,9 @@ def student_info(request):
                     alumno.municipio = form.cleaned_data.get('municipio')
                     alumno.localidad = form.cleaned_data.get('localidad')
                     alumno.nombre_referencia_principal = form.cleaned_data.get('nombre_ref_principal')
-                   # alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
-                    #alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
-                    #alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
+                    alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
+                    alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
+                    alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
                     alumno.pre_egreso_abierto = True
                     alumno.save()
                     return redirect('student_module:job_during_school')
