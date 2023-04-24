@@ -99,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'control_egresados',
         'USER': 'root',
-        'PASSWORD': 'Fairy59Atomic12',
+        'PASSWORD': 'seguimiento_egresados_FEI',
         'HOST': 'localhost',
         'PORT': '3306',
     }

@@ -41,7 +41,7 @@ class SignupUserForm(UserCreationForm):
         'Por favor ingrese una matrícula válida'
     )
     
-    username = UpperField(required=True, widget=MatriculaWidget(attrs={'placeholder': '', 'class': 'matricula-container'}), validators=[matricula_validator])
+    username = UpperField(required=True, widget=MatriculaWidget(attrs={'placeholder': '', 'class': 'prueba'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
