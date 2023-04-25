@@ -30,9 +30,6 @@ from xhtml2pdf import pisa
 from datetime import datetime
 from django.views.generic import View
 
-
-
-
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'student_module/password_reset_email.html'
     form_class = CustomPasswordResetForm
@@ -58,8 +55,6 @@ import io
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
-
-
 
 def returnFullName(request):
     student = Student.objects.filter(matricula=request.user).first()
@@ -182,7 +177,7 @@ def signup(request):
             user = form.save()
             # Crear el objeto estudiante y asignar el usuario
             print (form.cleaned_data.get('username'))
-            alumno = Student(matricula=form.cleaned_data.get('username'),
+            alumno = Student(matricula=form.cleaned_data.get('username').upper(),
                               nombre=form.cleaned_data.get('first_name'),
                               apellido_paterno=form.cleaned_data.get('last_name'),
                               apellido_materno=form.cleaned_data.get('apellido_materno'),

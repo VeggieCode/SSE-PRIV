@@ -5,43 +5,37 @@ from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 
-class MatriculaWidget(forms.MultiWidget):
+class MatriculaInput(forms.MultiWidget):
     def __init__(self, attrs=None):
         widgets = [
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'}),
-	    	TextInput(attrs={'size': '1', 'maxlength': '1'}),
-            TextInput(attrs={'size': '1', 'maxlength': '1'})
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
         ]
         super().__init__(widgets, attrs)
 
     def decompress(self, value):
         if value:
-            return list(value)
-        else:
-            return [None] * 9
+            return [value[i:i+1] for i in range(0, 9)]
+        return [None, None, None, None, None, None, None, None, None]
 
-    def as_widget(self, attrs=None, **kwargs):
-        attrs = attrs or {}
-        attrs['class'] = 'matricula-container'
-        return super().as_widget(attrs, **kwargs)
-
-class UpperField(forms.CharField):
-    def to_python(self, value):
-        return value.upper()
+    def value_from_datadict(self, data, files, name):
+        values = [widget.value_from_datadict(data, files, name + '_%s' % i) for i, widget in enumerate(self.widgets)]
+        return ''.join(values)
     
 class SignupUserForm(UserCreationForm):
     matricula_validator = RegexValidator(
-        r'S(1[4-9]|[2-9][0-9])\d{6}$',
+        r'[Ss](1[4-9]|[2-9][0-9])\d{6}$',
         'Por favor ingrese una matrícula válida'
     )
     
-    username = UpperField(required=True, widget=MatriculaWidget(attrs={'placeholder': '', 'class': 'prueba'}), validators=[matricula_validator])
+    username = forms.CharField(required=True, widget=MatriculaInput(attrs={'placeholder': '', 'class': 'prueba'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
@@ -70,25 +64,30 @@ class SignupUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'licenciatura_fei', 'first_name', 'last_name', 'apellido_materno']
+	
+    def clean_username(self):
+        # Get the username value entered by the user
+        username = self.cleaned_data.get('username')
+
+        # Convert the username value to uppercase
+        username = username.upper()
+
+        # Return the cleaned username value
+        return username
+	
+    def clean_matricula(self):
+        matricula = self.cleaned_data.get('matricula')
+        return matricula
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.first_name = self.cleaned_data.get('first_name')
         user.last_name = self.cleaned_data.get('last_name')
         user.email = self.cleaned_data.get('email')
         if commit:
-            user.save()  
+            user.save()
+       
         return user
-    def clean_username(self):
-        # Get the username value entered by the user
-        username = self.cleaned_data.get('username')
-        # Convert the username value to uppercase
-        username = username.upper()
-        # Return the cleaned username value
-        return username
-    
-    def clean_matricula(self):
-        matricula = self.cleaned_data.get('matricula')
-        return matricula
 
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
@@ -115,9 +114,8 @@ class CustomSetPasswordForm(SetPasswordForm):
         widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
     )
 
-
 class CustomAuthenticationForm(AuthenticationForm):
-    username = UpperField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
+    username = forms.CharField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
     password = forms.CharField(label=("Contraseña:"), widget=forms.PasswordInput(attrs={'placeholder': ''}))
 
 class CrearUsuarioForm(UserCreationForm):
