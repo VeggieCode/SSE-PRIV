@@ -55,9 +55,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'formtools',
     'bootstrap4',
     'student_module',
     'admin_module',
+    'bootstrapform',
+    'widget_tweaks',
+    
 ]
 
 MIDDLEWARE = [
@@ -99,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'control_egresados',
         'USER': 'root',
-        'PASSWORD': 'seguimiento_egresados_FEI',
+        'PASSWORD': 'Fairy59Atomic12',
         'HOST': 'localhost',
         'PORT': '3306',
     }

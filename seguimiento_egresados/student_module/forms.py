@@ -5,6 +5,7 @@ from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 
+
 class MatriculaInput(forms.MultiWidget):
     def __init__(self, attrs=None):
         widgets = [
@@ -35,16 +36,16 @@ class SignupUserForm(UserCreationForm):
         'Por favor ingrese una matrícula válida'
     )
     
-    username = forms.CharField(required=True, widget=MatriculaInput(attrs={'placeholder': '', 'class': 'prueba'}), validators=[matricula_validator])
+    username = forms.CharField(required=True, widget=MatriculaInput(attrs={'placeholder': '', 'class':'form-control', 'class': 'prueba'}), validators=[matricula_validator])
     username.label = 'Matrícula:'
     
-    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
+    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': '', 'class':'form-control'}))
     first_name.label = 'Nombre(s):'
 
-    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
+    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': '', 'class':'form-control'}))
     last_name.label = 'Apellido paterno:'
 
-    apellido_materno = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': ''}))
+    apellido_materno = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': '', 'class':'form-control'}))
     apellido_materno.label = 'Apellido materno:'
 
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'rafaelhernandez@ejemplo.com'}))
@@ -55,10 +56,10 @@ class SignupUserForm(UserCreationForm):
 		choices=CARRERAS_FEI, 
 		label='Licenciatura')
     
-    password1= forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ''}))
+    password1= forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '', 'class':'form-control'}))
     password1.label= 'Contraseña:'
 
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': ''}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '', 'class':'form-control'}))
     password2.label = 'Confirmar contraseña:'
 
     class Meta:
@@ -115,8 +116,8 @@ class CustomSetPasswordForm(SetPasswordForm):
     )
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': ''}))
-    password = forms.CharField(label=("Contraseña:"), widget=forms.PasswordInput(attrs={'placeholder': ''}))
+    username = forms.CharField(label= 'Matrícula:', max_length=254, widget=forms.TextInput(attrs={'placeholder': '', 'class':'form-control'}))
+    password = forms.CharField(label=("Contraseña:"), widget=forms.PasswordInput(attrs={'placeholder': '', 'class':'form-control'}))
 
 class CrearUsuarioForm(UserCreationForm):
 	class Meta:
@@ -124,14 +125,16 @@ class CrearUsuarioForm(UserCreationForm):
 		fields = ['username', 'email', 'password1', 'password2']
 
 class StudentForm(ModelForm):
+
 	class Meta:
 		model = Student
 		exclude = ('matricula',)
-		fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
+		fields = ['nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
 		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo','correo_alterno' , 'celular', 'telefono','twitter', 
 		'facebook', 'linkedin','calle', 'colonia', 'numero_exterior', 'numero_interior', 'codigo_postal',
 		  'estado', 'municipio', 'localidad' , 'nombre_ref_principal', 'celular_ref_principal' ,
-            'nombre_ref_auxiliar', 'celular_ref_auxiliar')
+            'nombre_ref_auxiliar', 'celular_ref_auxiliar']
+		
 		labels = {
 			'matricula': 'Matrícula',
 			'nombre': 'Nombre*',
@@ -156,39 +159,42 @@ class StudentForm(ModelForm):
         	'estado': 'Estado',
         	'municipio': 'Municipio',
 			'localidad': 'Localidad',
-			'nombre_ref_principal': 'Nombre completo de tu referencia principal* ',
+			'nombre_ref_principal': 'Nombre completo* ',
             'celular_ref_principal': 'Celular* ',
-            'nombre_ref_auxiliar' : 'Nombre completo de tu referencia auxiliar',
-			'celular_ref_auxiliar': 'Celular   '
-			
+            'nombre_ref_auxiliar' : 'Nombre completo ',
+			'celular_ref_auxiliar': 'Celular   '	
 		}
+
+		max_year = datetime.datetime.now().year - 4
 		widgets={
-			'estado': TextInput(attrs={'placeholder': ''}),
-			'municipio': TextInput(attrs={'placeholder': ''}),
-			#'matricula':TextInput(attrs={'placeholder': ''}),
-			'nombre': TextInput(attrs={'placeholder': ''}),
-			'apellido_paterno': TextInput(attrs={'placeholder': ''}),
-			'apellido_materno': TextInput(attrs={'placeholder': ''}),
+			'estado': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'municipio': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			#'matricula':TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'nombre': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'apellido_paterno': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'apellido_materno': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date'}),
-			'fecha_ingreso_lic': TextInput(attrs={'type':'number' ,'placeholder': '', 'min': '2014'  }),
-			'correo': TextInput(attrs={'placeholder': ''}),
-			'correo_alterno':  TextInput(attrs={'placeholder': ''}),
-			'celular': TextInput(attrs={'placeholder': ''}),
-			'telefono': TextInput(attrs={'placeholder': ''}),
-			'facebook': TextInput(attrs={'placeholder': ''}),
-			'twitter': TextInput(attrs={'placeholder': ''}),
-			'linkedin': TextInput(attrs={'placeholder': ''}),
-			'calle': TextInput(attrs={'placeholder': ''}),
-			'numero_exterior': TextInput(attrs={'type':'number' ,'placeholder': '', 'min': '1'}),
-			'numero_interior': TextInput(attrs={'type':'number','placeholder': '', 'min': '1'}),
-			'colonia': TextInput(attrs={'placeholder': ''}),
-			'codigo_postal': TextInput(attrs={'placeholder': ''}),
-			'localidad': TextInput(attrs={'placeholder': ''}),
-			'nombre_ref_principal': TextInput(attrs={'placeholder': ''}),
-            'celular_ref_principal': TextInput(attrs={'placeholder': ''}),
-            'nombre_ref_auxiliar': TextInput(attrs={'placeholder': ''}),
-	    	'celular_ref_auxiliar':TextInput(attrs={'placeholder': ''}),
+			'fecha_ingreso_lic': TextInput(attrs={'type':'number' ,'placeholder': '', 'class':'form-control', 'min': '2014' , 'max': max_year  }),
+			'correo': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'correo_alterno':  TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'celular': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'telefono': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'facebook': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'twitter': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'linkedin': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'calle': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'numero_exterior': TextInput(attrs={'type':'number' ,'placeholder': '', 'class':'form-control', 'min': '1'}),
+			'numero_interior': TextInput(attrs={'type':'number','placeholder': '', 'class':'form-control', 'min': '1'}),
+			'colonia': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'codigo_postal': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'localidad': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'nombre_ref_principal': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+            'celular_ref_principal': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+            'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+	    	'celular_ref_auxiliar':TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 	}
+	
+	
 
 class SeleccionCarreraForm(forms.ModelForm):
 
@@ -218,9 +224,9 @@ class SeleccionCarreraForm(forms.ModelForm):
 		}
 		widgets={
 			#'matricula':forms.HiddenInput(),
-			'primera_eleccion_nombre': TextInput(attrs={'placeholder': ''}),
-			'razon_eleccion_institucion': TextInput(attrs={'placeholder': ''}),
-			'razon_eleccion_carrera': TextInput(attrs={'placeholder': ''}),
+			'primera_eleccion_nombre': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'razon_eleccion_institucion': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'razon_eleccion_carrera': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 		}
 
 class LicenciaturaForm(forms.ModelForm):
@@ -244,14 +250,14 @@ class LicenciaturaForm(forms.ModelForm):
 		}
 		widgets={
 			'matricula':forms.HiddenInput(),
-			'nombre_campus': TextInput(attrs={'placeholder': ''}),
-			'anio_pestudios': TextInput(attrs={'placeholder': ''}),
+			'nombre_campus': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'anio_pestudios': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'anio_inicio': DateInput(attrs={'class':'form-control', 'type':'date'}),
 			'anio_fin': DateInput(attrs={'class':'form-control', 'type':'date'}),
-			'org_ss': TextInput(attrs={'placeholder': ''}),
+			'org_ss': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'fecha_inicioss': DateInput(attrs={'class':'form-control', 'type':'date'}),
 			'fecha_finss': DateInput(attrs={'class':'form-control', 'type':'date'}),
-			'promedio_final': TextInput(attrs={'placeholder': ''}),
+			'promedio_final': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 		}
 
 class ContinuacionEstudiosForm(forms.ModelForm):
@@ -279,8 +285,8 @@ class ContinuacionEstudiosForm(forms.ModelForm):
 		}
 		widgets ={
 			'matricula': forms.HiddenInput(),
-			'nombre_programa': TextInput(attrs={'placeholder': ''}),
-			'duracion_estudios_meses': TextInput(attrs={'placeholder': ''}),
+			'nombre_programa': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'duracion_estudios_meses': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
         }
 
 class EmpleoDuranteEstudiosForm(forms.ModelForm):
@@ -301,7 +307,7 @@ class EmpleoDuranteEstudiosForm(forms.ModelForm):
 			}
 			widgets={
 				'matricula': forms.HiddenInput(),
-				'horas_laboradas_semanales': TextInput(attrs={'placeholder': ''}),
+				'horas_laboradas_semanales': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			}
 
 class BusquedaEmpleoForm(forms.ModelForm):
@@ -371,13 +377,13 @@ class EmpleoInmediatoForm(forms.ModelForm):
 		}
 		widgets={
 			'matricula':forms.HiddenInput(),
-			'ingreso_mensual_neto_inicio': TextInput(attrs={'placeholder': ''}),
-			'horas_laboral_semanales': TextInput(attrs={'placeholder': ''}),
-			'duracion_trabajo': TextInput(attrs={'placeholder': ''}),
-			'nombre_empleo_inmediato': TextInput(attrs={'placeholder': ''}),
-			'nombre_jefe_supervisor': TextInput(attrs={'placeholder': ''}),
-			'telefono_empleo_inmediato': TextInput(attrs={'placeholder': ''}),
-			'correo_empleo_inmediato': TextInput(attrs={'placeholder': ''}),
+			'ingreso_mensual_neto_inicio': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'horas_laboral_semanales': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'duracion_trabajo': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'nombre_empleo_inmediato': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'nombre_jefe_supervisor': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'telefono_empleo_inmediato': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'correo_empleo_inmediato': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 		}
 
 class EmpresaForm(forms.ModelForm):
@@ -422,14 +428,14 @@ class EmpresaForm(forms.ModelForm):
 		}
 		widgets={
 			'matricula':forms.HiddenInput(),
-			'nombre_empresa': TextInput(attrs={'placeholder': ''}),
-			'calle_empresa': TextInput(attrs={'placeholder': ''}),
-			'colonia_empresa': TextInput(attrs={'placeholder': ''}),
-			'num_empresa': TextInput(attrs={'placeholder': ''}),
-			'codigo_postal': TextInput(attrs={'placeholder': ''}),
-			'ingresomensual_neto': TextInput(attrs={'placeholder': ''}),
-			'horas_laborales': TextInput(attrs={'placeholder': ''}),
-			'duracion_empresa_meses': TextInput(attrs={'placeholder': ''}),
+			'nombre_empresa': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'calle_empresa': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'colonia_empresa': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'num_empresa': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'codigo_postal': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'ingresomensual_neto': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'horas_laborales': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'duracion_empresa_meses': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 		}
 
 class DesempenioRecomendacionesForm(forms.ModelForm):
@@ -447,6 +453,6 @@ class DesempenioRecomendacionesForm(forms.ModelForm):
 		}
 		widgets={
 			'matricula':forms.HiddenInput(),
-			'modificaciones_planest': TextInput(attrs={'placeholder': ''}),
-			'opinion_orgainst': TextInput(attrs={'placeholder': ''}),
+			'modificaciones_planest': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'opinion_orgainst': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 		}

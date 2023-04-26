@@ -2,6 +2,8 @@
 
 {% load bootstrap4 %}
 {% load static %}
+{% load widget_tweaks %}
+
 <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
 <link href="{% static 'css/custom.css' %}" rel="stylesheet" />
 
@@ -28,18 +30,217 @@
           
         <br>
         <form method="POST" action="{% url 'student_module:student_info'%}">
-            <div class="form-group row">
-                <div class="col">
+            <div class="form-group ">
+                <div class="col form-horizontal">
                     {% csrf_token %}
-                    {% bootstrap_form form %}
+                    <fieldset>
+                        <legend>Información personal</legend>
+              
+                        <div class="form-group ">
+                            <label >{{ form.nombre.label_tag }}</label>
+                            <div >
+                                {{ form.nombre }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.apellido_paterno.label_tag }}</label>
+                            <div >
+                                {{ form.apellido_paterno }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.apellido_materno.label_tag }}</label>
+                            <div >
+                                {{ form.apellido_materno }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="{{form.sexo.id_for_label}}" class=" control-label"> {{form.sexo.label_tag}}</label>
+                            <div >
+                              {% render_field form.sexo class="form-control" %}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.fecha_nacimiento.label_tag }}</label>
+                            <div >
+                                {{ form.fecha_nacimiento }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.fecha_ingreso_lic.label_tag }}</label>
+                            <div >
+                                {{ form.fecha_ingreso_lic }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.correo.label_tag }}</label>
+                            <div >
+                                {{ form.correo }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.correo_alterno.label_tag }}</label>
+                            <div >
+                                {{ form.correo_alterno }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.celular.label_tag }}</label>
+                            <div >
+                                {{ form.celular }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.telefono.label_tag }}</label>
+                            <div >
+                                {{ form.telefono }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.twitter.label_tag }}</label>
+                            <div >
+                                {{ form.twitter }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.facebook.label_tag }}</label>
+                            <div >
+                                {{ form.facebook }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >{{ form.linkedin.label_tag }}</label>
+                            <div >
+                                {{ form.linkedin }}
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Lugar de residencia</legend>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.calle.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.calle }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.colonia.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.colonia }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.numero_exterior.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.numero_exterior }}
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <label >
+                                {{ form.numero_interior.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.numero_interior }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.codigo_postal.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.codigo_postal }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.localidad.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.localidad }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.municipio.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.municipio }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.estado.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.estado }}
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Referencias Personales</legend>
+                        <p> <b>Referencia principal (obligatorio)</b></p>
+
+                        <div class="form-group ">
+                            <label >
+                                {{ form.nombre_ref_principal.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.nombre_ref_principal }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.celular_ref_principal.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.celular_ref_principal }}
+                            </div>
+                        </div>
+                        <p> <b>Referencia auxiliar (opcional)</b></p>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.nombre_ref_auxiliar.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.nombre_ref_auxiliar }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.celular_ref_auxiliar.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.celular_ref_auxiliar }}
+                            </div>
+                        </div>
+                    </fieldset>
                     {% buttons %}
                     <button class="btn btn-outline-info" type="submit", name="guardar">Siguiente</button>
                     <a href="{% url 'student_module:home'%}" class="btn btn-secondary">  Regresar </a>
-
                     {% endbuttons %}
-
                 </div>
-                
             </div>
         </form>
+        </form>
+        {% block scripts %}
+        {{ block.super }}
+        {{ form.media }}
+        {% endblock %}
+        
+        {% block extra_css %}
+        {{ block.super }}
+        {{ form.media.css }}
+        {% endblock %}
+        
+        {% block extra_js %}
+        {{ block.super }}
+        {{ form.media.js }}
+        {% endblock %}
     {% endblock %}
