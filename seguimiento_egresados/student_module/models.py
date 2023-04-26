@@ -12,8 +12,8 @@ from django.core.validators import RegexValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.db.models.deletion import DO_NOTHING
 import datetime
-
-
+import re
+from django.core.exceptions import ValidationError
 #OPCIONES PARA PREGUNTAS DE SELECCIÓN
 
 SEXOS = (
@@ -295,11 +295,26 @@ NIVEL_FORMACION = (
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Sólo se permiten caracteres alfanuméricos.')
 just_number = RegexValidator(r'^\d+$', 'Sólo se permiten números.')
 only_decimals =RegexValidator(r'^[0-9]+(\.[0-9]{1,4})?$', 'Sólo se permiten números con el formato: X.XX')
-just_letters = RegexValidator(r'^[a-zA-Z ]*$')
+just_letters = RegexValidator(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-ZñÑáéíóúÁÉÍÓÚ]+)*$', 'Sólo se permiten letras')
+just_letters_blank =RegexValidator( regex=re.compile(r'^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+(?: [a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+)*$'),
+    message='El nombre solo debe contener letras y un espacio entre palabras')
+just_letters_numbers =  RegexValidator(
+    regex=re.compile(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ0-9]+( [a-zA-ZñÑáéíóúÁÉÍÓÚ0-9]+)*$'),
+    message='El nombre solo debe contener letras, números y un espacio entre palabras'
+)
+#born_date_validate= RegexValidator(regex=r'^(1\d|[2-3]\d|4[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$',
+ #   message='La fecha de nacimiento debe ser entre 20 - 40 años.')
 only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', 'Sólo se permiten direcciones de e-mail válidas.')
 only_postal_code_mx = RegexValidator(r'^\d{5}$', 'Sólo se permiten códigos postales válidos.')
 only_phone_number_mx = RegexValidator(r'^\d{10}$', 'Sólo se permiten números de teléfono de 10 dígitos.')
-MAX_YEAR = datetime.datetime.now().year - 4
+MAX_YEAR = datetime.date.today().year - 4
+
+def validate_age_range(value):
+    today = datetime.date.today()
+    age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+    if age < 20 or age > 40:
+        raise ValidationError('La edad debe estar entre 20 y 40 años.')
+
 def validator_enrollment(value): 
      year = int(value[1:2]) + 2000
      today = datetime.date.today()
@@ -315,13 +330,16 @@ def validator_enrollment(value):
 class Student(models.Model):
     #id_alumno = models.IntegerField(primary_key=True)
     matricula = models.CharField(max_length=9, validators=[alphanumeric])
-    nombre = models.CharField(max_length=45, blank=True, null=True)
-    apellido_paterno = models.CharField(max_length=45, blank=True, null=True)
-    apellido_materno = models.CharField(max_length=45, blank=True, null=True)
+    nombre = models.CharField(max_length=45, blank=True, null=True,
+                               validators=[just_letters_blank])
+    apellido_paterno = models.CharField(max_length=45, blank=True,
+                                         null=True, validators=[just_letters])
+    apellido_materno = models.CharField(max_length=45, blank=True, 
+                                        null=True, validators=[just_letters])
     sexo = models.CharField(max_length=10, choices=SEXOS, blank=True, null=True)
-    fecha_nacimiento = models.DateField(blank=True, null=True)
+    fecha_nacimiento = models.DateField(blank=True, null=True, validators=[validate_age_range])
     fecha_ingreso_lic = models.IntegerField(null=True, validators=[MaxValueValidator(MAX_YEAR)])
-    licenciatura_fei = models.CharField(max_length=100, choices=CARRERAS_FEI, blank=True, null=True)
+    licenciatura_fei = models.CharField(max_length=100, choices=CARRERAS_FEI, blank=True, null=True, validators=[just_letters_blank])
     correo = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     celular = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)

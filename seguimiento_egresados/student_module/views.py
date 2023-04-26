@@ -56,6 +56,7 @@ import io
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
+
 def returnFullName(request):
     student = Student.objects.filter(matricula=request.user).first()
     full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
@@ -138,6 +139,7 @@ def student_info(request):
                     alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
                     alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
                     alumno.correo =  form.cleaned_data.get('correo')
+                    alumno.correo_uv = form.cleaned_data.get('correo_uv')
                     alumno.celular = form.cleaned_data.get('celular')
                     alumno.telefono = form.cleaned_data.get('telefono')
                     alumno.twitter = form.cleaned_data.get('twitter')
@@ -151,7 +153,7 @@ def student_info(request):
                     alumno.estado = form.cleaned_data.get('estado')
                     alumno.municipio = form.cleaned_data.get('municipio')
                     alumno.localidad = form.cleaned_data.get('localidad')
-                    alumno.nombre_referencia_principal = form.cleaned_data.get('nombre_ref_principal')
+                    alumno.nombre_ref_principal = form.cleaned_data.get('nombre_ref_principal')
                     alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
                     alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
                     alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
@@ -159,8 +161,8 @@ def student_info(request):
                     alumno.save()
                     return redirect('student_module:job_during_school')
                 else:
-                    print("Formulario no válido")
-                    print(form.errors)
+                    errors= form.errors
+                    context = {'full_name': full_name, 'form': form, 'errors': errors}
                     return render(request, "student_module/student_info.html", context)           
         except:
             messages.error(request, f'No se guardaron los cambios.')
@@ -352,7 +354,7 @@ def other_studies(request):
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, "student_module/other_studies.html", {'full_name': full_name,"form":form})
 
-
+#Falta mejorar la funcion 
 def validateStudentForm(request):
     usuario = request.user
     alumno = Student.objects.filter(matricula=usuario).first()
@@ -367,7 +369,7 @@ def validateStudentForm(request):
         if  attribute is not None:
             contAttributeStudent= contAttributeStudent + 1
    
-    return contAttributeStudent>11 
+    return contAttributeStudent>14 
 
     
 

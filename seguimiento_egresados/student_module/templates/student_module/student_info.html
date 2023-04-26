@@ -42,18 +42,39 @@
                                 {{ form.nombre }}
                             </div>
                         </div>
+                        {% if form.nombre.errors %}
+                            <div class="errorlist">
+                                {% for error in form.nombre.errors %}
+                                    <p class="text-danger">{{ error }}</li>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <div class="form-group ">
                             <label >{{ form.apellido_paterno.label_tag }}</label>
                             <div >
                                 {{ form.apellido_paterno }}
                             </div>
                         </div>
+                        {% if form.apellido_paterno.errors %}
+                        <div class="errorlist">
+                            {% for error in form.apellido_paterno.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >{{ form.apellido_materno.label_tag }}</label>
                             <div >
                                 {{ form.apellido_materno }}
                             </div>
                         </div>
+                        {% if form.apellido_materno.errors %}
+                        <div class="errorlist">
+                            {% for error in form.apellido_materno.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label for="{{form.sexo.id_for_label}}" class=" control-label"> {{form.sexo.label_tag}}</label>
                             <div >
@@ -66,36 +87,78 @@
                                 {{ form.fecha_nacimiento }}
                             </div>
                         </div>
+                        {% if form.fecha_nacimiento.errors %}
+                        <div class="errorlist">
+                            {% for error in form.fecha_nacimiento.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >{{ form.fecha_ingreso_lic.label_tag }}</label>
                             <div >
                                 {{ form.fecha_ingreso_lic }}
                             </div>
                         </div>
+                        {% if form.fecha_ingreso_lic.errors %}
+                        <div class="errorlist">
+                            {% for error in form.fecha_ingreso_lic.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >{{ form.correo.label_tag }}</label>
                             <div >
                                 {{ form.correo }}
                             </div>
                         </div>
+                        {% if form.correo.errors %}
+                        <div class="errorlist">
+                            {% for error in form.correo.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
-                            <label >{{ form.correo_alterno.label_tag }}</label>
+                            <label >{{ form.correo_uv.label_tag }}</label>
                             <div >
-                                {{ form.correo_alterno }}
+                                {{ form.correo_uv }}
                             </div>
                         </div>
+                        {% if form.correo_uv.errors %}
+                        <div class="errorlist">
+                            {% for error in form.correo_uv.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >{{ form.celular.label_tag }}</label>
                             <div >
                                 {{ form.celular }}
                             </div>
                         </div>
+                        {% if form.celular.errors %}
+                        <div class="errorlist">
+                            {% for error in form.celular.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >{{ form.telefono.label_tag }}</label>
                             <div >
                                 {{ form.telefono }}
                             </div>
                         </div>
+                        {% if form.telefono.errors %}
+                        <div class="errorlist">
+                            {% for error in form.telefono.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >{{ form.twitter.label_tag }}</label>
                             <div >
@@ -158,6 +221,13 @@
                                 {{ form.codigo_postal }}
                             </div>
                         </div>
+                        {% if form.codigo_postal.errors %}
+                        <div class="errorlist">
+                            {% for error in form.codigo_postal.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <div class="form-group ">
                             <label >
                                 {{ form.localidad.label_tag }}
@@ -203,6 +273,13 @@
                                 {{ form.celular_ref_principal }}
                             </div>
                         </div>
+                        {% if form.celular_ref_principal.errors %}
+                        <div class="errorlist">
+                            {% for error in form.celular_ref_principal.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                         <p> <b>Referencia auxiliar (opcional)</b></p>
                         <div class="form-group ">
                             <label >
@@ -220,6 +297,13 @@
                                 {{ form.celular_ref_auxiliar }}
                             </div>
                         </div>
+                        {% if form.celular_ref_auxiliar.errors %}
+                        <div class="errorlist">
+                            {% for error in form.celular_ref_auxiliar.errors %}
+                                <p class="text-danger">{{ error }}</li>
+                            {% endfor %}
+                        </div>
+                         {% endif %}
                     </fieldset>
                     {% buttons %}
                     <button class="btn btn-outline-info" type="submit", name="guardar">Siguiente</button>
@@ -233,7 +317,7 @@
         {{ block.super }}
         {{ form.media }}
         {% endblock %}
-        
+        ¿
         {% block extra_css %}
         {{ block.super }}
         {{ form.media.css }}

@@ -37,8 +37,7 @@ class SignupUserForm(UserCreationForm):
     )
     
     username = forms.CharField(required=True, widget=MatriculaInput(attrs={'placeholder': '', 'class':'form-control', 'class': 'prueba'}), validators=[matricula_validator])
-    username.label = 'Matrícula:'
-    
+    username.label=""
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': '', 'class':'form-control'}))
     first_name.label = 'Nombre(s):'
 
@@ -130,7 +129,7 @@ class StudentForm(ModelForm):
 		model = Student
 		exclude = ('matricula',)
 		fields = ['nombre', 'apellido_paterno', 'apellido_materno', 'sexo', 
-		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo','correo_alterno' , 'celular', 'telefono','twitter', 
+		'fecha_nacimiento', 'fecha_ingreso_lic',  'correo','correo_uv' , 'celular', 'telefono','twitter', 
 		'facebook', 'linkedin','calle', 'colonia', 'numero_exterior', 'numero_interior', 'codigo_postal',
 		  'estado', 'municipio', 'localidad' , 'nombre_ref_principal', 'celular_ref_principal' ,
             'nombre_ref_auxiliar', 'celular_ref_auxiliar']
@@ -144,7 +143,7 @@ class StudentForm(ModelForm):
 			'fecha_nacimiento': 'Fecha de nacimiento*',
 			'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
 			'correo': 'Correo electronico*',
-			'correo_alterno': 'Correo electronico alterno',
+			'correo_uv': 'Correo electronico alterno',
 			'celular': 'Celular*',
 			'telefono': 'Teléfono',
 			'twitter': 'Twitter', 
@@ -166,17 +165,19 @@ class StudentForm(ModelForm):
 		}
 
 		max_year = datetime.datetime.now().year - 4
+		max_born_date= str(datetime.date.today() - datetime.timedelta(days=365 * 20))
+		min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
 		widgets={
 			'estado': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'municipio': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
-			#'matricula':TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'nombre': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'apellido_paterno': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'apellido_materno': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
-			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date'}),
+			#'min':min_born_date ,'max': max_born_date
+			'fecha_nacimiento': DateInput(attrs={'class':'form-control', 'type':'date',}),
 			'fecha_ingreso_lic': TextInput(attrs={'type':'number' ,'placeholder': '', 'class':'form-control', 'min': '2014' , 'max': max_year  }),
 			'correo': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
-			'correo_alterno':  TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'correo_uv':  TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'celular': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'telefono': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'facebook': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
@@ -193,7 +194,7 @@ class StudentForm(ModelForm):
             'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 	    	'celular_ref_auxiliar':TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 	}
-	
+
 	
 
 class SeleccionCarreraForm(forms.ModelForm):

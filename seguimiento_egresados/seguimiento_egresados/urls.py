@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from . import views
+from student_module.views import CustomPasswordResetCompleteView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetView, CustomLoginView
 
-from student_module.views import CustomPasswordResetCompleteView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetView
-
+handler404= views.custom_error_view
+handler500= views.custom_error_view
 urlpatterns = [
+    path('', CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
     path('admin/clearcache/', include('clearcache.urls')),
     path('admin/', admin.site.urls),
     path('', include('student_module.urls')),
