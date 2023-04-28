@@ -55,13 +55,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'formtools',
+    'widget_tweaks',
     'bootstrap4',
     'student_module',
     'admin_module',
-    'bootstrapform',
-    'widget_tweaks',
-    
 ]
 
 MIDDLEWARE = [
@@ -103,7 +100,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'control_egresados',
         'USER': 'root',
-        'PASSWORD': 'Fairy59Atomic12',
+        'PASSWORD': 'seguimiento_egresados_FEI',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -132,9 +129,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 

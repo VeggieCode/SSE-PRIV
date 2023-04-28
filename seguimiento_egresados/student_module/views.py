@@ -29,6 +29,90 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from datetime import datetime
 from django.views.generic import View
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import os
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import pdfrw
+from io import BytesIO
+from datetime import datetime
+import io
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+@login_required
+def generate_pdf(request):
+
+    # Obtén el objeto del estudiante
+    usuario = request.user
+    alumno = Student.objects.filter(matricula=usuario).first()
+    full_name = alumno.nombre + ' ' + alumno.apellido_paterno + ' ' + alumno.apellido_materno
+
+    # Abre el archivo PDF existente y crea un objeto PdfReader
+    existing_pdf_path = 'student_module/static/assets/docs/constancia_template.pdf'
+    with open(existing_pdf_path, 'rb') as f:
+        existing_pdf = pdfrw.PdfReader(f)
+
+    # Crea un objeto PdfWriter para escribir en el archivo PDF nuevo
+    output_pdf = pdfrw.PdfWriter()
+
+    # Agrega las páginas del archivo PDF existente al objeto PdfWriter
+    for i in range(len(existing_pdf.pages)):
+        page = existing_pdf.pages[i]
+
+        # Agrega contenido al PDF en la primera página
+        if i == 0:
+            canvas_data = BytesIO()
+            pdf_canvas = canvas.Canvas(canvas_data, pagesize=letter)
+            # Agrega el texto justificado
+            current_date = datetime.now().strftime('%Y/%m/%d')
+            def formato_fecha(date):
+                fecha = f"{date}".split()[0] #obtenemos solo la fehca YYYY-MM-DD
+                year,month,day = fecha.split("-") #separamos cada parte
+                #creamos un diccionario con todos los mese
+                months = {1:"Enero", 2: "Febrero", 3:"Marzo", 4:"Abril", 5:"Mayo", 6:"Junio", 7:"Julio", 8:"Agosto"}
+                #retornamos el resultado
+                return f"{day} de {months[int(month)]} del {year}"
+            text = f"\nPor medio de la presente, se hace constar que el estudiante {full_name}\ncon matrícula {alumno.matricula}, ha concluido de manera satisfactoria el cuestionario de pre-egreso\nen la fecha de {formato_fecha(datetime.today())} como requisito de su proceso de titulación."
+            lines = text.split('\n')
+            y = 200  # posición vertical de la primera línea
+            for line in lines:
+                pdf_canvas.drawCentredString(105 * mm, y * mm, line)
+                y -= 10  # distancia vertical entre líneas
+                pdf_canvas.setFont('Times-Roman', 12)
+            pdf_canvas.save()
+
+            overlay_pdf = pdfrw.PdfReader(BytesIO(canvas_data.getvalue())).pages[0]
+
+            # Crea una variable para guardar la página con el contenido añadido
+            merged_page = pdfrw.PageMerge(page)
+            merged_page.add(overlay_pdf)
+            output_page = merged_page.render()
+
+            # Añade la página al objeto PdfWriter
+            output_pdf.addpage(output_page)
+
+        else:
+            output_pdf.addpage(page)
+
+    # Guarda el archivo PDF nuevo en un archivo en el sistema de archivos
+    with open('student_module/static/assets/docs/constancia_template_f.pdf', 'wb') as f:
+        output_pdf.write(f)
+
+    # Crea la respuesta HTTP con encabezado PDF para descargar el archivo nuevo
+    response = HttpResponse(content_type='application/octet-stream')
+    response['Content-Disposition'] = 'attachment; filename="constancia.pdf"'
+    with open('student_module/static/assets/docs/constancia_template_f.pdf', 'rb') as f:
+        response.write(f.read())
+
+    return response
 
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'student_module/password_reset_email.html'
@@ -47,10 +131,6 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'student_module/password_reset_complete.html'
-
-from pdfrw import PdfReader, PdfWriter, IndirectPdfDict
-from django.http import FileResponse
-import io
 
 
 class CustomLoginView(LoginView):
@@ -650,25 +730,3 @@ def recommendations(request):
             desempenio_recomendaciones_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, 'student_module/recommendations.html', {'form':form})
-
-
-class GeneratePDF(View):
-     def get(self, request, *args, **kwargs): 
-        template = get_template('student_module/invoice.html') 
-        context = { 
-            "invoice_id": 123,
-            "customer_name": "John Cooper", 
-            "amount": 1399.99,
-            "today": "Today", }
-        html = template.render(context) 
-        pdf = render_to_pdf('invoice.html', context) 
-        if pdf:
-             response = HttpResponse(pdf, content_type='application/pdf') 
-             filename = "Invoice_%s.pdf" %("12341231") 
-             content = "inline; filename='%s'" %(filename) 
-             download = request.GET.get("download") 
-             if download:
-                 content = "attachment; filename='%s'" %(filename) 
-                 response['Content-Disposition'] = content 
-                 return response 
-             return HttpResponse("Not found")

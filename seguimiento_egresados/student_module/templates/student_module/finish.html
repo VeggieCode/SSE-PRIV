@@ -16,15 +16,15 @@
     </div>
     <br>
     <div >
-        <p text-align="justify">Tu información ha sido guardada con éxito. En caso de no haber finalizado, puedes volver a iniciar sesión para continuar.
+        <p text-align="justify">Tu información ha sido guardada con éxito. Recuerda generar y descargar tu constancia de finalización de ficha de pre-egreso.
             <br><br>
-            Para finalizar, da clic en el botón de cierre de sesión
+            Para descargar la constancia, da clic en el botón de descarga.
         </p>
         <br>
         <div class="subtitulo-principal">
-            <a href="{% url 'student_module:logout'%}">
+            <a href="{% url 'student_module:generate_pdf'%}">
                 <button class="btn submit-button btn-block">
-                    Cerrar sesión y terminar
+                    Descargar constancia
                 </button>
             </a>
         </div>
