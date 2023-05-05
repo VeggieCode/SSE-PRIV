@@ -1,0 +1,56 @@
+{% extends "admin_module/indexlog.html" %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <div class="subtitulo-pag">
+            <div class="col-7">
+                {{ student.apellido_paterno }} {{ student.apellido_materno }} {{ student.nombre }}
+            </div>
+            <div class="col-5">
+                {{student.matricula}}
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <span class="card-title" style="font-size:19px"><b>Información personal</b></span>
+        <br>
+        <p><b>Licenciatura: </b>{{student.licenciatura_fei }}</p>
+        <p><b>Correo personal: </b> {{student.correo}}</p>
+        <p><b>Correo institucional: </b> {{student.correo_uv}}</p>
+        <p><b>Celular:</b> {{student.celular}}</p>
+        <p><b>Telefono: </b>{{student.telefono}}</p>
+        <p><b>Redes sociales: </b></p>
+        <ul>
+            <li>Twitter: {{student.twitter}}</li>
+            <li>Facebook: {{student.facebook}}</li>
+            <li>LinkedIn: {{student.linkedin}}</li>
+        </ul>
+        <span class="card-title" style="font-size:19px"><b>Lugar de residencia</b></span>
+        <p>Calle {{student.calle}} {{student.numero_exterior}} {{student.numero_interior}} Col. {{student.colonia}} C.P {{student.codigo_postal}}</p>
+        <span class="card-title" style="font-size:19px"><b>Referencias personales</b></span>
+        <ul>
+            <li> {{student.nombre_ref_principal}} {{student.celular_ref_principal}}</li>
+            <li> {{student.nombre_ref_auxiliar}} {{student.celular_ref_auxiliar}}</li>
+
+        </ul>
+
+        <br>
+    </div>
+    
+</div>
+<br>
+<br>
+<div class="row">
+    <div class="col-5">
+        <a href="{% url 'admin_module:home'%}" class="btn btn-secondary">  Regresar </a>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+
+{% endblock %}

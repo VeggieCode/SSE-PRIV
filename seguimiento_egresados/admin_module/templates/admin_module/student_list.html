@@ -7,35 +7,64 @@
     Consulta de estudiantes
   </div>
   <br>
-  <input type="text" class="form-control mb-2" id="busqueda" placeholder="Buscar...">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Matrícula</th>
-        <th>Nombre</th>
-        <th>Licenciatura</th>
-        <th>Correo UV</th>
-        <th>Correo personal</th>
-        <th>Estatus</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for student in students %}
-      <tr>
-        <td>{{ student.matricula }}</td>
-        <td>{{ student.apellido_paterno }} {{ student.apellido_materno }} {{ student.nombre }}</td>
-        <td>Ingeniería de Software</td>
-        <td>{{ student.correo_uv }}</td>
-        <td>{{ student.correo }}</td>
-        <td>EGRESADO</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="3">No se encontraron resultados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <br>
+    <div class="row">
+      <div class="col-4">
+
+      </div>
+    <div class="input-group col-8" style="margin-left: 50%;">
+        <input type="search" id="busqueda" name="search" class="form-control rounded col-8" placeholder="Buscar..."/>
+        <button type="submit" class="btn btn-primary col-1">
+          <i class="fas fa-search"></i>
+        </button>
+    </div>
+  </div>
+  <!--<input type="text" class="form-control mb-2" placeholder="Buscar...">
+  -->
+  <br>
+    <div class="row">
+    <table class="table table-hover paginated">
+      <thead>
+        <tr >
+          <th scope="col" class="bg-primary text-white"  >Matrícula</th>
+          <th scope="col" class="bg-primary text-white" >Nombre</th>
+          <th scope="col" class="bg-primary text-white" >Licenciatura</th>
+          <th scope="col" class="bg-primary text-white" >Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr data-href="/students/{{student.matricula}}">
+          <th scope="row"> {{ student.matricula }}</th>
+          <td>{{ student.apellido_paterno }} {{ student.apellido_materno }} {{ student.nombre }}</td>
+          <td>{{student.licenciatura_fei}}</td>
+          <td>Pendiente</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No se encontraron resultados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span class="step-links">
+          {% if students.has_previous %}
+          <a href="?page=1">&laquo; Primera</a>
+          <a href="?page={{ students.previous_page_number }}">Anterior</a>
+          {% endif %}
+  
+          <span class="current-page">
+              Página {{ students.number }} de {{ students.paginator.num_pages }}
+          </span>
+  
+          {% if students.has_next %}
+          <a href="?page={{ students.next_page_number }}">Siguiente</a>
+          <a href="?page={{ students.paginator.num_pages }}">Última &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
+  </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -48,6 +77,21 @@
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
       });
     });
+  });
+</script>
+<script>
+  // Obtener todas las filas que tengan el atributo data-href
+  var rows = document.querySelectorAll("tr[data-href]");
+
+  // Agregar un evento click a cada fila
+  rows.forEach(function(row) {
+      row.addEventListener("click", function() {
+          // Obtener la URL del atributo data-href
+          var url = this.getAttribute("data-href");
+
+          // Redirigir a la página correspondiente
+          window.location.href = url;
+      });
   });
 </script>
 

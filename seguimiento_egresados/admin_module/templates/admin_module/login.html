@@ -1,10 +1,16 @@
-{% extends 'student_module/index.html' %}
+{% extends 'student_module/nav_bar_principal.html' %}
 {% load bootstrap4 %}
 {% load static %}
 
 {% block content %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <link href="{% static 'css/custom.css' %}" rel="stylesheet" />
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
+
     <div class="row-2 col-center">
         <div class="col-6 my-5 img-principal center-middle col-display">
             <img src="{% static 'assets/img/logo_sse.png' %}" width="360px" height="343px">
@@ -33,9 +39,6 @@
                             <a href="{% url 'student_module:login'%}">Iniciar sesión como alumno</a>
                         </div>
                         <div class="subtitulo-principal">
-                            <a href="{% url 'student_module:signup'%}">Registrar egresado</a>
-                        </div>
-                        <div class="subtitulo-principal">
                             <a href="{% url 'student_module:privacy_notice'%}">Aviso de Privacidad</a>
                         </div>
                     </div>
@@ -43,4 +46,13 @@
             </form>
         </div>
     </div>
+    {% if show_alert %}
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El usuario no se encuentra registrado como coordinador',
+            })
+        </script>
+    {% endif %}
 {% endblock %}
