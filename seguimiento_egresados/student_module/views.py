@@ -294,7 +294,6 @@ def signup(request):
     if request.method == 'POST':
         form = SignupUserForm(request.POST)
         if form.is_valid():
-            print('ya jalo el form')
             # Guardar el usuario
             user = form.save()
             # Crear el objeto estudiante y asignar el usuario

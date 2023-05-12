@@ -238,25 +238,18 @@
                         </div>
                         <div class="form-group ">
                             <label >
-                                {{ form.estado.label_tag }}
-                            </label>
-                            <div>
-                                <select id="estado" name="estado">
-                                    <option value="">Selecciona un estado</option>
-                                    {% for estado in estados %}
-                                        <option value="{{ estado.id }}">{{ estado.nombre }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            <label>
                                 {{ form.municipio.label_tag }}
                             </label>
                             <div >
-                                <select id="municipio" name="municipio">
-                                    <option value="">Selecciona un municipio</option>
-                                </select>
+                                {{ form.municipio }}
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.estado.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.estado }}
                             </div>
                         </div>
                     </fieldset>
@@ -324,6 +317,7 @@
         {{ block.super }}
         {{ form.media }}
         {% endblock %}
+        
         {% block extra_css %}
         {{ block.super }}
         {{ form.media.css }}
