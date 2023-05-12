@@ -20,7 +20,7 @@ from django.urls import reverse_lazy
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.conf import settings 
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
 from io import BytesIO
@@ -46,6 +46,36 @@ from datetime import datetime
 import io
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import pdfkit
+from docx import Document
+from docx.enum.text import WD_UNDERLINE
+from docx.enum.style import WD_STYLE_TYPE
+from docx.shared import Pt
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx2pdf import convert
+import pydocx
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
+from reportlab.platypus import SimpleDocTemplate, XPreformatted, Paragraph
+from reportlab.lib.styles import ParagraphStyle
+import mammoth
+from io import BytesIO
+from xhtml2pdf import pisa
+import PyPDF2
+import re
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
+from reportlab.lib.enums import TA_JUSTIFY
+from reportlab.pdfbase.ttfonts import TTFont
+import textwrap
 
 @login_required
 def generate_pdf(request):
@@ -70,7 +100,8 @@ def generate_pdf(request):
         # Agrega contenido al PDF en la primera página
         if i == 0:
             canvas_data = BytesIO()
-            pdf_canvas = canvas.Canvas(canvas_data, pagesize=letter)
+            pdf_canvas = canvas.Canvas(canvas_data, pagesize=letter, bottomup=0)
+
             # Agrega el texto justificado
             current_date = datetime.now().strftime('%Y/%m/%d')
             def formato_fecha(date):
@@ -80,13 +111,18 @@ def generate_pdf(request):
                 months = {1:"Enero", 2: "Febrero", 3:"Marzo", 4:"Abril", 5:"Mayo", 6:"Junio", 7:"Julio", 8:"Agosto"}
                 #retornamos el resultado
                 return f"{day} de {months[int(month)]} del {year}"
-            text = f"\nPor medio de la presente, se hace constar que el estudiante {full_name}\ncon matrícula {alumno.matricula}, ha concluido de manera satisfactoria el cuestionario de pre-egreso\nen la fecha de {formato_fecha(datetime.today())} como requisito de su proceso de titulación."
-            lines = text.split('\n')
-            y = 200  # posición vertical de la primera línea
-            for line in lines:
-                pdf_canvas.drawCentredString(105 * mm, y * mm, line)
-                y -= 10  # distancia vertical entre líneas
-                pdf_canvas.setFont('Times-Roman', 12)
+
+            # Agrega el texto con formato y margen
+            pdf_canvas.setFont('Helvetica', 9.5)
+            pdf_canvas.setFillColorRGB(0, 0, 0)
+            text = f"\nQue el estudiante {full_name} con matrícula {alumno.matricula}, ha concluido de manera satisfactoria el cuestionario de pre-egreso en la fecha de {formato_fecha(datetime.today())} como requisito de su proceso de titulación."
+            pdf_canvas.setLineWidth(0.5)
+            margin = 125  # Establece el tamaño del margen
+            y = 290   # Posición vertical de la primera línea
+            for line in textwrap.wrap(text, width=100):
+                pdf_canvas.drawString(margin, y, line)
+                y += 12  # Distancia vertical entre líneas
+
             pdf_canvas.save()
 
             overlay_pdf = pdfrw.PdfReader(BytesIO(canvas_data.getvalue())).pages[0]
@@ -108,7 +144,7 @@ def generate_pdf(request):
 
     # Crea la respuesta HTTP con encabezado PDF para descargar el archivo nuevo
     response = HttpResponse(content_type='application/octet-stream')
-    response['Content-Disposition'] = 'attachment; filename="constancia.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="constanciaFinalizacion.pdf"'
     with open('student_module/static/assets/docs/constancia_template_f.pdf', 'rb') as f:
         response.write(f.read())
 
@@ -119,16 +155,16 @@ class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     success_url = reverse_lazy('password_reset_done')
     template_name = 'student_module/password_reset_form.html'
-    
+
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'student_module/password_reset_done.html'
-    
+
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomSetPasswordForm
     post_reset_login = True
     success_url = reverse_lazy('password_reset_complete')
     template_name = 'student_module/password_reset_confirm.html'
-    
+
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'student_module/password_reset_complete.html'
 
@@ -136,6 +172,9 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
+def municipios_por_estado(request, id_estado):
+    municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre')
+    return JsonResponse(list(municipios), safe=False)
 
 def returnFullName(request):
     student = Student.objects.filter(matricula=request.user).first()
@@ -158,7 +197,7 @@ def home(request):
         finishPreForm = student.pre_egreso_terminado
         if finishPreForm:
             return redirect('/finish')
-        if pre_graduation:           
+        if pre_graduation:
             return redirect('/student-info')
         else:
             start = 'block'
@@ -166,7 +205,7 @@ def home(request):
             student.pre_egreso_abierto = True
             student.save()
             return render(request, 'student_module/home.html', context)
- 
+
 
 @login_required
 def finish(request):
@@ -183,7 +222,7 @@ def logout_view(request):
 
 @login_required
 def student_info(request):
- 
+    estados = Estados.objects.all()
     full_name = returnFullName(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
@@ -195,9 +234,9 @@ def student_info(request):
                 form = StudentForm(request.POST)
                 context = {'full_name': full_name, 'form': form}
                 return render(request, 'student_module/student_info.html', context)
-
+        
         form = StudentForm(instance=alumno)
-        context = {'full_name': full_name, 'form': form}
+        context = {'full_name': full_name, 'form': form, 'estados': estados}
         if alumno:
             form.fields['codigo_postal'].widget.attrs['maxlength'] = '5'
             return render(request, 'student_module/student_info.html', context)
@@ -207,8 +246,9 @@ def student_info(request):
     if request.method == 'POST':
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
+        estados = Estados.objects.all()
         form = StudentForm(request.POST)
-        context = {'full_name': full_name, 'form': form}
+        context = {'full_name': full_name, 'form': form, 'estados': estados}
         try:
             if alumno:
                 if form.is_valid():
@@ -242,16 +282,16 @@ def student_info(request):
                     return redirect('student_module:job_during_school')
                 else:
                     errors= form.errors
-                    context = {'full_name': full_name, 'form': form, 'errors': errors}
-                    return render(request, "student_module/student_info.html", context)           
+                    context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados}
+                    return render(request, "student_module/student_info.html", context)
         except:
             messages.error(request, f'No se guardaron los cambios.')
             return render(request, "student_module/student_info.html", context)
 
 
 def signup(request):
+    carreras = Carrera.objects.all()
     if request.method == 'POST':
-        print('ya entro')
         form = SignupUserForm(request.POST)
         if form.is_valid():
             print('ya jalo el form')
@@ -272,8 +312,8 @@ def signup(request):
             return redirect('student_module:login')
     else:
         form = SignupUserForm()
-    
-    return render(request, 'student_module/signup.html', {'form': form})
+
+    return render(request, 'student_module/signup.html', {'form': form, 'carreras': carreras})
 
 @login_required
 def career_selection(request):
@@ -302,10 +342,10 @@ def career_selection(request):
             return render(request, 'student_module/career_selection.html', context)
 
     #Si el método es POST, el sistema genera una form vacía que corresponde a la variable 'form' de tipo
-    #SeleccionCarreraForm y la llena con los datos entrantes en 'request.POST'. Debido a que en la BD todas 
-    #las tablas dependen de la tabla Alumno mediante la llave foránea (FK): 'matricula', django necesita 
+    #SeleccionCarreraForm y la llena con los datos entrantes en 'request.POST'. Debido a que en la BD todas
+    #las tablas dependen de la tabla Alumno mediante la llave foránea (FK): 'matricula', django necesita
     #una instancia de Alumno que le indique la relación de la FK. Por eso se obtiene un objeto Alumno correspondiente
-    #al User actual. Después, se extraen los datos de 'form' para crear el objeto 'seleccion_carrera_obj'  
+    #al User actual. Después, se extraen los datos de 'form' para crear el objeto 'seleccion_carrera_obj'
     # de tipo SeleccionCarrera (usando el objeto 'alumno' para la matricula) y se guarda "manualmente" el objeto en la BD.
     if request.method == 'POST':
         usuario = request.user
@@ -321,10 +361,10 @@ def career_selection(request):
             primera_eleccion_nombre = form.cleaned_data['primera_eleccion_nombre']
             razon_eleccion_institucion = form.cleaned_data['razon_eleccion_institucion']
             razon_eleccion_carrera = form.cleaned_data['razon_eleccion_carrera']
-            seleccion_carrera_obj = SeleccionCarrera(matricula=matricula, 
+            seleccion_carrera_obj = SeleccionCarrera(matricula=matricula,
                 primera_opcion_carrera=primera_opcion_carrera,
                 eleccion_tipo_institucion=eleccion_tipo_institucion,
-                primera_eleccion_institucion=primera_eleccion_institucion, 
+                primera_eleccion_institucion=primera_eleccion_institucion,
                 primera_eleccion_nombre=primera_eleccion_nombre,
                 razon_eleccion_institucion=razon_eleccion_institucion,
                 razon_eleccion_carrera=razon_eleccion_carrera)
@@ -341,10 +381,10 @@ def bachelors_degree(request):
         usuario = request.user
         try:
             licenciatura = Licenciatura.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
-        except Student.DoesNotExist:             
+        except Student.DoesNotExist:
             form = LicenciaturaForm(request.POST)
             return render(request, "student_module/bachelors_degree.html", {"form":form})
-        
+
         form = LicenciaturaForm(instance=licenciatura)
         if licenciatura:
             return render(request, 'student_module/bachelors_degree.html', {'form':form})
@@ -374,8 +414,8 @@ def bachelors_degree(request):
             tipo_inscripcion = form.cleaned_data['tipo_inscripcion']
             licenciatura_obj = Licenciatura(matricula=matricula,
                 nombre_campus=nombre_campus,
-                nombre_carrera=nombre_carrera, 
-                anio_pestudios=anio_pestudios, 
+                nombre_carrera=nombre_carrera,
+                anio_pestudios=anio_pestudios,
                 anio_inicio=anio_inicio,
                 anio_fin=anio_fin,
                 org_ss=org_ss,
@@ -387,7 +427,7 @@ def bachelors_degree(request):
             licenciatura_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, 'student_module/bachelors_degree.html', {'form':form})
-    
+
 @login_required
 def other_studies(request):
 
@@ -398,7 +438,7 @@ def other_studies(request):
         usuario = request.user
         try:
             continuacion = ContinuacionEstudios.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
-        except Student.DoesNotExist:  
+        except Student.DoesNotExist:
             form = ContinuacionEstudiosForm(request.POST)
             return render(request, "student_module/other_studies.html", {"form":form})
 
@@ -434,7 +474,7 @@ def other_studies(request):
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, "student_module/other_studies.html", {'full_name': full_name,"form":form})
 
-#Falta mejorar la funcion 
+#Falta mejorar la funcion
 def validateStudentForm(request):
     usuario = request.user
     alumno = Student.objects.filter(matricula=usuario).first()
@@ -448,10 +488,10 @@ def validateStudentForm(request):
       else:
         if  attribute is not None:
             contAttributeStudent= contAttributeStudent + 1
-   
-    return contAttributeStudent>14 
 
-    
+    return contAttributeStudent>14
+
+
 
 @login_required
 def job_during_school(request):
@@ -474,7 +514,7 @@ def job_during_school(request):
             return render(request, "student_module/job_during_school.html", {'full_name': full_name, "form":form})
         else:
             return render(request, 'student_module/job_during_school.html', {'full_name': full_name,'form':form})
-    
+
     #Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
@@ -494,7 +534,7 @@ def job_during_school(request):
                 horas_laboradas_semanales=horas_laboradas_semanales)
             empleo_durante_estudios_obj.save()
             if not confirmacion_empleo  is None:
-                alumno.pre_egreso_terminado= validateStudentForm(request) 
+                alumno.pre_egreso_terminado= validateStudentForm(request)
                 alumno.save()
             messages.success(request, f'Se guardaron los cambios.')
     return redirect('student_module:finish')
@@ -508,7 +548,7 @@ def job_search(request):
         usuario = request.user
         try:
             busqueda_empleo = BusquedaEmpleo.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
-        except Student.DoesNotExist:  
+        except Student.DoesNotExist:
             form = BusquedaEmpleoForm(request.POST)
             return render(request, "student_module/job_search.html", {"form":form})
 
@@ -517,7 +557,7 @@ def job_search(request):
             return render(request, "student_module/job_search.html", {"form":form})
         else:
             return render(request, 'student_module/job_search.html', {'form':form})
-    
+
     #Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
@@ -629,7 +669,7 @@ def current_job(request): #Corresponde a model Empresa, form EmpresaForm y en la
         if empleo_actual:
             return render(request, 'student_module/current_job.html', {'form':form})
         else:
-            return render(request, 'student_module/current_job.html', {'form':form})         
+            return render(request, 'student_module/current_job.html', {'form':form})
 
     #Ver comentarios en seleccion_carrera.
     if request.method == "POST":

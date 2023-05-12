@@ -31,14 +31,6 @@ ESTADO_CIVIL = (
     ('Viudo/a', 'Viudo/a')
     )
 
-CARRERAS_FEI = (
-    ('','Seleccione...'),
-    ('Estadística', 'Estadística'),
-    ('Ingeniería de Software','Ingeniería de Software'),
-    ('Tecnologías Computacionales ','Tecnologías Computacionales'),
-    ('Redes y Servicios de Cómputo ','Redes y Servicios de Cómputo'),
-    )
-
 TIPO_INSTITUCION = (
     ('', 'Seleccione el tipo de institución'),
     ('Universidad Pública', 'Universidad Pública'), #First one is the value of select option and second is the displayed value in option
@@ -330,38 +322,38 @@ def validator_enrollment(value):
 class Student(models.Model):
     #id_alumno = models.IntegerField(primary_key=True)
     matricula = models.CharField(max_length=9, validators=[alphanumeric])
-    nombre = models.CharField(max_length=45, blank=True, null=True,
+    nombre = models.CharField(max_length=45, blank=False, null=True,
                                validators=[just_letters_blank])
-    apellido_paterno = models.CharField(max_length=45, blank=True,
+    apellido_paterno = models.CharField(max_length=45, blank=False,
                                          null=True, validators=[just_letters])
-    apellido_materno = models.CharField(max_length=45, blank=True, 
+    apellido_materno = models.CharField(max_length=45, blank=False, 
                                         null=True, validators=[just_letters])
-    sexo = models.CharField(max_length=10, choices=SEXOS, blank=True, null=True)
-    fecha_nacimiento = models.DateField(blank=True, null=True, validators=[validate_age_range])
-    fecha_ingreso_lic = models.IntegerField(null=True, validators=[MaxValueValidator(MAX_YEAR)])
-    licenciatura_fei = models.CharField(max_length=100, choices=CARRERAS_FEI, blank=True, null=True, validators=[just_letters_blank])
-    correo = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
+    sexo = models.CharField(max_length=10, choices=SEXOS, blank=False, null=True)
+    fecha_nacimiento = models.DateField(blank=False, null=True, validators=[validate_age_range])
+    fecha_ingreso_lic = models.IntegerField(blank=False, null=True, validators=[MaxValueValidator(MAX_YEAR)])
+    licenciatura_fei = models.CharField(max_length=500, blank=True, null=True)
+    correo = models.CharField(max_length=45, blank=False, null=True, validators=[only_email])
     correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
-    celular = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
+    celular = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=False, null=True)
     telefono = models.CharField(max_length=10, blank=True, null=True, validators=[only_phone_number_mx])
     twitter = models.CharField(max_length=45, blank=True, null=True)
     facebook = models.CharField(max_length=45, blank=True, null=True)
     linkedin= models.CharField(max_length=45, blank=True, default='')
-    calle = models.CharField( max_length=45, blank=True, null=True)
-    numero_exterior= models.IntegerField(null=True)
-    numero_interior= models.IntegerField(null=True)
-    colonia = models.CharField(max_length=45, blank=True, null=True)
-    codigo_postal = models.CharField(max_length=5, blank=True, null=True, validators=[only_postal_code_mx])
+    calle = models.CharField( max_length=45, blank=False, null=True)
+    numero_exterior= models.IntegerField(null=True, blank=False)
+    numero_interior= models.IntegerField(null=True, blank=True)
+    colonia = models.CharField(max_length=45, blank=False, null=True)
+    codigo_postal = models.CharField(max_length=5, blank=False, null=True, validators=[only_postal_code_mx])
     correo_alterno= models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     pre_egreso_abierto= models.BooleanField(default=False)
     post_egreso_abierto= models.BooleanField(default=False)
-    nombre_ref_principal = models.CharField(max_length=100, blank=True, null=True)
-    celular_ref_principal = models.CharField( max_length=10, validators=[only_phone_number_mx], blank=True, null=True)    
+    nombre_ref_principal = models.CharField(max_length=100, blank=False, null=True)
+    celular_ref_principal = models.CharField( max_length=10, validators=[only_phone_number_mx], blank=False, null=True)    
     nombre_ref_auxiliar= models.CharField(max_length=100, blank=True, null=True)
     celular_ref_auxiliar= models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
-    estado = models.CharField(max_length=50, blank=True, null=True)
-    municipio = models.CharField(max_length=50, blank=True, null=True)
-    localidad = models.CharField(max_length=50, blank=True, null=True)
+    estado = models.CharField(max_length=50, blank=False, null=True)
+    municipio = models.CharField(max_length=50, blank=False, null=True)
+    localidad = models.CharField(max_length=50, blank=False, null=True)
     pre_egreso_terminado = models.BooleanField(default=False)
 
 class Coordinador(models.Model):
@@ -383,11 +375,17 @@ class SeleccionCarrera(models.Model):
     razon_eleccion_carrera = models.CharField(max_length=45, blank=True, null=True)
     matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
 
+class Carrera(models.Model):
+    #id_carrera = models.IntegerField(primary_key=True)
+    licenciatura = models.CharField(max_length=50, validators=[just_letters], null=True, blank=True)
+
+    def __str__(self):
+        return self.licenciatura
 
 class Licenciatura(models.Model):
     #id_licenciatura = models.IntegerField(primary_key=True)
     nombre_campus = models.CharField(max_length=45, validators=[just_letters], null=True, blank=True)
-    nombre_carrera = models.CharField(max_length=60, blank=True, choices=CARRERAS_FEI)
+    nombre_carrera = models.CharField(max_length=500, blank=True, null=True)
     anio_pestudios = models.CharField(max_length=45, blank=True, null=True)
     anio_inicio = models.CharField(max_length=25, blank=True, null=True)
     anio_fin = models.CharField(max_length=25, blank=True, null=True)
@@ -398,7 +396,6 @@ class Licenciatura(models.Model):
     promedio_final = models.FloatField(blank=True, null=True, validators=[only_decimals])
     tipo_inscripcion = models.CharField(max_length=25, choices=TIPOINSCRIPCION, null=True, blank=True)
     matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
-
 
 class ContinuacionEstudios(models.Model):
     #id_continuacion_estudios = models.IntegerField(primary_key=True)
@@ -489,23 +486,47 @@ class DesempenioRecomendaciones(models.Model):
     opinion_orgainst = models.CharField(max_length=45, blank=True, null=True)
     matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
 
+class Estados(models.Model):
+    #id_estado = models.AutoField(primary_key=True)
+    clave = models.CharField(max_length=25, blank=True, null=True)
+    nombre = models.CharField(max_length=255, blank=True, null=True)
+    abrev = models.CharField(max_length=25, blank=True, null=True)
+    activo = models.IntegerField()
+
+    def __str__(self):
+        return self.nombre
 
 class Municipios(models.Model):
     #id_municipio = models.AutoField(primary_key=True)
-    nombre_municipio = models.CharField(max_length=100)
-    id_estado = models.IntegerField()
+    id_estado = models.ForeignKey('Estados', on_delete=models.CASCADE, db_column='id_estado', validators=[alphanumeric], null= True)
+    clave = models.CharField(max_length=10)
+    nombre = models.CharField(max_length=100)
+    activo = models.IntegerField()
 
     def __str__(self):
-        return self.nombre_municipio
+        return self.nombre
 
-
-class Estados(models.Model):
-    #id_estado = models.AutoField(primary_key=True)
-    estado = models.CharField(max_length=255, blank=True, null=True)
+class Localidades(models.Model):
+    #id_localidad = models.AutoField(primary_key=True)
+    municipio = models.ForeignKey('Municipios', on_delete=DO_NOTHING, db_column='id_municipio', validators=[alphanumeric], null= True)
+    clave = models.CharField(max_length=4)
+    nombre = models.CharField(max_length=100)
+    mapa = models.IntegerField()
+    ambito = models.CharField(max_length=1)
+    latitud = models.CharField(max_length=20)
+    longitud = models.CharField(max_length=20)
+    lat = models.DecimalField(max_digits=10, decimal_places=7)
+    lng = models.DecimalField(max_digits=10, decimal_places=7)
+    altitud = models.CharField(max_length=15)
+    carta = models.CharField(max_length=10)
+    poblacion = models.IntegerField()
+    masculino = models.IntegerField()
+    femenino = models.IntegerField()
+    viviendas = models.IntegerField()
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.estado
-
+        return self.nombre
 
 
 #TERMINAN CLASES DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#

@@ -5,12 +5,11 @@ from .models import *
 from django.utils.translation import gettext_lazy as _
 from django.forms import ModelForm
 
-
 class MatriculaInput(forms.MultiWidget):
     def __init__(self, attrs=None):
         widgets = [
             forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': '[0-9]'}),
             forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
             forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
             forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
@@ -36,7 +35,7 @@ class SignupUserForm(UserCreationForm):
         'Por favor ingrese una matrícula válida'
     )
     
-    username = forms.CharField(required=True, widget=MatriculaInput(attrs={'placeholder': '', 'class':'form-control', 'class': 'prueba'}), validators=[matricula_validator])
+    username = forms.CharField(required=True, widget=MatriculaInput(attrs={'placeholder': '', 'class':'form-control', 'class': 'prueba', 'autocomplete': 'username'}), validators=[matricula_validator])
     username.label=""
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': '', 'class':'form-control'}))
     first_name.label = 'Nombre(s):'
@@ -52,7 +51,7 @@ class SignupUserForm(UserCreationForm):
     
     licenciatura_fei = forms.ChoiceField(
 		widget=forms.Select,
-		choices=CARRERAS_FEI, 
+		choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()], 
 		label='Licenciatura')
     
     password1= forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '', 'class':'form-control'}))
@@ -161,15 +160,15 @@ class StudentForm(ModelForm):
 			'nombre_ref_principal': 'Nombre completo* ',
             'celular_ref_principal': 'Celular* ',
             'nombre_ref_auxiliar' : 'Nombre completo ',
-			'celular_ref_auxiliar': 'Celular   '	
+			'celular_ref_auxiliar': 'Celular'	
 		}
 
 		max_year = datetime.datetime.now().year - 4
 		max_born_date= str(datetime.date.today() - datetime.timedelta(days=365 * 20))
 		min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
 		widgets={
-			'estado': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
-			'municipio': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
+			'estado': forms.Select(choices=[]),
+			'municipio': forms.Select(choices=[]),
 			'nombre': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'apellido_paterno': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 			'apellido_materno': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
@@ -194,7 +193,6 @@ class StudentForm(ModelForm):
             'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 	    	'celular_ref_auxiliar':TextInput(attrs={'placeholder': '', 'class':'form-control'}),
 	}
-
 	
 
 class SeleccionCarreraForm(forms.ModelForm):
