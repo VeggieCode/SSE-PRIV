@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrap4',
     'student_module',
-    'admin_module',
+    'chartjs',
+    'admin_module.apps.AdminModuleConfig',
 ]
 
 MIDDLEWARE = [

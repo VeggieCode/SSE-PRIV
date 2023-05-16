@@ -356,14 +356,7 @@ class Student(models.Model):
     localidad = models.CharField(max_length=50, blank=False, null=True)
     pre_egreso_terminado = models.BooleanField(default=False)
 
-class Coordinador(models.Model):
-    #id_coordinador = models.IntegerField(primary_key=True)
-    matricula = models.CharField(max_length=10, validators=[alphanumeric])
-    nombre = models.CharField(max_length=45, blank=True, null=True)
-    apellido_paterno = models.CharField(max_length=45, blank=True, null=True)
-    apellido_materno = models.CharField(max_length=45, blank=True, null=True)
-    correo = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
-    correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
+
 
 class SeleccionCarrera(models.Model):
     #id_seleccion_carrera = models.IntegerField(primary_key=True)
@@ -377,7 +370,7 @@ class SeleccionCarrera(models.Model):
 
 class Carrera(models.Model):
     #id_carrera = models.IntegerField(primary_key=True)
-    licenciatura = models.CharField(max_length=50, validators=[just_letters], null=True, blank=True)
+    licenciatura = models.CharField(max_length=100, validators=[just_letters], null=True, blank=True)
 
     def __str__(self):
         return self.licenciatura

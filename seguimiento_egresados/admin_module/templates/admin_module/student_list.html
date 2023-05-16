@@ -38,7 +38,11 @@
           <th scope="row"> {{ student.matricula }}</th>
           <td>{{ student.apellido_paterno }} {{ student.apellido_materno }} {{ student.nombre }}</td>
           <td>{{student.licenciatura_fei}}</td>
-          <td>Pendiente</td>
+          {% if student.pre_egreso_terminado %}
+            <td>Concluido</td>
+          {% else %}
+            <td>Pendiente</td>
+          {% endif %}
         </tr>
         {% empty %}
         <tr>

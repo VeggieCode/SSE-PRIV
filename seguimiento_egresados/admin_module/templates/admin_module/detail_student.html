@@ -16,28 +16,91 @@
     <div class="card-body">
         <span class="card-title" style="font-size:19px"><b>Información personal</b></span>
         <br>
-        <p><b>Licenciatura: </b>{{student.licenciatura_fei }}</p>
-        <p><b>Correo personal: </b> {{student.correo}}</p>
-        <p><b>Correo institucional: </b> {{student.correo_uv}}</p>
-        <p><b>Celular:</b> {{student.celular}}</p>
-        <p><b>Telefono: </b>{{student.telefono}}</p>
+        {% if student.licenciatura_fei %}
+        <p><b>Licenciatura: </b>{{ student.licenciatura_fei }}</p>
+      {% endif %}
+      
+      {% if student.correo %}
+        <p><b>Correo personal: </b>{{ student.correo }}</p>
+      {% endif %}
+      
+      {% if student.correo_uv %}
+        <p><b>Correo institucional: </b>{{ student.correo_uv }}</p>
+      {% endif %}
+      
+      {% if student.celular %}
+        <p><b>Celular: </b>{{ student.celular }}</p>
+      {% endif %}
+      
+      {% if student.telefono %}
+        <p><b>Telefono: </b>{{ student.telefono }}</p>
+      {% endif %}
+      
+      {% if student.twitter or student.facebook or student.linkedin %}
         <p><b>Redes sociales: </b></p>
         <ul>
-            <li>Twitter: {{student.twitter}}</li>
-            <li>Facebook: {{student.facebook}}</li>
-            <li>LinkedIn: {{student.linkedin}}</li>
+          {% if student.twitter %}
+            <li>Twitter: {{ student.twitter }}</li>
+          {% endif %}
+          {% if student.facebook %}
+            <li>Facebook: {{ student.facebook }}</li>
+          {% endif %}
+          {% if student.linkedin %}
+            <li>LinkedIn: {{ student.linkedin }}</li>
+          {% endif %}
         </ul>
+      {% endif %}
+      
+      {% if student.calle or student.numero_exterior or student.numero_interior or student.colonia or student.codigo_postal %}
         <span class="card-title" style="font-size:19px"><b>Lugar de residencia</b></span>
-        <p>Calle {{student.calle}} {{student.numero_exterior}} {{student.numero_interior}} Col. {{student.colonia}} C.P {{student.codigo_postal}}</p>
+        <p>
+          {% if student.calle %}
+            Calle {{ student.calle }}
+          {% endif %}
+          {% if student.numero_exterior %}
+            {{ student.numero_exterior }}
+          {% endif %}
+          {% if student.numero_interior %}
+            {{ student.numero_interior }}
+          {% endif %}
+          {% if student.colonia %}
+            Col. {{ student.colonia }}
+          {% endif %}
+          {% if student.codigo_postal %}
+            C.P {{ student.codigo_postal }}
+          {% endif %}
+        </p>
+      {% endif %}
+      
+      {% if student.nombre_ref_principal or student.celular_ref_principal or student.nombre_ref_auxiliar or student.celular_ref_auxiliar %}
         <span class="card-title" style="font-size:19px"><b>Referencias personales</b></span>
         <ul>
-            <li> {{student.nombre_ref_principal}} {{student.celular_ref_principal}}</li>
-            <li> {{student.nombre_ref_auxiliar}} {{student.celular_ref_auxiliar}}</li>
-
+          {% if student.nombre_ref_principal or student.celular_ref_principal %}
+            <li>
+              {% if student.nombre_ref_principal %}
+                {{ student.nombre_ref_principal }}
+              {% endif %}
+              {% if student.celular_ref_principal %}
+                {{ student.celular_ref_principal }}
+              {% endif %}
+            </li>
+          {% endif %}
+          {% if student.nombre_ref_auxiliar or student.celular_ref_auxiliar %}
+            <li>
+              {% if student.nombre_ref_auxiliar %}
+                {{ student.nombre_ref_auxiliar }}
+              {% endif %}
+              {% if student.celular_ref_auxiliar %}
+                {{ student.celular_ref_auxiliar }}
+              {% endif %}
+            </li>
+          {% endif %}
         </ul>
-
-        <br>
-    </div>
+      {% endif %}
+      
+      <br>
+      </div>
+      
     
 </div>
 <br>

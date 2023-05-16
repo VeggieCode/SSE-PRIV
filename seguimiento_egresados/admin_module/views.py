@@ -9,15 +9,15 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.from django.contrib import messages
 from django.contrib import messages
 from django.db.models import Q
-from .models import Coordinator
+from .models import Coordinador
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
     def form_valid(self, form):
         # Obtener el usuario autenticado
         user = form.get_user()
         try:
-            coordinator = Coordinator.objects.get(usuario=user)
-        except Coordinator.DoesNotExist:
+            coordinator = Coordinador.objects.get(usuario=user)
+        except Coordinador.DoesNotExist:
             coordinator = None
         if coordinator is None:
             form = CustomAuthenticationForm()
@@ -32,16 +32,27 @@ class CustomLoginView(LoginView):
             context['show_alert'] = True
         return context
 
+
+def getStudents(request):
+    user = request.user
+    coordinator = Coordinador.objects.get(usuario=user)
+    object_list= Student.objects.filter(licenciatura_fei = coordinator.carrera_asignada)
+    if coordinator.coordinador_general:
+        object_list = Student.objects.all()
+        
+    return object_list
+
 #@login_required
 def home(request):
     query = request.GET.get('search')
+    studentList= getStudents(request)
     if query:
-        object_list = Student.objects.filter(
+        object_list = studentList.filter(
             Q(nombre__icontains=query) |
             Q(matricula__icontains=query) 
         ).order_by('matricula')
     else:
-        object_list = Student.objects.all().order_by('matricula')
+        object_list = studentList.order_by('matricula')
         # Definir la cantidad de objetos por página
     objects_per_page = 10
     paginator = Paginator(object_list, objects_per_page)
@@ -58,9 +69,7 @@ def home(request):
         students = paginator.page(paginator.num_pages)
         # Pasar la página actual, los objetos a mostrar y la cantidad total de objetos a la plantilla HTML
     return render(request,  'admin_module/student_list.html', {'page': page, 'students': students})
-    '''students = Student.objects.all()
-        datos = {'students': students}
-        return render(request, 'admin_module/student_list.html', datos)'''
+   
 
 def logout_view(request):
     logout(request)

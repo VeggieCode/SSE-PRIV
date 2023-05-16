@@ -5,9 +5,11 @@ $(document).ready(function() {
     var selectMunicipio = document.getElementById("municipio");
     // Cuando se selecciona un estado, cargar los municipios correspondientes
     selectEstado.addEventListener("change", function() {
-    var estadoId = this.value;
-    if (estadoId) {
+        var estadoId = this.value;
+        if (estadoId) {
         var url = "/municipios/" + estadoId + "/";
+        $(selectEstado).selectpicker('refresh');
+
         fetch(url)
         .then(response => response.json())
         .then(municipios => {
@@ -18,10 +20,15 @@ $(document).ready(function() {
             option.text = municipio.nombre;
             selectMunicipio.add(option);
             });
+            $(selectMunicipio).selectpicker('refresh');
+
         });
     } else {
         // Si no se selecciona ningún estado, vaciar los municipios
         selectMunicipio.innerHTML = "<option value=''>Selecciona un municipio</option>";
+        $(selectEstado).selectpicker('refresh');
+        $(selectMunicipio).selectpicker('refresh');
+
     }
     });
 });
