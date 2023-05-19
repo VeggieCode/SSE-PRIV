@@ -15,7 +15,6 @@
         <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{% static 'js/pdfgen.js' %}"></script>
-        <script src="{% static 'js/municipios.js' %}"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300&display=swap" rel="stylesheet" type="text/css">
         <!--<link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />-->
@@ -60,35 +59,48 @@
                         <br>
                           <div class="row">
                             <div class="col-3 my-5 pad-content" >
-                              <br>
 
                               {% if coordinator.coordinador_general%}
                               <br>
                               <br>
                                 <div class="row">
-                                  <select class="form-control custom-select" id="carreraSelect" onchange="filterTableDegree()">
-                                    <option value="">Todas las carreras</option>
+                                  <p>Selecciona la carrera a consultar: </p>
+                                  <select class="form-control custom-select" id="carreraSelect" onchange="filterTable()">
+                                    <option value="" selected>Todas las carreras</option>
                                     {% for degree in degrees %}
                                       <option value="{{ degree.licenciatura }}">{{ degree.licenciatura }}</option>
                                     {% endfor %}
                                   </select>
                                 </div>
-                              {% endif %}
                                 <br>
                                 <br>
                               <div class="row">
-                              <select class="form-select custom-select" id="estatusSelect" onchange="filterTableStatus()">
-                                <option disabled selected>Estatus</option>
-                                <option value="">Todos</option>
+                              <p>Selecciona el estatus a consultar: </p>
+                              <select class="form-select custom-select" id="estatusSelect" onchange="filterTable()">
+                                <option value="" selected>Todos</option>
                                 <option value="Pendiente">Pendiente</option>
                                 <option value="Concluido">Concluido</option>
                               </select>
                               </div>
+                              {% else %}
+                              <br>
+                              <br>
+                              <div class="row">
+                                <p>Selecciona el estatus a consultar: </p>
+                                <select class="form-select custom-select" id="estatusSelect" onchange="filterTableStatus()">
+                                  <option value="" selected>Todos</option>
+                                  <option value="Pendiente">Pendiente</option>
+                                  <option value="Concluido">Concluido</option>
+                                </select>
+                                </div>
+                              {% endif %}
+                                
+                              
                         </div> 
                         <div class="col-9 my-5 pad-content">
                           <div class="row" >
                             <div class="input-group col-11" >
-                              <input type="search" id="busqueda" name="search" class="form-control rounded col-8" placeholder="Buscar..."/>
+                              <input type="search" id="busqueda" name="search" class="form-control rounded col-8" placeholder="Buscar por matrícula o nombre"/>
                               <button type="submit" class="btn btn-primary col-1">
                                 <i class="fas fa-search"></i>
                               </button>
@@ -188,32 +200,12 @@
                 </script>
                 
                 <script>
-                  function filterTableDegree() {
-                  var selectedValue = document.getElementById("carreraSelect").value;
-                  var tableRows = document.querySelectorAll(".table tbody tr");
-                  
-                  for (var i = 0; i < tableRows.length; i++) {
-                    var row = tableRows[i];
-                    var degreeCell = row.querySelector("td:nth-child(3)");
-                    var degree = degreeCell.innerText.trim();
-                    
-                    if (selectedValue === "" || degree === selectedValue) {
-                      row.style.display = "";
-                    } else {
-                      row.style.display = "none";
-                    }
-                  }
-                }
-                
-                </script>
-                
-                <script>
                   function filterTableStatus() {
                   var selectedValue = document.getElementById("estatusSelect").value;
                   var tableRows = document.querySelectorAll(".table tbody tr");
                   
-                  for (var i = 0; i < tableRows.length; i++) {
-                    var row = tableRows[i];
+                  for (const element of tableRows) {
+                    var row = element;
                     var estatusCell = row.querySelector("td:nth-child(4)");
                     var estatus = estatusCell.innerText.trim();
                     
@@ -225,6 +217,32 @@
                   }
                 }
                 
+                </script>
+                
+                <script>
+                  function filterTable() {
+                    var selectedDegree = document.getElementById("carreraSelect").value;
+                    var selectedStatus = document.getElementById("estatusSelect").value;
+                    var tableRows = document.querySelectorAll(".table tbody tr");
+                    
+                    for (const element of tableRows) {
+                      var row = element;
+                      var degreeCell = row.querySelector("td:nth-child(3)");
+                      var statusCell = row.querySelector("td:nth-child(4)");
+                      var degree = degreeCell.innerText.trim();
+                      var status = statusCell.innerText.trim();
+                      
+                      var degreeMatch = selectedDegree === "" || degree === selectedDegree;
+                      var statusMatch = selectedStatus === "" || status === selectedStatus;
+                      
+                      if (degreeMatch && statusMatch) {
+                        row.style.display = "";
+                      } else {
+                        row.style.display = "none";
+                      }
+                    }
+                  }
+
                 </script>
               {% endblock %}
             </div>
