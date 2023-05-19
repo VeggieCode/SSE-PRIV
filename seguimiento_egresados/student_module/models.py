@@ -355,7 +355,7 @@ class Student(models.Model):
     municipio = models.CharField(max_length=50, blank=False, null=True)
     localidad = models.CharField(max_length=50, blank=False, null=True)
     pre_egreso_terminado = models.BooleanField(default=False)
-
+    pre_egreso_fecha_fin = models.DateField(blank=False, null=True)
 
 
 class SeleccionCarrera(models.Model):

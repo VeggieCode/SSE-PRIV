@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from student_module.models import Carrera
 from .forms import CustomAuthenticationForm
 from student_module.models import Student, Licenciatura
 from django.contrib.auth.views import LoginView
@@ -12,6 +14,10 @@ from django.db.models import Q
 from .models import Coordinador
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
+
+    def get_success_url(self):
+        return '/homeadmin/'
+
     def form_valid(self, form):
         # Obtener el usuario autenticado
         user = form.get_user()
@@ -20,17 +26,20 @@ class CustomLoginView(LoginView):
         except Coordinador.DoesNotExist:
             coordinator = None
         if coordinator is None:
-            form = CustomAuthenticationForm()
+            form.add_error(None, 'El usuario no se encuentra registrado como coordinador')
             return self.form_invalid(form)
-        # limpiar el formulario
+        # Limpiar el formulario
+        self.request.session.flush()  # Limpia los datos de sesión
+        self.request.session.modified = True
         return super().form_valid(form)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.method == 'POST':
             # Si el formulario fue enviado por POST, mostramos el mensaje de error
             context['show_alert'] = True
         return context
+
 
 
 def getStudents(request):
@@ -42,9 +51,13 @@ def getStudents(request):
         
     return object_list
 
-#@login_required
+@login_required
 def home(request):
     query = request.GET.get('search')
+    degrees =  Carrera.objects.all()
+    user= request.user
+    coordinator = Coordinador.objects.get(usuario=user)
+
     studentList= getStudents(request)
     if query:
         object_list = studentList.filter(
@@ -68,7 +81,7 @@ def home(request):
             # Si el número de página es mayor al total de páginas, mostrar la última página
         students = paginator.page(paginator.num_pages)
         # Pasar la página actual, los objetos a mostrar y la cantidad total de objetos a la plantilla HTML
-    return render(request,  'admin_module/student_list.html', {'page': page, 'students': students})
+    return render(request,  'admin_module/student_list.html', {'page': page, 'students': students, 'degrees': degrees, 'coordinator': coordinator})
    
 
 def logout_view(request):

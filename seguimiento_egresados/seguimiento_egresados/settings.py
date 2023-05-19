@@ -74,6 +74,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'seguimiento_egresados.urls'
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

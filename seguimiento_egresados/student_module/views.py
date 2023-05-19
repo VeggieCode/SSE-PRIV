@@ -1,5 +1,6 @@
 from numbers import Number
 from django.shortcuts import render
+from admin_module.models import Coordinador
 from seguimiento_egresados.utils import render_to_pdf
 from student_module.forms import SignupUserForm
 from .forms import CustomAuthenticationForm
@@ -102,8 +103,7 @@ def generate_pdf(request):
             canvas_data = BytesIO()
             pdf_canvas = canvas.Canvas(canvas_data, pagesize=letter, bottomup=0)
 
-            # Agrega el texto justificado
-            current_date = datetime.now().strftime('%Y/%m/%d')
+            
             def formato_fecha(date):
                 fecha = f"{date}".split()[0] #obtenemos solo la fehca YYYY-MM-DD
                 year,month,day = fecha.split("-") #separamos cada parte
@@ -115,7 +115,7 @@ def generate_pdf(request):
             # Agrega el texto con formato y margen
             pdf_canvas.setFont('Helvetica', 9.5)
             pdf_canvas.setFillColorRGB(0, 0, 0)
-            text = f"\nQue el estudiante {full_name} con matrícula {alumno.matricula}, ha concluido de manera satisfactoria el cuestionario de pre-egreso en la fecha de {formato_fecha(datetime.today())} como requisito de su proceso de titulación."
+            text = f"\nQue el estudiante {full_name} con matrícula {alumno.matricula}, ha concluido de manera satisfactoria el cuestionario de pre-egreso en la fecha de {formato_fecha(alumno.pre_egreso_fecha_fin)} como requisito de su proceso de titulación."
             pdf_canvas.setLineWidth(0.5)
             margin = 125  # Establece el tamaño del margen
             y = 290   # Posición vertical de la primera línea
@@ -123,6 +123,14 @@ def generate_pdf(request):
                 pdf_canvas.drawString(margin, y, line)
                 y += 12  # Distancia vertical entre líneas
 
+            second_text = f"\nSe extiende la presente a petición de la interesada y para los fines legales que a ésta convenga a la fecha de {formato_fecha(datetime.now())}, en la ciudad de Xalapa, Veracruz. "
+            
+            margin_second_text = 125  # Establece el tamaño del margen
+            y_second_text= 450   # Posición vertical de la primera línea
+            lines = textwrap.wrap(second_text, width=100)
+            for line in lines:
+                pdf_canvas.drawString(margin_second_text, y_second_text, line)
+                y_second_text += 12  # Distancia vertical entre líneas
             pdf_canvas.save()
 
             overlay_pdf = pdfrw.PdfReader(BytesIO(canvas_data.getvalue())).pages[0]
@@ -171,6 +179,30 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
+    def get_success_url(self):
+        return '/home/'
+
+    def form_valid(self, form):
+        # Obtener el usuario autenticado
+        user = form.get_user()
+        try:
+            coordinator = Coordinador.objects.get(usuario=user)
+        except Coordinador.DoesNotExist:
+            coordinator = None
+        if coordinator is not None:
+            form.add_error(None, 'El usuario no se encuentra registrado como estudiante')
+            return self.form_invalid(form)
+        # Limpiar el formulario
+        self.request.session.flush()  # Limpia los datos de sesión
+        self.request.session.modified = True
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == 'POST':
+            # Si el formulario fue enviado por POST, mostramos el mensaje de error
+            context['show_alert'] = True
+        return context
 
 def municipios_por_estado(request, id_estado):
     municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre')
@@ -211,6 +243,7 @@ def home(request):
 def finish(request):
         student = Student.objects.filter(matricula=request.user).first()
         name = student.nombre
+
         context = { 'name': name }
         full_name = returnFullName(request)
         context = {'full_name': full_name, 'name': name}
@@ -535,6 +568,8 @@ def job_during_school(request):
             empleo_durante_estudios_obj.save()
             if not confirmacion_empleo  is None:
                 alumno.pre_egreso_terminado= validateStudentForm(request)
+                if alumno.pre_egreso_terminado: 
+                    alumno.pre_egreso_fecha_fin = datetime.now()
                 alumno.save()
             messages.success(request, f'Se guardaron los cambios.')
     return redirect('student_module:finish')
