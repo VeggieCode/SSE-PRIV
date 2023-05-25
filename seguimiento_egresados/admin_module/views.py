@@ -86,7 +86,7 @@ def home(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/login')
+    return redirect('/loginadmin/')
 
 def detail_student(request, enrollment):
     student = Student.objects.get(matricula=enrollment)

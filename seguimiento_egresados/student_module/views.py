@@ -126,7 +126,7 @@ def generate_pdf(request):
             second_text = f"\nSe extiende la presente a petición de la interesada y para los fines legales que a ésta convenga a la fecha de {formato_fecha(datetime.now())}, en la ciudad de Xalapa, Veracruz. "
             
             margin_second_text = 125  # Establece el tamaño del margen
-            y_second_text= 450   # Posición vertical de la primera línea
+            y_second_text= 350   # Posición vertical de la primera línea
             lines = textwrap.wrap(second_text, width=100)
             for line in lines:
                 pdf_canvas.drawString(margin_second_text, y_second_text, line)
