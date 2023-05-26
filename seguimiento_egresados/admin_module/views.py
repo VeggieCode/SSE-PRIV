@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from student_module.models import EmpleoDuranteEstudios
 
 from student_module.models import Carrera
 from .forms import CustomAuthenticationForm
@@ -86,8 +87,10 @@ def home(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/loginadmin/')
+    return render(request, 'admin_module/login.html')
 
 def detail_student(request, enrollment):
     student = Student.objects.get(matricula=enrollment)
-    return render(request, 'admin_module/detail_student.html', {'student': student})
+    job_during_degree = EmpleoDuranteEstudios.objects.filter(matricula=student.id).first()
+
+    return render(request, 'admin_module/detail_student.html', {'student': student, 'job_during_school':job_during_degree})

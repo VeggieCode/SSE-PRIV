@@ -231,14 +231,7 @@
                             {% endfor %}
                         </div>
                          {% endif %}
-                        <div class="form-group ">
-                            <label >
-                                {{ form.localidad.label_tag }}
-                            </label>
-                            <div >
-                                {{ form.localidad }}
-                            </div>
-                        </div>
+                        
                         <div class="form-group ">
                             <label >
                                 {{ form.estado.label_tag }}
@@ -260,6 +253,14 @@
                                 <select  class="selectpicker form-control" aria-label=".form-select-lg example" id="municipio" name="municipio">
                                     <option value="">Selecciona un municipio</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label >
+                                {{ form.localidad.label_tag }}
+                            </label>
+                            <div >
+                                {{ form.localidad }}
                             </div>
                         </div>
                     </fieldset>

@@ -99,6 +99,14 @@
       {% endif %}
       
       <br>
+      {% if  job_during_school %}
+        {%if job_during_school.confirmacion_empleo == 1%}
+          <span class="card-title" style="font-size:19px"><b>Trabajo durante estudios</b></span>
+          <p><b>Coincidencia del trabajo con la carrera estudiada:</b> {{job_during_school.coincidencia_estudios_trabajo}} </p>
+          
+          <p><b>Horas laborales a la semana: </b> {{job_during_school.horas_laboradas_semanales}}</p>
+        {% endif %}
+      {% endif %}
       </div>
       
     
