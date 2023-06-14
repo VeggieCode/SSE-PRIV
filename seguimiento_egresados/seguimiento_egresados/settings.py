@@ -12,23 +12,28 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import pymysql
+from dotenv import load_dotenv
+import os
+
 pymysql.version_info = (1, 4, 3, "final", 0)
 pymysql.install_as_MySQLdb()
-import MySQLdb
 
+
+dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env"), 'settings.env')
+load_dotenv(dotenv_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_PORT = 587
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp-mail.outlook.com'
-EMAIL_HOST_USER = 'sistemagresadosfei@outlook.com'
-EMAIL_HOST_PASSWORD = '&s00ftecHA'
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_AUTH = True
-DEFAULT_FROM_EMAIL = 'sistemagresadosfei@outlook.com'
-SERVER_EMAIL = 'sistemagresadosfei@outlook.com'
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 
 
 
@@ -58,7 +63,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrap4',
     'student_module',
-    'chartjs',
+
     'admin_module.apps.AdminModuleConfig',
 ]
 
@@ -101,11 +106,11 @@ WSGI_APPLICATION = 'seguimiento_egresados.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'control_egresados',
-        'USER': 'root',
-        'PASSWORD': 'Fairy59Atomic12',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
 
