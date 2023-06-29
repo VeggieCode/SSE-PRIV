@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  seguimiento_egresados:
+    env_file:
+      - seguimiento_egresados/seguimiento_egresados/settings.env
+    build: ./seguimiento_egresados
+    restart: always
+    ports:
+      - '8000:8000'
+    expose:
+      - '8000'
+    container_name: seguimiento_egresados
+    volumes:
+      - ./seguimiento_egresados:/code
+    depends_on:
+      - bd_seguimiento_egresados  
+
+  bd_seguimiento_egresados:
+    image: mysql
+    restart: unless-stopped
+    env_file:
+      - bd.env
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./data:/var/lib/mysql
+    
+   
+
+
+
+
