@@ -136,4 +136,5 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 /sse-aao/
+/sse-env/
 /contenedor_seguimiento_egresados/seguimiento_egresados/ssao-venv/
