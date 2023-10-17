@@ -25,5 +25,4 @@ WORKDIR /code
 RUN useradd -s /bin/bash desarrollador
 RUN chown -R desarrollador /code
 
-CMD chmod +x run.sh && ./run.sh
-
+CMD ["/bin/bash","/code/run.sh"]
