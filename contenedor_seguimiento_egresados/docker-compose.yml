@@ -22,14 +22,8 @@ services:
     env_file:
       - bd.env
     ports:
-      - '3306:3306'
+      - '4000:3306'
     expose:
       - '3306'
     volumes:
       - ./data:/var/lib/mysql
-    
-   
-
-
-
-
