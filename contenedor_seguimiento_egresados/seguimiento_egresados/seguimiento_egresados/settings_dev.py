@@ -51,7 +51,6 @@ ALLOWED_HOSTS = ['*',  'localhost']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'clearcache',
     'django.contrib.admin',
@@ -111,9 +110,10 @@ DATABASES = {
         'PASSWORD': os.environ.get("DB_PASSWORD"),
         'HOST': os.environ.get("DB_HOST"),
         'PORT': os.environ.get("DB_PORT"),
-        'TEST': {
-            'NAME': os.environ.get("DB_TEST_NAME")
-        }
+    },
+    'dev': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.environ.get("DB_NAME")
     }
 }
 
