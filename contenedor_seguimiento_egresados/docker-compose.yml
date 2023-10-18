@@ -4,12 +4,10 @@ services:
   seguimiento_egresados:
     env_file:
       - seguimiento_egresados/seguimiento_egresados/settings.env
+    environment:
+      PATH_PREFIX: sse
     build: ./seguimiento_egresados
     restart: always
-    ports:
-      - '8000:8000'
-    expose:
-      - '8000'
     container_name: seguimiento_egresados
     volumes:
       - ./seguimiento_egresados:/code
@@ -23,8 +21,6 @@ services:
       - bd.env
     ports:
       - '4000:3306'
-    expose:
-      - '3306'
     volumes:
       - ./data:/var/lib/mysql
 
@@ -34,8 +30,9 @@ services:
     volumes:
       - ./nginx/templates:/etc/nginx/templates
       - ./seguimiento_egresados/static:/static
-    environment:
-      PATH_PREFIX: sse
     depends_on:
       - seguimiento_egresados
-
+    environment:
+      PATH_PREFIX: sse
+    ports:
+      - '8000:80'
