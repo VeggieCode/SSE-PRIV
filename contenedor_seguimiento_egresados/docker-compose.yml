@@ -37,5 +37,5 @@ services:
     environment:
       PATH_PREFIX: sse
     depends_on:
-     - seguimiento_egresados
+      - seguimiento_egresados
 
