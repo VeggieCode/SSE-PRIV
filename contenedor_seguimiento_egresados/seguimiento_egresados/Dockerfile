@@ -22,10 +22,12 @@ RUN mkdir /code
 COPY . /code
 WORKDIR /code
 
+RUN chmod +x run.sh
+
 RUN useradd -s /bin/bash desarrollador
 
 RUN chown -R desarrollador /code
 
 USER desarrollador
 
-CMD ["/bin/bash","/code/run.sh"]
+CMD ./run.sh
