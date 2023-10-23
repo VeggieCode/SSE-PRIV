@@ -20,8 +20,10 @@ pymysql.install_as_MySQLdb()
 
 
 dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env"), 'settings.env')
+
 load_dotenv(dotenv_path)
 
+#/contenedor/seguimiento_egresados
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
