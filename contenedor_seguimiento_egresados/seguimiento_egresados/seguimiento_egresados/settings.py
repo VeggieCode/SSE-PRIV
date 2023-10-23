@@ -37,6 +37,10 @@ EMAIL_USE_AUTH = True
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 
+PATH_PREFIX = os.environ.get('PATH_PREFIX', '')
+
+if PATH_PREFIX and not PATH_PREFIX.endswith('/'):
+    PATH_PREFIX += '/'
 
 
 
@@ -51,6 +55,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*',  'localhost']
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000'
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+]
 
 # Application definition
 
@@ -154,9 +165,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = '/static/'
 
+if PATH_PREFIX:
+    STATIC_URL = f'/{PATH_PREFIX}static/'
+
+STATICFILES_DIRS = (
+    #os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/'),
+    os.path.join(BASE_DIR, "static"),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
