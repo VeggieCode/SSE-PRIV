@@ -6,7 +6,6 @@ upstream front_end_wsgi {
 
 # now we declare our main server
 server {
-
     listen 80;
     server_name localhost;
 

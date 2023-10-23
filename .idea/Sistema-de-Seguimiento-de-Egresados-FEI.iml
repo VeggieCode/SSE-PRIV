@@ -21,6 +21,7 @@
       <excludeFolder url="file://$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados/ssao-venv/Include" />
       <excludeFolder url="file://$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados/ssao-venv/Lib" />
       <excludeFolder url="file://$MODULE_DIR$/sse-aao" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (Sistema-de-Seguimiento-de-Egresados-FEI)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
