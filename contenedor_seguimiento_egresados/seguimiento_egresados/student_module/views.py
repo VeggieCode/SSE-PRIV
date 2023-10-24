@@ -179,8 +179,6 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
-    def get_success_url(self):
-        return '/home/'
 
     def form_valid(self, form):
         # Obtener el usuario autenticado
