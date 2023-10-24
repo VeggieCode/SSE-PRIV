@@ -33,6 +33,4 @@ urlpatterns = ([
     path('%spassword-reset/done/' % settings.PATH_PREFIX, CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('%spassword-reset/confirm/<uidb64>/<token>/' % settings.PATH_PREFIX, CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('%spassword-reset/complete/' % settings.PATH_PREFIX, CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
-])
-#For serving static files in debug mode:
-#+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
