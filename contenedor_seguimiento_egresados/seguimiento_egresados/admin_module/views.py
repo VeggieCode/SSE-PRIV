@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, resolve_url
 from student_module.models import EmpleoDuranteEstudios
 
 from student_module.models import Carrera
@@ -17,7 +17,7 @@ class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
     def get_success_url(self):
-        return '/homeadmin/'
+        return resolve_url('admin_module:home')
 
     def form_valid(self, form):
         # Obtener el usuario autenticado
