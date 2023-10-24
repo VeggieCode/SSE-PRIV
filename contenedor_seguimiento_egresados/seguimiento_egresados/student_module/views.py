@@ -226,9 +226,9 @@ def home(request):
         context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
         finishPreForm = student.pre_egreso_terminado
         if finishPreForm:
-            return redirect('/finish')
+            return redirect('student_module:finish')
         if pre_graduation:
-            return redirect('/student-info')
+            return redirect('student_module:student_info')
         else:
             start = 'block'
             context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
@@ -249,7 +249,7 @@ def finish(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/login')
+    return redirect('student_module:login')
 
 @login_required
 def student_info(request):
