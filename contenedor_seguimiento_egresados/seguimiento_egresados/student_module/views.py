@@ -179,8 +179,6 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
-    def get_success_url(self):
-        return '/home/'
 
     def form_valid(self, form):
         # Obtener el usuario autenticado
@@ -228,9 +226,9 @@ def home(request):
         context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
         finishPreForm = student.pre_egreso_terminado
         if finishPreForm:
-            return redirect('/finish')
+            return redirect('student_module:finish')
         if pre_graduation:
-            return redirect('/student-info')
+            return redirect('student_module:student_info')
         else:
             start = 'block'
             context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
@@ -251,7 +249,7 @@ def finish(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('/login')
+    return redirect('student_module:login')
 
 @login_required
 def student_info(request):
@@ -330,14 +328,12 @@ def signup(request):
             # Guardar el usuario
             user = form.save()
             # Crear el objeto estudiante y asignar el usuario
-            print (form.cleaned_data.get('username'))
             alumno = Student(matricula=form.cleaned_data.get('username').upper(),
                               nombre=form.cleaned_data.get('first_name'),
                               apellido_paterno=form.cleaned_data.get('last_name'),
                               apellido_materno=form.cleaned_data.get('apellido_materno'),
                               licenciatura_fei=form.cleaned_data.get('licenciatura_fei'),
                               correo=form.cleaned_data.get('email'))
-            print(alumno.matricula)
             alumno.save()
 
             messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
@@ -429,8 +425,6 @@ def bachelors_degree(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         Licenciatura.objects.filter(matricula=alumno).delete()
         form = LicenciaturaForm(request.POST)
-        #print(form.is_valid())
-        #print(form.errors)
         if form.is_valid():
             matricula = alumno
             nombre_campus = form.cleaned_data['nombre_campus']
@@ -485,8 +479,6 @@ def other_studies(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         ContinuacionEstudios.objects.filter(matricula=alumno).delete()
         form = ContinuacionEstudiosForm(request.POST)
-        print(form.is_valid())
-        print(form.errors)
         if form.is_valid():
             matricula = alumno
             tipo_estudio_continuacion = form.cleaned_data['tipo_estudio_continuacion']
@@ -512,7 +504,6 @@ def validateStudentForm(request):
     alumno = Student.objects.filter(matricula=usuario).first()
     attrStudentList=alumno.__dict__
     contAttributeStudent= 0
-    print(alumno.__dict__)
     del attrStudentList['_state']
     for attribute in attrStudentList.values():
       if isinstance(attribute, int):
@@ -553,8 +544,6 @@ def job_during_school(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         EmpleoDuranteEstudios.objects.filter(matricula=alumno).delete()
         form = EmpleoDuranteEstudiosForm(request.POST)
-        print(form.is_valid())
-        print(form.errors)
         if form.is_valid():
             matricula = alumno
             confirmacion_empleo = form.cleaned_data['confirmacion_empleo']
@@ -598,8 +587,6 @@ def job_search(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         BusquedaEmpleo.objects.filter(matricula=alumno).delete()
         form = BusquedaEmpleoForm(request.POST)
-        print(form.is_valid())
-        print(form.errors)
         if form.is_valid():
             matricula = alumno
             confirmacion_empleo_egreso = form.cleaned_data['confirmacion_empleo_egreso']
@@ -644,8 +631,6 @@ def job_after_grad(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         EmpleoInmediato.objects.filter(matricula=alumno).delete()
         form = EmpleoInmediatoForm(request.POST)
-        #print(form.is_valid())
-        #print(form.errors)
         if form.is_valid():
             matricula = alumno
             confirmacion_empleo_inmediato=form.cleaned_data['confirmacion_empleo_inmediato']
@@ -711,8 +696,6 @@ def current_job(request): #Corresponde a model Empresa, form EmpresaForm y en la
         alumno = Student.objects.filter(matricula=usuario).first()
         Empresa.objects.filter(matricula=alumno).delete()
         form = EmpresaForm(request.POST)
-        #print(form.is_valid())
-        #print(form.errors)
         if form.is_valid():
             matricula = alumno
             confirmacion_empleo_empresa= form.cleaned_data['confirmacion_empleo_empresa']
@@ -786,8 +769,6 @@ def recommendations(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         DesempenioRecomendaciones.objects.filter(matricula=alumno).delete()
         form = DesempenioRecomendacionesForm(request.POST)
-        #print(form.is_valid())
-        #print(form.errors)
         if form.is_valid():
             matricula = alumno
             nivel_satisfaccion = form.cleaned_data['nivel_satisfaccion']

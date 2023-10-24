@@ -19,9 +19,11 @@ pymysql.version_info = (1, 4, 3, "final", 0)
 pymysql.install_as_MySQLdb()
 
 
-dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/dev.env"), 'dev.env')
+dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env"), 'settings.env')
+
 load_dotenv(dotenv_path)
 
+#/contenedor/seguimiento_egresados
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -35,6 +37,10 @@ EMAIL_USE_AUTH = True
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 
+PATH_PREFIX = os.environ.get('PATH_PREFIX', '')
+
+if PATH_PREFIX and not PATH_PREFIX.endswith('/'):
+    PATH_PREFIX += '/'
 
 
 
@@ -42,13 +48,20 @@ SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ke-4y73nsx4qzxsc_9xqqdbpxwtc^g%9lx$8&7-qi@ih$6@gxb'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*',  'localhost']
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000'
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+]
 
 # Application definition
 
@@ -152,9 +165,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL = '/static/'
 
+if PATH_PREFIX:
+    STATIC_URL = f'/{PATH_PREFIX}static/'
+
+STATICFILES_DIRS = (
+    #os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/'),
+    os.path.join(BASE_DIR, "static"),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

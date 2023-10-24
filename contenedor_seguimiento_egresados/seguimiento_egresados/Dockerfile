@@ -16,13 +16,18 @@ ENV DB_USER=""
 ENV DB_PASSWORD=""
 ENV DB_HOST=""
 ENV DB_PORT=3306
-
+ENV PATH_PREFIX=""
 
 RUN mkdir /code
 COPY . /code
 WORKDIR /code
 
+RUN chmod +x run.sh
+
 RUN useradd -s /bin/bash desarrollador
+
 RUN chown -R desarrollador /code
 
-CMD ["/bin/bash","/code/run.sh"]
+USER desarrollador
+
+CMD ./run.sh

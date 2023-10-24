@@ -104,8 +104,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-sse-aao/
-ssao-venv/
 
 # mkdocs documentation
 /site

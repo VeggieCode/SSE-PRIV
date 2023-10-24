@@ -3,9 +3,9 @@
   <component name="FacetManager">
     <facet type="django" name="Django">
       <configuration>
-        <option name="rootFolder" value="$MODULE_DIR$" />
-        <option name="settingsModule" value="contenedor_seguimiento_egresados/seguimiento_egresados/seguimiento_egresados/settings.py" />
-        <option name="manageScript" value="contenedor_seguimiento_egresados/seguimiento_egresados/manage.py" />
+        <option name="rootFolder" value="$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados" />
+        <option name="settingsModule" value="seguimiento_egresados/settings.py" />
+        <option name="manageScript" value="manage.py" />
         <option name="environment" value="&lt;map/&gt;" />
         <option name="doNotUseTestRunner" value="false" />
         <option name="trackFilePattern" value="" />
@@ -21,6 +21,7 @@
       <excludeFolder url="file://$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados/ssao-venv/Include" />
       <excludeFolder url="file://$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados/ssao-venv/Lib" />
       <excludeFolder url="file://$MODULE_DIR$/sse-aao" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (Sistema-de-Seguimiento-de-Egresados-FEI)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

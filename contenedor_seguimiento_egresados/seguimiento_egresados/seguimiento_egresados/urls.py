@@ -22,14 +22,15 @@ from student_module.views import CustomPasswordResetCompleteView, CustomPassword
 
 handler404= views.custom_error_view
 handler500= views.custom_error_view
-urlpatterns = [
-    path('', CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
-    path('admin/clearcache/', include('clearcache.urls')),
-    path('admin/', admin.site.urls),
+
+urlpatterns = ([
+    path('%s' % settings.PATH_PREFIX, CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
+    path('%sadmin/clearcache/' % settings.PATH_PREFIX, include('clearcache.urls')),
+    path('%sadmin/' % settings.PATH_PREFIX, admin.site.urls),
     path('', include('student_module.urls')),
     path('', include('admin_module.urls')),
-    path('password-reset/', CustomPasswordResetView.as_view(), name='password_reset'),
-    path('password-reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('password-reset/confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('password-reset/complete/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('%spassword-reset/' % settings.PATH_PREFIX, CustomPasswordResetView.as_view(), name='password_reset'),
+    path('%spassword-reset/done/' % settings.PATH_PREFIX, CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('%spassword-reset/confirm/<uidb64>/<token>/' % settings.PATH_PREFIX, CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('%spassword-reset/complete/' % settings.PATH_PREFIX, CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+]) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
