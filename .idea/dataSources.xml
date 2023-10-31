@@ -9,5 +9,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/control_egresados</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="CONTENEDOR_control_egresados" uuid="0021a198-14ae-4339-a6f1-b6da8c925212">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:4000/control_egresados</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
