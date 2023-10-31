@@ -23,6 +23,7 @@ services:
       - '4000:3306'
     volumes:
       - ./data:/var/lib/mysql
+      - ./Scripts_SQL:/docker-entrypoint-initdb.d
 
   web_seguimiento_egresados:
     image: nginx
