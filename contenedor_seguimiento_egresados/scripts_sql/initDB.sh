@@ -1,0 +1,1 @@
+mysql -u root -pbeethoven123?! --init-command="SET SESSION FOREIGN_KEY_CHECKS=0" < ./1-control_egresados_student_module_carrera.sql
