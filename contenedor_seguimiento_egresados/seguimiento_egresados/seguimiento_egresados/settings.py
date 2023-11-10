@@ -11,7 +11,6 @@ dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env")
 
 load_dotenv(dotenv_path)
 
-#/contenedor/seguimiento_egresados
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -89,7 +88,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates').replace('\\', '/'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,7 +116,7 @@ DATABASES = {
         'HOST': os.environ.get("DB_HOST"),
         'PORT': os.environ.get("DB_PORT"),
         'TEST': {
-            'NAME': os.environ.get("DB_TEST_NAME")
+            'NAME': os.environ.get("DB_TEST_NAME"),
         }
     }
 }
