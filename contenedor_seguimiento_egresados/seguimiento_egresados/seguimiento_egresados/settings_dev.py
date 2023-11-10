@@ -89,7 +89,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates').replace('\\', '/'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -163,7 +163,6 @@ if PATH_PREFIX:
     STATIC_URL = f'/{PATH_PREFIX}static/'
 
 STATICFILES_DIRS = (
-    #os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/'),
     os.path.join(BASE_DIR, "static"),
 )
 # Default primary key field type
