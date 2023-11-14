@@ -26,7 +26,7 @@ handler500= views.custom_error_view
 urlpatterns = ([
     path('%s' % settings.PATH_PREFIX, CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
     path('%sadmin/clearcache/' % settings.PATH_PREFIX, include('clearcache.urls')),
-    path('admin/', admin.site.urls),
+    path('%sadmin/' % settings.PATH_PREFIX, admin.site.urls, name='admin'),
     path('', include('student_module.urls')),
     path('', include('admin_module.urls')),
     path('%spassword-reset/' % settings.PATH_PREFIX, CustomPasswordResetView.as_view(), name='password_reset'),
