@@ -11,7 +11,6 @@ dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env")
 
 load_dotenv(dotenv_path)
 
-#/contenedor/seguimiento_egresados
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,8 +21,13 @@ EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_USE_AUTH = True
+
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
+
+DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+DJANGO_SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
 PATH_PREFIX = os.environ.get('PATH_PREFIX', '')
 
@@ -44,11 +48,15 @@ DEBUG = True
 ALLOWED_HOSTS = ['*',  'localhost']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000'
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000'
 ]
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000'
 ]
 
 # Application definition
@@ -85,7 +93,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates').replace('\\', '/'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,7 +121,7 @@ DATABASES = {
         'HOST': os.environ.get("DB_HOST"),
         'PORT': os.environ.get("DB_PORT"),
         'TEST': {
-            'NAME': os.environ.get("DB_TEST_NAME")
+            'NAME': os.environ.get("DB_TEST_NAME"),
         }
     }
 }

@@ -25,6 +25,10 @@ EMAIL_USE_AUTH = True
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 
+DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+DJANGO_SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+
 PATH_PREFIX = os.environ.get('PATH_PREFIX', '')
 
 if PATH_PREFIX and not PATH_PREFIX.endswith('/'):
@@ -44,11 +48,15 @@ DEBUG = True
 ALLOWED_HOSTS = ['*',  'localhost']
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000'
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000'
 ]
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000'
 ]
 
 # Application definition
@@ -85,7 +93,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates').replace('\\', '/'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -159,7 +167,6 @@ if PATH_PREFIX:
     STATIC_URL = f'/{PATH_PREFIX}static/'
 
 STATICFILES_DIRS = (
-    #os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/'),
     os.path.join(BASE_DIR, "static"),
 )
 # Default primary key field type
