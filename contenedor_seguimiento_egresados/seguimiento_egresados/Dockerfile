@@ -33,4 +33,4 @@ RUN chown -R desarrollador /code
 
 USER desarrollador
 
-CMD ./run.sh
+CMD ["/bin/bash","/code/run.sh"]
