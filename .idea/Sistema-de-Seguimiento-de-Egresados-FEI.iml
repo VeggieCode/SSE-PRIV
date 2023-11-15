@@ -31,10 +31,11 @@
     <option name="myDocStringFormat" value="Plain" />
   </component>
   <component name="TemplatesService">
-    <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
+    <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados/admin_module/templates" />
+        <option value="$MODULE_DIR$/contenedor_seguimiento_egresados/seguimiento_egresados/seguimiento_egresados/templates" />
       </list>
     </option>
   </component>
