@@ -14,54 +14,56 @@ from django.db.models.deletion import DO_NOTHING
 import datetime
 import re
 from django.core.exceptions import ValidationError
-#OPCIONES PARA PREGUNTAS DE SELECCIÓN
+
+# OPCIONES PARA PREGUNTAS DE SELECCIÓN
 
 SEXOS = (
     ('', 'Seleccione sexo'),
-    ('M', 'Masculino'), #First one is the value of select option and second is the displayed value in option
+    ('M', 'Masculino'),  # First one is the value of select option and second is the displayed value in option
     ('F', 'Femenino'),
     ('O', 'Prefiero no decirlo')
-    )
+)
 
 ESTADO_CIVIL = (
     ('', 'Seleccione...'),
-    ('Soltero/a', 'Soltero/a'), #First one is the value of select option and second is the displayed value in option
+    ('Soltero/a', 'Soltero/a'),  # First one is the value of select option and second is the displayed value in option
     ('Casado/a', 'Casado/a'),
     ('Divorciado/a', 'Divorciado/a'),
     ('Viudo/a', 'Viudo/a')
-    )
+)
 
 TIPO_INSTITUCION = (
     ('', 'Seleccione el tipo de institución'),
-    ('Universidad Pública', 'Universidad Pública'), #First one is the value of select option and second is the displayed value in option
+    ('Universidad Pública', 'Universidad Pública'),
+    # First one is the value of select option and second is the displayed value in option
     ('Universidad Privada', 'Universidad Privada'),
     ('Instituto Tecnológico y/o Politécnico Público', 'Instituto Tecnológico y/o Politécnico Público'),
     ('Instituto Tecnológico Privado', 'Instituto Tecnológico Privado'),
     ('Otro', 'Otro')
-    )
+)
 
 TITULADO_CHOICES = (
     ('', 'Seleccione...'),
     ('Sí', 'Titulado'),
     ('No', 'No titulado'),
     ('En proceso', 'En proceso')
-    )
+)
 
 SI_NO_CHOICES = (
     ('Sí', 'Sí'),
     ('No', 'No'),
-    )
+)
 
 SI_NO_CHOICES_NUMERIC = (
-    (1, ("Sí")),
-    (0, ("No")),
-    )
+    (1, "Sí"),
+    (0, "No"),
+)
 
 TIPOINSCRIPCION = (
     ('', 'Seleccione...'),
     ('Tiempo completo', 'Tiempo completo'),
     ('Tiempo parcial', 'Tiempo parcial')
-    )
+)
 
 TIPO_CONTINUACION_ESTUDIOS = (
     ('', 'Seleccione el tipo de continuación de estudios...'),
@@ -71,14 +73,14 @@ TIPO_CONTINUACION_ESTUDIOS = (
     ('Maestría', 'Maestría'),
     ('Doctorado', 'Doctorado'),
     ('Otro', 'Otro')
-    )
+)
 
 TIPO_INSTITUCION_CONTINUACION = (
     ('', 'Seleccione el tipo de institución'),
-    ('Pública ', 'Pública'), #First one is the value of select option and second is the displayed value in option
-    ('Privada',  'Privada'),
+    ('Pública ', 'Pública'),  # First one is the value of select option and second is the displayed value in option
+    ('Privada', 'Privada'),
     ('Otro', 'Otro')
-    )
+)
 
 MEDIDA_COINCIDENCIA_ESTUDIOS = (
     ('', 'Seleccione...'),
@@ -86,18 +88,18 @@ MEDIDA_COINCIDENCIA_ESTUDIOS = (
     ('Baja coincidencia', 'Baja coincidencia'),
     ('Mediana coincidencia', 'Mediana coincidencia'),
     ('Alta coincidencia', 'Alta coincidencia')
-    )
+)
 
 TIEMPO_CONSEGUIR_EMPLEO = (
     ('', 'Seleccione...'),
     ('Menos de seis meses', 'Menos de seis meses'),
-    ('De seis meses a un año','De seis meses a un año'),
+    ('De seis meses a un año', 'De seis meses a un año'),
     ('De 1 año 1 día a 2 años', 'De 1 año 1 día a 2 años'),
     ('Más de 2 años', 'Más de 2 años'),
     ('No encontré y seguí en el mismo empleo', 'No encontré y seguí en el mismo empleo'),
     ('No encontré empleo, quedé desocupado', 'No encontré empleo, quedé desocupado'),
     ('Otro', 'Otro')
-    )
+)
 
 DEMORA_EMPLEO = (
     ('', 'Seleccione...'),
@@ -106,54 +108,55 @@ DEMORA_EMPLEO = (
     ('Su situación personal se lo dificultó', 'Su situación personal se lo dificultó'),
     ('Tenía ofertas de trabajo poco atractivas', 'Tenía ofertas de trabajo poco atractivas'),
     ('Otro ', 'Otro')
-    )
+)
 
 MEDIO_EMPLEO = (
     ('', 'Seleccione...'),
     ('Bolsa de trabajo', 'Bolsa de trabajo'),
     ('Anuncio en el periódico', 'Anuncio en el periódico'),
-    ('Invitación expresa de una empresa', 'Invitación expresa de una empresa'), #O institucion
+    ('Invitación expresa de una empresa', 'Invitación expresa de una empresa'),  # O institucion
     ('Recomendación de amigos de la licenciatura', 'Recomendación de amigos de la licenciatura'),
     ('Recomendación de un profesor', 'Recomendación de un profesor'),
     ('Recomendación de un amigo o familiar', 'Recomendación de un amigo o familiar'),
     ('Relaciones hechas en empleos anteriores', 'Relaciones hechas en empleos anteriores'),
-    ('Creación de un negocio de empresa, propios', 'Creación de empresa, propios'),#checar en cuestionario preg 53
+    ('Creación de un negocio de empresa, propios', 'Creación de empresa, propios'),  # checar en cuestionario preg 53
     ('Integración a un negocio familiar', 'Integración a un negocio familiar'),
     ('Servicio social', 'Servicio social'),
     ('Otro', 'Otro')
-    )
+)
 
 REQUISITO_FORMAL_EMPLEO = (
     ('', 'Seleccione...'),
     ('Tener título de licenciatura', 'Tener título de licenciatura'),
     ('Aprobar los exámenes de selección', 'Aprobar los exámenes de selección'),
     ('Pasar una entrevista formal', 'Pasar una entrevista formal')
-    )
+)
 
-RAZON_NO_BUSQUEDA_EMPLEO =(
+RAZON_NO_BUSQUEDA_EMPLEO = (
     ('', 'Seleccione...'),
     ('Ya tenía un trabajo', 'Ya tenía un trabajo'),
     ('Decidí continuar estudiando', 'Decidí continuar estudiando'),
     ('Por razones personales', 'Por razones personales')
-    )
+)
 
-RAZON_DESEMPLEO =(
+RAZON_DESEMPLEO = (
     ('', 'Seleccione...'),
-    ('No tengo trabajo porque no encontré, pero sigo buscando','No tengo trabajo porque no encontré, pero sigo buscando'),
-    ('No tengo trabajo porque no encontré y ya no busco','No tengo trabajo porque no encontré y ya no busco'),
-    ('Estoy por incorporarme a un trabajo','Estoy por incorporarme a un trabajo'),
-    ('No tengo trabajo, porque decidí continuar estudiando','No tengo trabajo, porque decidí continuar estudiando'),
-    ('No necesito trabajar','No necesito trabajar'),
-    ('No tengo trabajo por razones de salud','No tengo trabajo por razones de salud'),
-    ('No tengo trabajo porque aún no lo he buscado','No tengo trabajo porque aún no lo he buscado'),
-    )
+    ('No tengo trabajo porque no encontré, pero sigo buscando',
+     'No tengo trabajo porque no encontré, pero sigo buscando'),
+    ('No tengo trabajo porque no encontré y ya no busco', 'No tengo trabajo porque no encontré y ya no busco'),
+    ('Estoy por incorporarme a un trabajo', 'Estoy por incorporarme a un trabajo'),
+    ('No tengo trabajo, porque decidí continuar estudiando', 'No tengo trabajo, porque decidí continuar estudiando'),
+    ('No necesito trabajar', 'No necesito trabajar'),
+    ('No tengo trabajo por razones de salud', 'No tengo trabajo por razones de salud'),
+    ('No tengo trabajo porque aún no lo he buscado', 'No tengo trabajo porque aún no lo he buscado'),
+)
 
-ROL_EGRESADO_EMPLEO =(
+ROL_EGRESADO_EMPLEO = (
     ('', 'Seleccione...'),
-    ('Propietario','Propietario'),
-    ('Trabajador Independiente','Trabajador Independiente'),
-    ('Empleado','Empleado'),
-    )
+    ('Propietario', 'Propietario'),
+    ('Trabajador Independiente', 'Trabajador Independiente'),
+    ('Empleado', 'Empleado'),
+)
 
 PUESTO_INICIAL = (
     ('', 'Seleccione...'),
@@ -177,14 +180,14 @@ PUESTO_INICIAL = (
     ('Empleado profesional', 'Empleado profesional'),
     ('Supervisor', 'Supervisor'),
     ('Analista especializado/técnico', 'Analista especializado/técnico'),
-    ('Vendedor en establecimiento', 'Vendedor en establecimiento'), 
+    ('Vendedor en establecimiento', 'Vendedor en establecimiento'),
     ('Asistente', 'Asistente'),
     ('Ayudante', 'Ayudante'),
     ('Por cuenta propia no profesional', 'Por cuenta propia no profesional'),
     ('Empleado no profesional', 'Empleado no profesional'),
     ('Auxiliar', 'Auxiliar'),
     ('Otro', 'Otro')
-    )
+)
 
 TAMANIO_EMPRESA = (
     ('', 'Seleccione...'),
@@ -192,17 +195,17 @@ TAMANIO_EMPRESA = (
     ('Entre 16 y 100 empleados (Pequeña)', 'Entre 16 y 100 empleados (Pequeña)'),
     ('Entre 101 y 250 empleados (Mediana)', 'Entre 101 y 250 empleados (Mediana)'),
     ('Más de 251 empleados (Grande)', 'Más de 251 empleados (Grande)')
-    )
+)
 
 REGIMEN_JURIDICO = (
     ('', 'Seleccione...'),
     ('Público', 'Público'),
     ('Privado', 'Privado')
-    )
+)
 
 SECTOR_ECONOMICO = (
     ('', 'Seleccione...'),
-    ('Agrícola-ganadero, silvícola,etc','Agrícola-ganadero, silvícola,etc'),
+    ('Agrícola-ganadero, silvícola,etc', 'Agrícola-ganadero, silvícola,etc'),
     ('Industria extractiva', 'Industria extractiva'),
     ('Industria de la transformación', 'Industria de la transformación'),
     ('Industria de la construcción', 'Industria de la construcción'),
@@ -214,7 +217,7 @@ SECTOR_ECONOMICO = (
     ('Servicios de Salud', 'Servicios de Salud'),
     ('Servicios de Gobierno', 'Servicios de Gobierno'),
     ('Otro', 'Otro')
-    )
+)
 
 DEPARTAMENTOS = (
     ('', 'Seleccione...'),
@@ -249,7 +252,7 @@ DEPARTAMENTOS = (
     ('Publicidad', 'Publicidad'),
     ('Atención a Clientes', 'Atención a Clientes'),
     ('Otro', 'Otro')
-    )
+)
 
 TIPO_CONTRATACION = (
     ('', 'Seleccione...'),
@@ -257,7 +260,7 @@ TIPO_CONTRATACION = (
     ('Por obra determinada', 'Por obra determinada'),
     ('Por tiempo indeterminado', 'Por tiempo indeterminado'),
     ('Otro', 'Otro')
-    )
+)
 
 NIVEL_SATISFACCION = (
     ('', 'Seleccione...'),
@@ -265,7 +268,7 @@ NIVEL_SATISFACCION = (
     ('Satisfecho', 'Satisfecho'),
     ('Muy satisfecho', 'Muy satisfecho'),
     ('Totalmente satisfecho', 'Totalmente satisfecho')
-    )
+)
 
 GRADO_EXIGENCIA = (
     ('', 'Seleccione...'),
@@ -273,7 +276,7 @@ GRADO_EXIGENCIA = (
     ('Poca exigencia', 'Poca exigencia'),
     ('Moderada exigencia', 'Moderada exigencia'),
     ('Mucha exigencia', 'Mucha exigencia')
-    )
+)
 
 NIVEL_FORMACION = (
     ('', 'Seleccione...'),
@@ -281,25 +284,27 @@ NIVEL_FORMACION = (
     ('Poco', 'Poco'),
     ('En parte', 'En parte'),
     ('Mucho', 'Mucho')
-    )
+)
 
-#Validators usando expresiones regulares
+# Validators usando expresiones regulares
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Sólo se permiten caracteres alfanuméricos.')
 just_number = RegexValidator(r'^\d+$', 'Sólo se permiten números.')
-only_decimals =RegexValidator(r'^[0-9]+(\.[0-9]{1,4})?$', 'Sólo se permiten números con el formato: X.XX')
+only_decimals = RegexValidator(r'^[0-9]+(\.[0-9]{1,4})?$', 'Sólo se permiten números con el formato: X.XX')
 just_letters = RegexValidator(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+(?: [a-zA-ZñÑáéíóúÁÉÍÓÚ]+)*$', 'Sólo se permiten letras')
-just_letters_blank =RegexValidator( regex=re.compile(r'^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+(?: [a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+)*$'),
-    message='El nombre solo debe contener letras y un espacio entre palabras')
-just_letters_numbers =  RegexValidator(
+just_letters_blank = RegexValidator(regex=re.compile(r'^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+(?: [a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]+)*$'),
+                                    message='El nombre solo debe contener letras y un espacio entre palabras')
+just_letters_numbers = RegexValidator(
     regex=re.compile(r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ0-9]+( [a-zA-ZñÑáéíóúÁÉÍÓÚ0-9]+)*$'),
     message='El nombre solo debe contener letras, números y un espacio entre palabras'
 )
-#born_date_validate= RegexValidator(regex=r'^(1\d|[2-3]\d|4[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$',
- #   message='La fecha de nacimiento debe ser entre 20 - 40 años.')
-only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$', 'Sólo se permiten direcciones de e-mail válidas.')
+# born_date_validate= RegexValidator(regex=r'^(1\d|[2-3]\d|4[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$',
+#   message='La fecha de nacimiento debe ser entre 20 - 40 años.')
+only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$',
+                            'Sólo se permiten direcciones de e-mail válidas.')
 only_postal_code_mx = RegexValidator(r'^\d{5}$', 'Sólo se permiten códigos postales válidos.')
 only_phone_number_mx = RegexValidator(r'^\d{10}$', 'Sólo se permiten números de teléfono de 10 dígitos.')
 MAX_YEAR = datetime.date.today().year - 4
+
 
 def validate_age_range(value):
     today = datetime.date.today()
@@ -307,26 +312,29 @@ def validate_age_range(value):
     if age < 20 or age > 40:
         raise ValidationError('La edad debe estar entre 20 y 40 años.')
 
-def validator_enrollment(value): 
-     year = int(value[1:2]) + 2000
-     today = datetime.date.today()
-     yearCurrently = today.strftime("%Y")
-     
-     if year - yearCurrently < -3:
+
+def validator_enrollment(value):
+    year = int(value[1:2]) + 2000
+    today = datetime.date.today()
+    year_currently = today.strftime("%Y")
+
+    if year - year_currently < -3:
         raise ValidationError(
             _('%(value)s no es una matricula valida'),
             params={'value': value},
         )
-#COMIENZAN MODELOS DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
+
+
+# COMIENZAN MODELOS DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
 
 class Student(models.Model):
-    #id_alumno = models.IntegerField(primary_key=True)
+    # id_alumno = models.IntegerField(primary_key=True)
     matricula = models.CharField(max_length=9, validators=[alphanumeric])
     nombre = models.CharField(max_length=45, blank=False, null=True,
-                               validators=[just_letters_blank])
+                              validators=[just_letters_blank])
     apellido_paterno = models.CharField(max_length=45, blank=False,
-                                         null=True, validators=[just_letters])
-    apellido_materno = models.CharField(max_length=45, blank=False, 
+                                        null=True, validators=[just_letters])
+    apellido_materno = models.CharField(max_length=45, blank=False,
                                         null=True, validators=[just_letters])
     sexo = models.CharField(max_length=10, choices=SEXOS, blank=False, null=True)
     fecha_nacimiento = models.DateField(blank=False, null=True, validators=[validate_age_range])
@@ -338,19 +346,19 @@ class Student(models.Model):
     telefono = models.CharField(max_length=10, blank=True, null=True, validators=[only_phone_number_mx])
     twitter = models.CharField(max_length=45, blank=True, null=True)
     facebook = models.CharField(max_length=45, blank=True, null=True)
-    linkedin= models.CharField(max_length=45, blank=True, default='')
-    calle = models.CharField( max_length=45, blank=False, null=True)
-    numero_exterior= models.IntegerField(null=True, blank=False)
-    numero_interior= models.IntegerField(null=True, blank=True)
+    linkedin = models.CharField(max_length=45, blank=True, default='')
+    calle = models.CharField(max_length=45, blank=False, null=True)
+    numero_exterior = models.IntegerField(null=True, blank=False)
+    numero_interior = models.IntegerField(null=True, blank=True)
     colonia = models.CharField(max_length=45, blank=False, null=True)
     codigo_postal = models.CharField(max_length=5, blank=False, null=True, validators=[only_postal_code_mx])
-    correo_alterno= models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
-    pre_egreso_abierto= models.BooleanField(default=False)
-    post_egreso_abierto= models.BooleanField(default=False)
+    correo_alterno = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
+    pre_egreso_abierto = models.BooleanField(default=False)
+    post_egreso_abierto = models.BooleanField(default=False)
     nombre_ref_principal = models.CharField(max_length=100, blank=False, null=True)
-    celular_ref_principal = models.CharField( max_length=10, validators=[only_phone_number_mx], blank=False, null=True)    
-    nombre_ref_auxiliar= models.CharField(max_length=100, blank=True, null=True)
-    celular_ref_auxiliar= models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
+    celular_ref_principal = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=False, null=True)
+    nombre_ref_auxiliar = models.CharField(max_length=100, blank=True, null=True)
+    celular_ref_auxiliar = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
     estado = models.CharField(max_length=50, blank=False, null=True)
     municipio = models.CharField(max_length=50, blank=False, null=True)
     localidad = models.CharField(max_length=50, blank=False, null=True)
@@ -359,24 +367,27 @@ class Student(models.Model):
 
 
 class SeleccionCarrera(models.Model):
-    #id_seleccion_carrera = models.IntegerField(primary_key=True)
-    primera_opcion_carrera = models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
-    eleccion_tipo_institucion = models.CharField(max_length=45,  null=True, choices=TIPO_INSTITUCION, blank=True)
-    primera_eleccion_institucion =  models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
+    # id_seleccion_carrera = models.IntegerField(primary_key=True)
+    primera_opcion_carrera = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
+    eleccion_tipo_institucion = models.CharField(max_length=45, null=True, choices=TIPO_INSTITUCION, blank=True)
+    primera_eleccion_institucion = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
     primera_eleccion_nombre = models.CharField(max_length=45, blank=True, null=True)
     razon_eleccion_institucion = models.CharField(max_length=45, blank=True, null=True)
     razon_eleccion_carrera = models.CharField(max_length=45, blank=True, null=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
+
 
 class Carrera(models.Model):
-    #id_carrera = models.IntegerField(primary_key=True)
+    # id_carrera = models.IntegerField(primary_key=True)
     licenciatura = models.CharField(max_length=100, validators=[just_letters], null=True, blank=True)
 
     def __str__(self):
         return self.licenciatura
 
+
 class Licenciatura(models.Model):
-    #id_licenciatura = models.IntegerField(primary_key=True)
+    # id_licenciatura = models.IntegerField(primary_key=True)
     nombre_campus = models.CharField(max_length=45, validators=[just_letters], null=True, blank=True)
     nombre_carrera = models.CharField(max_length=500, blank=True, null=True)
     anio_pestudios = models.CharField(max_length=45, blank=True, null=True)
@@ -388,64 +399,76 @@ class Licenciatura(models.Model):
     titulado = models.CharField(max_length=10, choices=TITULADO_CHOICES, null=True, blank=True)
     promedio_final = models.FloatField(blank=True, null=True, validators=[only_decimals])
     tipo_inscripcion = models.CharField(max_length=25, choices=TIPOINSCRIPCION, null=True, blank=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
+
 
 class ContinuacionEstudios(models.Model):
-    #id_continuacion_estudios = models.IntegerField(primary_key=True)
-    tipo_estudio_continuacion = models.CharField(max_length=45, choices=TIPO_CONTINUACION_ESTUDIOS, null=True, blank=True)
+    # id_continuacion_estudios = models.IntegerField(primary_key=True)
+    tipo_estudio_continuacion = models.CharField(max_length=45, choices=TIPO_CONTINUACION_ESTUDIOS, null=True,
+                                                 blank=True)
     institucion = models.CharField(max_length=45, choices=TIPO_INSTITUCION_CONTINUACION, null=True, blank=True)
     nombre_programa = models.CharField(max_length=45, blank=True, null=True)
-    conclusion_estudios = models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
+    conclusion_estudios = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
     obtencion_grado = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
     duracion_estudios_meses = models.IntegerField(blank=True, null=True, validators=[just_number])
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
 
 
 class EmpleoDuranteEstudios(models.Model):
-    #id_empleo_durante_estudios = models.IntegerField(primary_key=True)
-    confirmacion_empleo = models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
-    coincidencia_estudios_trabajo = models.CharField(max_length=45, choices=MEDIDA_COINCIDENCIA_ESTUDIOS, null=True, blank=True)
+    # id_empleo_durante_estudios = models.IntegerField(primary_key=True)
+    confirmacion_empleo = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
+    coincidencia_estudios_trabajo = models.CharField(max_length=45, choices=MEDIDA_COINCIDENCIA_ESTUDIOS, null=True,
+                                                     blank=True)
     horas_laboradas_semanales = models.CharField(max_length=45, blank=True, null=True, validators=[just_number])
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
-    
-    
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
+
+
 class BusquedaEmpleo(models.Model):
-    #id_busqueda_empleo = models.IntegerField(primary_key=True)
-    confirmacion_empleo_egreso = models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
-    confirmacion_busqueda_empleo = models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
+    # id_busqueda_empleo = models.IntegerField(primary_key=True)
+    confirmacion_empleo_egreso = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
+    confirmacion_busqueda_empleo = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
     tiempo_obtencion_empleo = models.CharField(max_length=45, blank=True, null=True, choices=TIEMPO_CONSEGUIR_EMPLEO)
     opinion_demora_empleo = models.CharField(max_length=45, blank=True, null=True, choices=DEMORA_EMPLEO)
     medio_obtencion_empleo = models.CharField(max_length=45, blank=True, null=True, choices=MEDIO_EMPLEO)
     requisito_formal = models.CharField(max_length=45, blank=True, null=True, choices=REQUISITO_FORMAL_EMPLEO)
     razon_no_busqueda = models.CharField(max_length=45, blank=True, null=True, choices=RAZON_NO_BUSQUEDA_EMPLEO)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
 
 
 class EmpleoInmediato(models.Model):
-    #id_empleo_inmediato = models.IntegerField(primary_key=True)
-    confirmacion_empleo_inmediato= models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
+    # id_empleo_inmediato = models.IntegerField(primary_key=True)
+    confirmacion_empleo_inmediato = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
     rol_egresado_empleo = models.CharField(max_length=45, blank=True, null=True, choices=ROL_EGRESADO_EMPLEO)
     puesto_empleo_inmediato = models.CharField(max_length=45, choices=PUESTO_INICIAL, blank=True, null=True)
     tamano_empresa_inmediata = models.CharField(max_length=45, choices=TAMANIO_EMPRESA, null=True, blank=True)
     nombre_empleo_inmediato = models.CharField(max_length=45, blank=True, null=True)
     nombre_jefe_supervisor = models.CharField(max_length=45, blank=True, null=True)
-    telefono_empleo_inmediato = models.CharField(max_length=10, blank=True, null=True, validators=[only_phone_number_mx])
+    telefono_empleo_inmediato = models.CharField(max_length=10, blank=True, null=True,
+                                                 validators=[only_phone_number_mx])
     correo_empleo_inmediato = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     tipo_contratacion = models.CharField(max_length=45, blank=True, null=True, choices=TIPO_CONTRATACION)
     regimen_juridico = models.CharField(max_length=45, choices=REGIMEN_JURIDICO, null=True, blank=True)
-    ingreso_mensual_neto_inicio = models.CharField(db_column='ingreso_mensual_neto_Inicio', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    ingreso_mensual_neto_inicio = models.CharField(db_column='ingreso_mensual_neto_Inicio', max_length=45, blank=True,
+                                                   null=True)  # Field name made lowercase.
     horas_laboral_semanales = models.CharField(max_length=45, blank=True, null=True, validators=[just_number])
-    duracion_trabajo = models.IntegerField(blank=True, null= True, validators=[just_number])
-    coincidencia_estudios_trabajo= models.CharField(max_length=45, blank=True, null=True, choices=MEDIDA_COINCIDENCIA_ESTUDIOS)
+    duracion_trabajo = models.IntegerField(blank=True, null=True, validators=[just_number])
+    coincidencia_estudios_trabajo = models.CharField(max_length=45, blank=True, null=True,
+                                                     choices=MEDIDA_COINCIDENCIA_ESTUDIOS)
     sector_economico = models.CharField(max_length=45, choices=SECTOR_ECONOMICO, null=True, blank=True)
     razon_desempleo = models.CharField(max_length=55, choices=RAZON_DESEMPLEO, null=True, blank=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], blank=True, null=True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  blank=True, null=True)
 
-#Model Empresa y derivados (EmpresaForm y empresa en BD) hacen corresponden a la sección de Empleo Actual. 
-#(no tengo idea por qué razón decidieron nombrarla Empresa)
+
+# Model Empresa y derivados (EmpresaForm y empresa en BD) hacen corresponden a la sección de Empleo Actual.
+# (no tengo idea por qué razón decidieron nombrarla Empresa)
 class Empresa(models.Model):
-    #id_empresa = models.IntegerField(primary_key=True)
-    confirmacion_empleo_empresa= models.IntegerField(blank=True, null= True, choices=SI_NO_CHOICES_NUMERIC)
+    # id_empresa = models.IntegerField(primary_key=True)
+    confirmacion_empleo_empresa = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
     razon_desempleo_empresa = models.CharField(max_length=55, choices=RAZON_DESEMPLEO, null=True, blank=True)
     nombre_empresa = models.CharField(max_length=45, blank=True, null=True)
     calle_empresa = models.CharField(max_length=45, blank=True, null=True)
@@ -462,24 +485,28 @@ class Empresa(models.Model):
     regimen_juridico = models.CharField(max_length=45, choices=REGIMEN_JURIDICO, null=True, blank=True)
     ingresomensual_neto = models.CharField(max_length=45, blank=True, null=True)
     horas_laborales = models.CharField(max_length=45, blank=True, null=True, validators=[just_number])
-    duracion_empresa_meses = models.IntegerField(blank=True, null= True, validators=[just_number])
-    medida_coincidencia_labestudios = models.CharField(max_length=45, choices=MEDIDA_COINCIDENCIA_ESTUDIOS, null=True, blank=True)
+    duracion_empresa_meses = models.IntegerField(blank=True, null=True, validators=[just_number])
+    medida_coincidencia_labestudios = models.CharField(max_length=45, choices=MEDIDA_COINCIDENCIA_ESTUDIOS, null=True,
+                                                       blank=True)
     sector_economico = models.CharField(max_length=45, choices=SECTOR_ECONOMICO, null=True, blank=True)
     medio_obtencion_empresa = models.CharField(max_length=45, blank=True, null=True, choices=MEDIO_EMPLEO)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
 
 
 class DesempenioRecomendaciones(models.Model):
-    #id_desempenio_recomendaciones = models.IntegerField(primary_key=True)
+    # id_desempenio_recomendaciones = models.IntegerField(primary_key=True)
     nivel_satisfaccion = models.CharField(max_length=45, choices=NIVEL_SATISFACCION, null=True, blank=True)
     grado_exigencia = models.CharField(max_length=45, choices=GRADO_EXIGENCIA, null=True, blank=True)
     nivel_formacion = models.CharField(max_length=45, choices=NIVEL_FORMACION, null=True, blank=True)
     modificaciones_planest = models.CharField(max_length=45, blank=True, null=True)
     opinion_orgainst = models.CharField(max_length=45, blank=True, null=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric], null= True)
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
+                                  null=True)
+
 
 class Estados(models.Model):
-    #id_estado = models.AutoField(primary_key=True)
+    # id_estado = models.AutoField(primary_key=True)
     clave = models.CharField(max_length=25, blank=True, null=True)
     nombre = models.CharField(max_length=255, blank=True, null=True)
     abrev = models.CharField(max_length=25, blank=True, null=True)
@@ -488,9 +515,11 @@ class Estados(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Municipios(models.Model):
-    #id_municipio = models.AutoField(primary_key=True)
-    id_estado = models.ForeignKey('Estados', on_delete=models.CASCADE, db_column='id_estado', validators=[alphanumeric], null= True)
+    # id_municipio = models.AutoField(primary_key=True)
+    id_estado = models.ForeignKey('Estados', on_delete=models.CASCADE, db_column='id_estado', validators=[alphanumeric],
+                                  null=True)
     clave = models.CharField(max_length=10)
     nombre = models.CharField(max_length=100)
     activo = models.IntegerField()
@@ -498,9 +527,11 @@ class Municipios(models.Model):
     def __str__(self):
         return self.nombre
 
+
 class Localidades(models.Model):
-    #id_localidad = models.AutoField(primary_key=True)
-    municipio = models.ForeignKey('Municipios', on_delete=DO_NOTHING, db_column='id_municipio', validators=[alphanumeric], null= True)
+    # id_localidad = models.AutoField(primary_key=True)
+    municipio = models.ForeignKey('Municipios', on_delete=DO_NOTHING, db_column='id_municipio',
+                                  validators=[alphanumeric], null=True)
     clave = models.CharField(max_length=4)
     nombre = models.CharField(max_length=100)
     mapa = models.IntegerField()
@@ -521,9 +552,9 @@ class Localidades(models.Model):
         return self.nombre
 
 
-#TERMINAN CLASES DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
+# TERMINAN CLASES DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
 
-#COMIENZAN CLASES DE DJANGO#
+# COMIENZAN CLASES DE DJANGO#
 
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -571,10 +602,10 @@ class AuthUser(models.Model):
         db_table = 'auth_user'
 
     def save(self, *args, **kwargs):
-            # Convert the username value to uppercase before saving
-            self.username = self.username.upper()
+        # Convert the username value to uppercase before saving
+        self.username = self.username.upper()
 
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class AuthUserGroups(models.Model):
@@ -640,4 +671,4 @@ class DjangoSession(models.Model):
         managed = False
         db_table = 'django_session'
 
-#TERMINAN CLASES DE DJANGO#
+# TERMINAN CLASES DE DJANGO#
