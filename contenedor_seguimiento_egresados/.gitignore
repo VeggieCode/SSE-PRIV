@@ -2,5 +2,4 @@ bd.env
 data/
 /scripts_sql/admin_control_egresados.sql
 /seguimiento_egresados/seguimiento_egresados/settings.env
-/seguimiento_egresados/seguimiento_egresados/settings_dev.env
 /seguimiento_egresados/seguimiento_egresados/dev.env
