@@ -220,7 +220,7 @@ def municipios_por_estado(request, id_estado):
     return JsonResponse(list(municipios), safe=False)
 
 
-def returnFullName(request):
+def return_full_name(request):
     student = Student.objects.filter(matricula=request.user).first()
     full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
     return full_name
@@ -237,11 +237,10 @@ def home(request):
     pre_graduation = student.pre_egreso_abierto
     start = 'block'
     continue_form = 'none'
-    context = {'name': name}
-    full_name = returnFullName(request)
+    full_name = return_full_name(request)
     context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
-    finishPreForm = student.pre_egreso_terminado
-    if finishPreForm:
+    finish_pre_form = student.pre_egreso_terminado
+    if finish_pre_form:
         return redirect('student_module:finish')
     if pre_graduation:
         return redirect('student_module:student_info')
@@ -258,8 +257,7 @@ def finish(request):
     student = Student.objects.filter(matricula=request.user).first()
     name = student.nombre
 
-    context = {'name': name}
-    full_name = returnFullName(request)
+    full_name = return_full_name(request)
     context = {'full_name': full_name, 'name': name}
     return render(request, 'student_module/finish.html', context)
 
@@ -272,7 +270,7 @@ def logout_view(request):
 @login_required
 def student_info(request):
     estados = Estados.objects.all()
-    full_name = returnFullName(request)
+    full_name = return_full_name(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -298,43 +296,42 @@ def student_info(request):
         estados = Estados.objects.all()
         form = StudentForm(request.POST)
         context = {'full_name': full_name, 'form': form, 'estados': estados}
-        try:
-            if alumno:
-                if form.is_valid():
-                    alumno.nombre = form.cleaned_data.get('nombre')
-                    alumno.apellido_paterno = form.cleaned_data.get('apellido_paterno')
-                    alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
-                    alumno.sexo = form.cleaned_data.get('sexo')
-                    alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
-                    alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
-                    alumno.correo = form.cleaned_data.get('correo')
-                    alumno.correo_uv = form.cleaned_data.get('correo_uv')
-                    alumno.celular = form.cleaned_data.get('celular')
-                    alumno.telefono = form.cleaned_data.get('telefono')
-                    alumno.twitter = form.cleaned_data.get('twitter')
-                    alumno.facebook = form.cleaned_data.get('facebook')
-                    alumno.linkedin = form.cleaned_data.get('linkedin')
-                    alumno.calle = form.cleaned_data.get('calle')
-                    alumno.colonia = form.cleaned_data.get('colonia')
-                    alumno.numero_exterior = form.cleaned_data.get('numero_exterior')
-                    alumno.numero_interior = form.cleaned_data.get('numero_interior')
-                    alumno.codigo_postal = form.cleaned_data.get('codigo_postal')
-                    alumno.estado = form.cleaned_data.get('estado')
-                    alumno.municipio = form.cleaned_data.get('municipio')
-                    alumno.localidad = form.cleaned_data.get('localidad')
-                    alumno.nombre_ref_principal = form.cleaned_data.get('nombre_ref_principal')
-                    alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
-                    alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
-                    alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
-                    alumno.pre_egreso_abierto = True
-                    alumno.save()
-                    return redirect('student_module:job_during_school')
-                else:
-                    errors = form.errors
-                    context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados}
-                    return render(request, "student_module/student_info.html", context)
-        except:
-            messages.error(request, f'No se guardaron los cambios.')
+        if alumno:
+            if form.is_valid():
+                alumno.nombre = form.cleaned_data.get('nombre')
+                alumno.apellido_paterno = form.cleaned_data.get('apellido_paterno')
+                alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
+                alumno.sexo = form.cleaned_data.get('sexo')
+                alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
+                alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
+                alumno.correo = form.cleaned_data.get('correo')
+                alumno.correo_uv = form.cleaned_data.get('correo_uv')
+                alumno.celular = form.cleaned_data.get('celular')
+                alumno.telefono = form.cleaned_data.get('telefono')
+                alumno.twitter = form.cleaned_data.get('twitter')
+                alumno.facebook = form.cleaned_data.get('facebook')
+                alumno.linkedin = form.cleaned_data.get('linkedin')
+                alumno.calle = form.cleaned_data.get('calle')
+                alumno.colonia = form.cleaned_data.get('colonia')
+                alumno.numero_exterior = form.cleaned_data.get('numero_exterior')
+                alumno.numero_interior = form.cleaned_data.get('numero_interior')
+                alumno.codigo_postal = form.cleaned_data.get('codigo_postal')
+                alumno.estado = form.cleaned_data.get('estado')
+                alumno.municipio = form.cleaned_data.get('municipio')
+                alumno.localidad = form.cleaned_data.get('localidad')
+                alumno.nombre_ref_principal = form.cleaned_data.get('nombre_ref_principal')
+                alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
+                alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
+                alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
+                alumno.pre_egreso_abierto = True
+                alumno.save()
+                return redirect('student_module:job_during_school')
+            else:
+                errors = form.errors
+                context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados}
+                return render(request, "student_module/student_info.html", context)
+        else:
+            messages.error(request, 'No se guardaron los cambios.')
             return render(request, "student_module/student_info.html", context)
 
 
@@ -344,7 +341,7 @@ def signup(request):
         form = SignupUserForm(request.POST)
         if form.is_valid():
             # Guardar el usuario
-            user = form.save()
+            form.save()
             # Crear el objeto estudiante y asignar el usuario
             alumno = Student(matricula=form.cleaned_data.get('username').upper(),
                              nombre=form.cleaned_data.get('first_name'),
@@ -375,15 +372,15 @@ def career_selection(request):
         storage.used = True
         usuario = request.user
         try:
-            career_selection = SeleccionCarrera.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
+            career_selected = SeleccionCarrera.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = SeleccionCarreraForm(request.POST)
             context = {'full_name': full_name, 'form': form}
             return render(request, 'student_module/career_selection.html', context)
 
-        form = SeleccionCarreraForm(instance=career_selection)
+        form = SeleccionCarreraForm(instance=career_selected)
         context = {'full_name': full_name, 'form': form}
-        if career_selection:
+        if career_selected:
             return render(request, 'student_module/career_selection.html', context)
         else:
             return render(request, 'student_module/career_selection.html', context)
@@ -478,6 +475,7 @@ def bachelors_degree(request):
 
 @login_required
 def other_studies(request):
+    full_name = return_full_name(request)
     # Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
@@ -516,36 +514,36 @@ def other_studies(request):
                                                              obtencion_grado=obtencion_grado,
                                                              duracion_estudios_meses=duracion_estudios_meses)
             continuacion_estudios_obj.save()
-            messages.success(request, f'Se guardaron los cambios.')
+            messages.success(request, 'Se guardaron los cambios.')
     return render(request, "student_module/other_studies.html", {'full_name': full_name, "form": form})
 
 
 # Falta mejorar la funcion
-def validateStudentForm(request):
+def validate_student_form(request):
     usuario = request.user
     alumno = Student.objects.filter(matricula=usuario).first()
-    attrStudentList = alumno.__dict__
-    contAttributeStudent = 0
-    del attrStudentList['_state']
-    for attribute in attrStudentList.values():
+    attr_student_list = alumno.__dict__
+    cont_attribute_student = 0
+    del attr_student_list['_state']
+    for attribute in attr_student_list.values():
         if isinstance(attribute, int):
-            contAttributeStudent = contAttributeStudent + 1
+            cont_attribute_student = cont_attribute_student + 1
         else:
             if attribute is not None:
-                contAttributeStudent = contAttributeStudent + 1
+                cont_attribute_student = cont_attribute_student + 1
 
-    return contAttributeStudent > 14
+    return cont_attribute_student > 14
 
 
 @login_required
 def job_during_school(request):
     # Ver comentarios en seleccion_carrera.
-    full_name = returnFullName(request)
+    full_name = return_full_name(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
-        alumno = Student.objects.filter(matricula=usuario).first()
+        student = Student.objects.filter(matricula=usuario).first()
 
         try:
             empleo_durante_estudios = EmpleoDuranteEstudios.objects.filter(
@@ -563,24 +561,24 @@ def job_during_school(request):
     # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
-        alumno = Student.objects.filter(matricula=usuario).first()
-        EmpleoDuranteEstudios.objects.filter(matricula=alumno).delete()
+        student = Student.objects.filter(matricula=usuario).first()
+        EmpleoDuranteEstudios.objects.filter(matricula=student).delete()
         form = EmpleoDuranteEstudiosForm(request.POST)
         if form.is_valid():
-            matricula = alumno
-            confirmacion_empleo = form.cleaned_data['confirmacion_empleo']
-            coincidencia_estudios_trabajo = form.cleaned_data['coincidencia_estudios_trabajo']
-            horas_laboradas_semanales = form.cleaned_data['horas_laboradas_semanales']
+            matricula = student
+            employee_confirmation = form.cleaned_data['confirmacion_empleo']
+            coincidence = form.cleaned_data['coincidencia_estudios_trabajo']
+            weekly_worked_hours = form.cleaned_data['horas_laboradas_semanales']
             empleo_durante_estudios_obj = EmpleoDuranteEstudios(matricula=matricula,
-                                                                confirmacion_empleo=confirmacion_empleo,
-                                                                coincidencia_estudios_trabajo=coincidencia_estudios_trabajo,
-                                                                horas_laboradas_semanales=horas_laboradas_semanales)
+                                                                confirmacion_empleo=employee_confirmation,
+                                                                coincidencia_estudios_trabajo=coincidence,
+                                                                horas_laboradas_semanales=weekly_worked_hours)
             empleo_durante_estudios_obj.save()
-            if not confirmacion_empleo is None:
-                alumno.pre_egreso_terminado = validateStudentForm(request)
-                if alumno.pre_egreso_terminado:
-                    alumno.pre_egreso_fecha_fin = datetime.now()
-                alumno.save()
+            if employee_confirmation is not None:
+                student.pre_egreso_terminado = validate_student_form(request)
+                if student.pre_egreso_terminado:
+                    student.pre_egreso_fecha_fin = datetime.now()
+                student.save()
             messages.success(request, f'Se guardaron los cambios.')
     return redirect('student_module:finish')
 
