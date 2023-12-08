@@ -277,7 +277,9 @@ def student_info(request):
         usuario = request.user
         try:
             alumno = Student.objects.filter(matricula=usuario).first()
-        except Student.ObjectDoesNotExist:
+            if alumno is None:
+                raise Student.DoesNotExist
+        except Student.DoesNotExist:
             form = StudentForm(request.POST)
             context = {'full_name': full_name, 'form': form}
             return render(request, 'student_module/student_info.html', context)
@@ -351,7 +353,7 @@ def signup(request):
                              correo=form.cleaned_data.get('email'))
             alumno.save()
 
-            messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
+            messages.success(request, 'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
             return redirect('student_module:login')
     else:
         form = SignupUserForm()
@@ -543,7 +545,6 @@ def job_during_school(request):
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
-        student = Student.objects.filter(matricula=usuario).first()
 
         try:
             empleo_durante_estudios = EmpleoDuranteEstudios.objects.filter(
