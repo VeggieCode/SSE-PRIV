@@ -216,7 +216,7 @@ class CustomLoginView(LoginView):
 
 
 def municipios_por_estado(request, id_estado):
-    municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre')
+    municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre').order_by('nombre')
     return JsonResponse(list(municipios), safe=False)
 
 
