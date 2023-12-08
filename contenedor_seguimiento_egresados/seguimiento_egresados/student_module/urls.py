@@ -33,5 +33,5 @@ urlpatterns = [
     path('%spassword-reset/confirm/<uidb64>/<token>/' % settings.PATH_PREFIX, CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('%spassword-reset/complete/' % settings.PATH_PREFIX, CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('%sgenerate-pdf/' % settings.PATH_PREFIX, views.generate_pdf, name='generate_pdf'),
-    path('%smunicipios/<int:id_estado>/' % settings.PATH_PREFIX, views.municipios_por_estado, name='municipios_por_estado'),
+    path('municipios/<int:id_estado>/', views.municipios_por_estado, name='municipios_por_estado'),
 ]

@@ -16,7 +16,8 @@ from .forms import *
 from django.contrib import messages
 from django.forms.models import model_to_dict
 from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
+    PasswordResetCompleteView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordResetForm, CustomSetPasswordForm
 from django.core.mail import send_mail
@@ -78,9 +79,12 @@ from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfbase.ttfonts import TTFont
 import textwrap
 
+from .models import Student, Municipios, Estados, Carrera, SeleccionCarrera, Licenciatura, ContinuacionEstudios, \
+    EmpleoDuranteEstudios, BusquedaEmpleo, EmpleoInmediato, Empresa, DesempenioRecomendaciones
+
+
 @login_required
 def generate_pdf(request):
-
     # Obtén el objeto del estudiante
     usuario = request.user
     alumno = Student.objects.filter(matricula=usuario).first()
@@ -103,30 +107,34 @@ def generate_pdf(request):
             canvas_data = BytesIO()
             pdf_canvas = canvas.Canvas(canvas_data, pagesize=letter, bottomup=0)
 
-            
             def formato_fecha(date):
-                fecha = f"{date}".split()[0] #obtenemos solo la fehca YYYY-MM-DD
-                year,month,day = fecha.split("-") #separamos cada parte
-                #creamos un diccionario con todos los mese
-                months = {1:"Enero", 2: "Febrero", 3:"Marzo", 4:"Abril", 5:"Mayo", 6:"Junio", 7:"Julio", 8:"Agosto"}
-                #retornamos el resultado
+                fecha = f"{date}".split()[0]  # obtenemos solo la fehca YYYY-MM-DD
+                year, month, day = fecha.split("-")  # separamos cada parte
+                # creamos un diccionario con todos los mese
+                months = {1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio", 7: "Julio",
+                          8: "Agosto"}
+                # retornamos el resultado
                 return f"{day} de {months[int(month)]} del {year}"
 
             # Agrega el texto con formato y margen
             pdf_canvas.setFont('Helvetica', 9.5)
             pdf_canvas.setFillColorRGB(0, 0, 0)
-            text = f"\nQue el estudiante {full_name} con matrícula {alumno.matricula}, ha concluido de manera satisfactoria el cuestionario de pre-egreso en la fecha de {formato_fecha(alumno.pre_egreso_fecha_fin)} como requisito de su proceso de titulación."
+            text = (f"\nQue el estudiante {full_name} con matrícula {alumno.matricula}, ha concluido de manera "
+                    f"satisfactoria el cuestionario de pre-egreso en la f"
+                    f"echa de {formato_fecha(alumno.pre_egreso_fecha_fin)} como requisito de su proceso de titulación.")
             pdf_canvas.setLineWidth(0.5)
             margin = 125  # Establece el tamaño del margen
-            y = 290   # Posición vertical de la primera línea
+            y = 290  # Posición vertical de la primera línea
             for line in textwrap.wrap(text, width=100):
                 pdf_canvas.drawString(margin, y, line)
                 y += 12  # Distancia vertical entre líneas
 
-            second_text = f"\nSe extiende la presente a petición de la interesada y para los fines legales que a ésta convenga a la fecha de {formato_fecha(datetime.now())}, en la ciudad de Xalapa, Veracruz. "
-            
+            second_text = (f"\nSe extiende la presente a petición de la interesada y para los fines legales que a ésta "
+                           f"convenga a la fecha de {formato_fecha(datetime.now())}, en la ciudad de Xalapa, "
+                           f"Veracruz. ")
+
             margin_second_text = 125  # Establece el tamaño del margen
-            y_second_text= 350   # Posición vertical de la primera línea
+            y_second_text = 350  # Posición vertical de la primera línea
             lines = textwrap.wrap(second_text, width=100)
             for line in lines:
                 pdf_canvas.drawString(margin_second_text, y_second_text, line)
@@ -158,20 +166,24 @@ def generate_pdf(request):
 
     return response
 
+
 class CustomPasswordResetView(PasswordResetView):
     email_template_name = 'student_module/password_reset_email.html'
     form_class = CustomPasswordResetForm
     success_url = reverse_lazy('password_reset_done')
     template_name = 'student_module/password_reset_form.html'
 
+
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'student_module/password_reset_done.html'
+
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomSetPasswordForm
     post_reset_login = True
     success_url = reverse_lazy('password_reset_complete')
     template_name = 'student_module/password_reset_confirm.html'
+
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'student_module/password_reset_complete.html'
@@ -202,70 +214,76 @@ class CustomLoginView(LoginView):
             context['show_alert'] = True
         return context
 
+
 def municipios_por_estado(request, id_estado):
-    municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre')
+    municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre').order_by('nombre')
     return JsonResponse(list(municipios), safe=False)
 
-def returnFullName(request):
+
+def return_full_name(request):
     student = Student.objects.filter(matricula=request.user).first()
     full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
     return full_name
 
+
 def privacy_notice(request):
     return render(request, 'student_module/privacy_notice.html')
 
+
 @login_required
 def home(request):
-        student = Student.objects.filter(matricula=request.user).first()
-        name = student.nombre
-        pre_graduation= student.pre_egreso_abierto
+    student = Student.objects.filter(matricula=request.user).first()
+    name = student.nombre
+    pre_graduation = student.pre_egreso_abierto
+    start = 'block'
+    continue_form = 'none'
+    full_name = return_full_name(request)
+    context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
+    finish_pre_form = student.pre_egreso_terminado
+    if finish_pre_form:
+        return redirect('student_module:finish')
+    if pre_graduation:
+        return redirect('student_module:student_info')
+    else:
         start = 'block'
-        continue_form= 'none'
-        context = { 'name': name }
-        full_name = returnFullName(request)
         context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
-        finishPreForm = student.pre_egreso_terminado
-        if finishPreForm:
-            return redirect('student_module:finish')
-        if pre_graduation:
-            return redirect('student_module:student_info')
-        else:
-            start = 'block'
-            context = {'full_name': full_name, 'name': name, 'start': start, 'continue_form': continue_form}
-            student.pre_egreso_abierto = True
-            student.save()
-            return render(request, 'student_module/home.html', context)
+        student.pre_egreso_abierto = True
+        student.save()
+        return render(request, 'student_module/home.html', context)
 
 
 @login_required
 def finish(request):
-        student = Student.objects.filter(matricula=request.user).first()
-        name = student.nombre
+    student = Student.objects.filter(matricula=request.user).first()
+    name = student.nombre
 
-        context = { 'name': name }
-        full_name = returnFullName(request)
-        context = {'full_name': full_name, 'name': name}
-        return render(request, 'student_module/finish.html', context)
+    full_name = return_full_name(request)
+    context = {'full_name': full_name, 'name': name}
+    return render(request, 'student_module/finish.html', context)
+
 
 def logout_view(request):
     logout(request)
     return redirect('student_module:login')
 
+
 @login_required
 def student_info(request):
     estados = Estados.objects.all()
-    full_name = returnFullName(request)
+    full_name = return_full_name(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
         try:
             alumno = Student.objects.filter(matricula=usuario).first()
-        except Student.ObjectDoesNotExist:
-                form = StudentForm(request.POST)
-                context = {'full_name': full_name, 'form': form}
-                return render(request, 'student_module/student_info.html', context)
-        
+            if alumno is None:
+                raise Student.DoesNotExist
+        except Student.DoesNotExist:
+            form = StudentForm(request.POST)
+            context = {'full_name': full_name, 'form': form}
+            return render(request, 'student_module/student_info.html', context)
+
         form = StudentForm(instance=alumno)
         context = {'full_name': full_name, 'form': form, 'estados': estados}
         if alumno:
@@ -280,43 +298,42 @@ def student_info(request):
         estados = Estados.objects.all()
         form = StudentForm(request.POST)
         context = {'full_name': full_name, 'form': form, 'estados': estados}
-        try:
-            if alumno:
-                if form.is_valid():
-                    alumno.nombre = form.cleaned_data.get('nombre')
-                    alumno.apellido_paterno = form.cleaned_data.get('apellido_paterno')
-                    alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
-                    alumno.sexo = form.cleaned_data.get('sexo')
-                    alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
-                    alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
-                    alumno.correo =  form.cleaned_data.get('correo')
-                    alumno.correo_uv = form.cleaned_data.get('correo_uv')
-                    alumno.celular = form.cleaned_data.get('celular')
-                    alumno.telefono = form.cleaned_data.get('telefono')
-                    alumno.twitter = form.cleaned_data.get('twitter')
-                    alumno.facebook = form.cleaned_data.get('facebook')
-                    alumno.linkedin = form.cleaned_data.get('linkedin')
-                    alumno.calle = form.cleaned_data.get('calle')
-                    alumno.colonia = form.cleaned_data.get('colonia')
-                    alumno.numero_exterior = form.cleaned_data.get('numero_exterior')
-                    alumno.numero_interior = form.cleaned_data.get('numero_interior')
-                    alumno.codigo_postal = form.cleaned_data.get('codigo_postal')
-                    alumno.estado = form.cleaned_data.get('estado')
-                    alumno.municipio = form.cleaned_data.get('municipio')
-                    alumno.localidad = form.cleaned_data.get('localidad')
-                    alumno.nombre_ref_principal = form.cleaned_data.get('nombre_ref_principal')
-                    alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
-                    alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
-                    alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
-                    alumno.pre_egreso_abierto = True
-                    alumno.save()
-                    return redirect('student_module:job_during_school')
-                else:
-                    errors= form.errors
-                    context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados}
-                    return render(request, "student_module/student_info.html", context)
-        except:
-            messages.error(request, f'No se guardaron los cambios.')
+        if alumno:
+            if form.is_valid():
+                alumno.nombre = form.cleaned_data.get('nombre')
+                alumno.apellido_paterno = form.cleaned_data.get('apellido_paterno')
+                alumno.apellido_materno = form.cleaned_data.get('apellido_materno')
+                alumno.sexo = form.cleaned_data.get('sexo')
+                alumno.fecha_nacimiento = form.cleaned_data.get('fecha_nacimiento')
+                alumno.fecha_ingreso_lic = form.cleaned_data.get('fecha_ingreso_lic')
+                alumno.correo = form.cleaned_data.get('correo')
+                alumno.correo_uv = form.cleaned_data.get('correo_uv')
+                alumno.celular = form.cleaned_data.get('celular')
+                alumno.telefono = form.cleaned_data.get('telefono')
+                alumno.twitter = form.cleaned_data.get('twitter')
+                alumno.facebook = form.cleaned_data.get('facebook')
+                alumno.linkedin = form.cleaned_data.get('linkedin')
+                alumno.calle = form.cleaned_data.get('calle')
+                alumno.colonia = form.cleaned_data.get('colonia')
+                alumno.numero_exterior = form.cleaned_data.get('numero_exterior')
+                alumno.numero_interior = form.cleaned_data.get('numero_interior')
+                alumno.codigo_postal = form.cleaned_data.get('codigo_postal')
+                alumno.estado = form.cleaned_data.get('estado')
+                alumno.municipio = form.cleaned_data.get('municipio')
+                alumno.localidad = form.cleaned_data.get('localidad')
+                alumno.nombre_ref_principal = form.cleaned_data.get('nombre_ref_principal')
+                alumno.celular_ref_principal = form.cleaned_data.get('celular_ref_principal')
+                alumno.nombre_ref_auxiliar = form.cleaned_data.get('nombre_ref_auxiliar')
+                alumno.celular_ref_auxiliar = form.cleaned_data.get('celular_ref_auxiliar')
+                alumno.pre_egreso_abierto = True
+                alumno.save()
+                return redirect('student_module:job_during_school')
+            else:
+                errors = form.errors
+                context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados}
+                return render(request, "student_module/student_info.html", context)
+        else:
+            messages.error(request, 'No se guardaron los cambios.')
             return render(request, "student_module/student_info.html", context)
 
 
@@ -326,28 +343,29 @@ def signup(request):
         form = SignupUserForm(request.POST)
         if form.is_valid():
             # Guardar el usuario
-            user = form.save()
+            form.save()
             # Crear el objeto estudiante y asignar el usuario
             alumno = Student(matricula=form.cleaned_data.get('username').upper(),
-                              nombre=form.cleaned_data.get('first_name'),
-                              apellido_paterno=form.cleaned_data.get('last_name'),
-                              apellido_materno=form.cleaned_data.get('apellido_materno'),
-                              licenciatura_fei=form.cleaned_data.get('licenciatura_fei'),
-                              correo=form.cleaned_data.get('email'))
+                             nombre=form.cleaned_data.get('first_name'),
+                             apellido_paterno=form.cleaned_data.get('last_name'),
+                             apellido_materno=form.cleaned_data.get('apellido_materno'),
+                             licenciatura_fei=form.cleaned_data.get('licenciatura_fei'),
+                             correo=form.cleaned_data.get('email'))
             alumno.save()
 
-            messages.success(request, f'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
+            messages.success(request, 'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
             return redirect('student_module:login')
     else:
         form = SignupUserForm()
 
     return render(request, 'student_module/signup.html', {'form': form, 'carreras': carreras})
 
+
 @login_required
 def career_selection(request):
-    #Si el método es GET, el sistema recupera de la BD el objeto Seleccion Carrera correspondiente y lo usa para
-    #llenar la variable form de tipo SeleccionCarreraForm. La cual DEBE recibir una instancia de un objeto tipo
-    #SeleccionCarrera(ver models.py -> SeleccionCarrera)
+    # Si el método es GET, el sistema recupera de la BD el objeto Seleccion Carrera correspondiente y lo usa para
+    # llenar la variable form de tipo SeleccionCarreraForm. La cual DEBE recibir una instancia de un objeto tipo
+    # SeleccionCarrera(ver models.py -> SeleccionCarrera)
     usuario = request.user
     student = Student.objects.filter(matricula=usuario).first()
     full_name = student.nombre + ' ' + student.apellido_paterno + ' ' + student.apellido_materno
@@ -356,25 +374,26 @@ def career_selection(request):
         storage.used = True
         usuario = request.user
         try:
-            career_selection = SeleccionCarrera.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
+            career_selected = SeleccionCarrera.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = SeleccionCarreraForm(request.POST)
             context = {'full_name': full_name, 'form': form}
             return render(request, 'student_module/career_selection.html', context)
 
-        form = SeleccionCarreraForm(instance=career_selection)
+        form = SeleccionCarreraForm(instance=career_selected)
         context = {'full_name': full_name, 'form': form}
-        if career_selection:
+        if career_selected:
             return render(request, 'student_module/career_selection.html', context)
         else:
             return render(request, 'student_module/career_selection.html', context)
 
-    #Si el método es POST, el sistema genera una form vacía que corresponde a la variable 'form' de tipo
-    #SeleccionCarreraForm y la llena con los datos entrantes en 'request.POST'. Debido a que en la BD todas
-    #las tablas dependen de la tabla Alumno mediante la llave foránea (FK): 'matricula', django necesita
-    #una instancia de Alumno que le indique la relación de la FK. Por eso se obtiene un objeto Alumno correspondiente
-    #al User actual. Después, se extraen los datos de 'form' para crear el objeto 'seleccion_carrera_obj'
-    # de tipo SeleccionCarrera (usando el objeto 'alumno' para la matricula) y se guarda "manualmente" el objeto en la BD.
+    # Si el método es POST, el sistema genera una form vacía que corresponde a la variable 'form' de tipo
+    # SeleccionCarreraForm y la llena con los datos entrantes en 'request.POST'. Debido a que en la BD todas
+    # las tablas dependen de la tabla Alumno mediante la llave foránea (FK): 'matricula', django necesita
+    # una instancia de Alumno que le indique la relación de la FK. Por eso se obtiene un objeto Alumno correspondiente
+    # al User actual. Después, se extraen los datos de 'form' para crear el objeto 'seleccion_carrera_obj'
+    # de tipo SeleccionCarrera (usando el objeto 'alumno' para la matricula) y se guarda "manualmente" el objeto en
+    # la BD.
     if request.method == 'POST':
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -390,19 +409,20 @@ def career_selection(request):
             razon_eleccion_institucion = form.cleaned_data['razon_eleccion_institucion']
             razon_eleccion_carrera = form.cleaned_data['razon_eleccion_carrera']
             seleccion_carrera_obj = SeleccionCarrera(matricula=matricula,
-                primera_opcion_carrera=primera_opcion_carrera,
-                eleccion_tipo_institucion=eleccion_tipo_institucion,
-                primera_eleccion_institucion=primera_eleccion_institucion,
-                primera_eleccion_nombre=primera_eleccion_nombre,
-                razon_eleccion_institucion=razon_eleccion_institucion,
-                razon_eleccion_carrera=razon_eleccion_carrera)
+                                                     primera_opcion_carrera=primera_opcion_carrera,
+                                                     eleccion_tipo_institucion=eleccion_tipo_institucion,
+                                                     primera_eleccion_institucion=primera_eleccion_institucion,
+                                                     primera_eleccion_nombre=primera_eleccion_nombre,
+                                                     razon_eleccion_institucion=razon_eleccion_institucion,
+                                                     razon_eleccion_carrera=razon_eleccion_carrera)
             seleccion_carrera_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
     return render(request, "student_module/career_selection.html", context)
 
+
 @login_required
 def bachelors_degree(request):
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -411,15 +431,15 @@ def bachelors_degree(request):
             licenciatura = Licenciatura.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = LicenciaturaForm(request.POST)
-            return render(request, "student_module/bachelors_degree.html", {"form":form})
+            return render(request, "student_module/bachelors_degree.html", {"form": form})
 
         form = LicenciaturaForm(instance=licenciatura)
         if licenciatura:
-            return render(request, 'student_module/bachelors_degree.html', {'form':form})
+            return render(request, 'student_module/bachelors_degree.html', {'form': form})
         else:
-            return render(request, 'student_module/bachelors_degree.html', {'form':form})
+            return render(request, 'student_module/bachelors_degree.html', {'form': form})
 
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -439,25 +459,26 @@ def bachelors_degree(request):
             promedio_final = form.cleaned_data['promedio_final']
             tipo_inscripcion = form.cleaned_data['tipo_inscripcion']
             licenciatura_obj = Licenciatura(matricula=matricula,
-                nombre_campus=nombre_campus,
-                nombre_carrera=nombre_carrera,
-                anio_pestudios=anio_pestudios,
-                anio_inicio=anio_inicio,
-                anio_fin=anio_fin,
-                org_ss=org_ss,
-                fecha_inicioss=fecha_inicioss,
-                fecha_finss=fecha_finss,
-                titulado=titulado,
-                promedio_final=promedio_final,
-                tipo_inscripcion=tipo_inscripcion)
+                                            nombre_campus=nombre_campus,
+                                            nombre_carrera=nombre_carrera,
+                                            anio_pestudios=anio_pestudios,
+                                            anio_inicio=anio_inicio,
+                                            anio_fin=anio_fin,
+                                            org_ss=org_ss,
+                                            fecha_inicioss=fecha_inicioss,
+                                            fecha_finss=fecha_finss,
+                                            titulado=titulado,
+                                            promedio_final=promedio_final,
+                                            tipo_inscripcion=tipo_inscripcion)
             licenciatura_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, 'student_module/bachelors_degree.html', {'form':form})
+    return render(request, 'student_module/bachelors_degree.html', {'form': form})
+
 
 @login_required
 def other_studies(request):
-
-    #Ver comentarios en seleccion_carrera.
+    full_name = return_full_name(request)
+    # Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -466,14 +487,14 @@ def other_studies(request):
             continuacion = ContinuacionEstudios.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = ContinuacionEstudiosForm(request.POST)
-            return render(request, "student_module/other_studies.html", {"form":form})
+            return render(request, "student_module/other_studies.html", {"form": form})
 
         form = ContinuacionEstudiosForm(instance=continuacion)
         if continuacion:
-            return render(request, "student_module/other_studies.html", {"form":form})
+            return render(request, "student_module/other_studies.html", {"form": form})
         else:
-            return render(request, 'student_module/other_studies.html', {'form':form})
-    #Ver comentarios en seleccion_carrera.
+            return render(request, 'student_module/other_studies.html', {'form': form})
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -485,86 +506,87 @@ def other_studies(request):
             institucion = form.cleaned_data['institucion']
             nombre_programa = form.cleaned_data['nombre_programa']
             conclusion_estudios = form.cleaned_data['conclusion_estudios']
-            obtencion_grado =form.cleaned_data['obtencion_grado']
+            obtencion_grado = form.cleaned_data['obtencion_grado']
             duracion_estudios_meses = form.cleaned_data['duracion_estudios_meses']
-            continuacion_estudios_obj = ContinuacionEstudios(matricula= matricula,
-                tipo_estudio_continuacion=tipo_estudio_continuacion,
-                institucion=institucion,
-                nombre_programa=nombre_programa,
-                conclusion_estudios =conclusion_estudios,
-                obtencion_grado =obtencion_grado,
-                duracion_estudios_meses = duracion_estudios_meses)
+            continuacion_estudios_obj = ContinuacionEstudios(matricula=matricula,
+                                                             tipo_estudio_continuacion=tipo_estudio_continuacion,
+                                                             institucion=institucion,
+                                                             nombre_programa=nombre_programa,
+                                                             conclusion_estudios=conclusion_estudios,
+                                                             obtencion_grado=obtencion_grado,
+                                                             duracion_estudios_meses=duracion_estudios_meses)
             continuacion_estudios_obj.save()
-            messages.success(request, f'Se guardaron los cambios.')
-    return render(request, "student_module/other_studies.html", {'full_name': full_name,"form":form})
+            messages.success(request, 'Se guardaron los cambios.')
+    return render(request, "student_module/other_studies.html", {'full_name': full_name, "form": form})
 
-#Falta mejorar la funcion
-def validateStudentForm(request):
+
+# Falta mejorar la funcion
+def validate_student_form(request):
     usuario = request.user
     alumno = Student.objects.filter(matricula=usuario).first()
-    attrStudentList=alumno.__dict__
-    contAttributeStudent= 0
-    del attrStudentList['_state']
-    for attribute in attrStudentList.values():
-      if isinstance(attribute, int):
-          contAttributeStudent = contAttributeStudent + 1
-      else:
-        if  attribute is not None:
-            contAttributeStudent= contAttributeStudent + 1
+    attr_student_list = alumno.__dict__
+    cont_attribute_student = 0
+    del attr_student_list['_state']
+    for attribute in attr_student_list.values():
+        if isinstance(attribute, int):
+            cont_attribute_student = cont_attribute_student + 1
+        else:
+            if attribute is not None:
+                cont_attribute_student = cont_attribute_student + 1
 
-    return contAttributeStudent>14
-
+    return cont_attribute_student > 14
 
 
 @login_required
 def job_during_school(request):
-    #Ver comentarios en seleccion_carrera.
-    full_name = returnFullName(request)
+    # Ver comentarios en seleccion_carrera.
+    full_name = return_full_name(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
-        alumno = Student.objects.filter(matricula=usuario).first()
 
         try:
-            empleo_durante_estudios = EmpleoDuranteEstudios.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
+            empleo_durante_estudios = EmpleoDuranteEstudios.objects.filter(
+                matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = EmpleoDuranteEstudiosForm(request.POST)
-            return render(request, "student_module/job_during_school.html", {'full_name': full_name,"form":form})
+            return render(request, "student_module/job_during_school.html", {'full_name': full_name, "form": form})
 
         form = EmpleoDuranteEstudiosForm(instance=empleo_durante_estudios)
         if empleo_durante_estudios:
-            return render(request, "student_module/job_during_school.html", {'full_name': full_name, "form":form})
+            return render(request, "student_module/job_during_school.html", {'full_name': full_name, "form": form})
         else:
-            return render(request, 'student_module/job_during_school.html', {'full_name': full_name,'form':form})
+            return render(request, 'student_module/job_during_school.html', {'full_name': full_name, 'form': form})
 
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
-        alumno = Student.objects.filter(matricula=usuario).first()
-        EmpleoDuranteEstudios.objects.filter(matricula=alumno).delete()
+        student = Student.objects.filter(matricula=usuario).first()
+        EmpleoDuranteEstudios.objects.filter(matricula=student).delete()
         form = EmpleoDuranteEstudiosForm(request.POST)
         if form.is_valid():
-            matricula = alumno
-            confirmacion_empleo = form.cleaned_data['confirmacion_empleo']
-            coincidencia_estudios_trabajo = form.cleaned_data['coincidencia_estudios_trabajo']
-            horas_laboradas_semanales = form.cleaned_data['horas_laboradas_semanales']
-            empleo_durante_estudios_obj = EmpleoDuranteEstudios(matricula= matricula,
-                confirmacion_empleo=confirmacion_empleo,
-                coincidencia_estudios_trabajo=coincidencia_estudios_trabajo,
-                horas_laboradas_semanales=horas_laboradas_semanales)
+            matricula = student
+            employee_confirmation = form.cleaned_data['confirmacion_empleo']
+            coincidence = form.cleaned_data['coincidencia_estudios_trabajo']
+            weekly_worked_hours = form.cleaned_data['horas_laboradas_semanales']
+            empleo_durante_estudios_obj = EmpleoDuranteEstudios(matricula=matricula,
+                                                                confirmacion_empleo=employee_confirmation,
+                                                                coincidencia_estudios_trabajo=coincidence,
+                                                                horas_laboradas_semanales=weekly_worked_hours)
             empleo_durante_estudios_obj.save()
-            if not confirmacion_empleo  is None:
-                alumno.pre_egreso_terminado= validateStudentForm(request)
-                if alumno.pre_egreso_terminado: 
-                    alumno.pre_egreso_fecha_fin = datetime.now()
-                alumno.save()
+            if employee_confirmation is not None:
+                student.pre_egreso_terminado = validate_student_form(request)
+                if student.pre_egreso_terminado:
+                    student.pre_egreso_fecha_fin = datetime.now()
+                student.save()
             messages.success(request, f'Se guardaron los cambios.')
     return redirect('student_module:finish')
 
+
 @login_required
 def job_search(request):
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -573,15 +595,15 @@ def job_search(request):
             busqueda_empleo = BusquedaEmpleo.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = BusquedaEmpleoForm(request.POST)
-            return render(request, "student_module/job_search.html", {"form":form})
+            return render(request, "student_module/job_search.html", {"form": form})
 
         form = BusquedaEmpleoForm(instance=busqueda_empleo)
         if job_during_school:
-            return render(request, "student_module/job_search.html", {"form":form})
+            return render(request, "student_module/job_search.html", {"form": form})
         else:
-            return render(request, 'student_module/job_search.html', {'form':form})
+            return render(request, 'student_module/job_search.html', {'form': form})
 
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -596,17 +618,18 @@ def job_search(request):
             medio_obtencion_empleo = form.cleaned_data['medio_obtencion_empleo']
             requisito_formal = form.cleaned_data['requisito_formal']
             razon_no_busqueda = form.cleaned_data['razon_no_busqueda']
-            busqueda_empleo_obj = BusquedaEmpleo(matricula= matricula,
-                confirmacion_empleo_egreso=confirmacion_empleo_egreso,
-                confirmacion_busqueda_empleo=confirmacion_busqueda_empleo,
-                tiempo_obtencion_empleo=tiempo_obtencion_empleo,
-                opinion_demora_empleo=opinion_demora_empleo,
-                medio_obtencion_empleo=medio_obtencion_empleo,
-                requisito_formal=requisito_formal,
-                razon_no_busqueda=razon_no_busqueda)
+            busqueda_empleo_obj = BusquedaEmpleo(matricula=matricula,
+                                                 confirmacion_empleo_egreso=confirmacion_empleo_egreso,
+                                                 confirmacion_busqueda_empleo=confirmacion_busqueda_empleo,
+                                                 tiempo_obtencion_empleo=tiempo_obtencion_empleo,
+                                                 opinion_demora_empleo=opinion_demora_empleo,
+                                                 medio_obtencion_empleo=medio_obtencion_empleo,
+                                                 requisito_formal=requisito_formal,
+                                                 razon_no_busqueda=razon_no_busqueda)
             busqueda_empleo_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, "student_module/job_search.html", {"form":form})
+    return render(request, "student_module/job_search.html", {"form": form})
+
 
 @login_required
 def job_after_grad(request):
@@ -618,14 +641,14 @@ def job_after_grad(request):
             empleo_inmediato = EmpleoInmediato.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = EmpleoInmediatoForm(request.POST)
-            return render(request, "student_module/job_after_grad.html", {"form":form})
+            return render(request, "student_module/job_after_grad.html", {"form": form})
 
         form = EmpleoInmediatoForm(instance=empleo_inmediato)
         if empleo_inmediato:
-            return render(request, 'student_module/job_after_grad.html', {'form':form})
+            return render(request, 'student_module/job_after_grad.html', {'form': form})
         else:
-            return render(request, 'student_module/job_after_grad.html', {'form':form})
-    #Ver comentarios en seleccion_carrera.
+            return render(request, 'student_module/job_after_grad.html', {'form': form})
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -633,47 +656,48 @@ def job_after_grad(request):
         form = EmpleoInmediatoForm(request.POST)
         if form.is_valid():
             matricula = alumno
-            confirmacion_empleo_inmediato=form.cleaned_data['confirmacion_empleo_inmediato']
-            rol_egresado_empleo=form.cleaned_data['rol_egresado_empleo']
+            confirmacion_empleo_inmediato = form.cleaned_data['confirmacion_empleo_inmediato']
+            rol_egresado_empleo = form.cleaned_data['rol_egresado_empleo']
             puesto_empleo_inmediato = form.cleaned_data['puesto_empleo_inmediato']
             tamano_empresa_inmediata = form.cleaned_data['tamano_empresa_inmediata']
             nombre_empleo_inmediato = form.cleaned_data['nombre_empleo_inmediato']
             nombre_jefe_supervisor = form.cleaned_data['nombre_jefe_supervisor']
             telefono_empleo_inmediato = form.cleaned_data['telefono_empleo_inmediato']
             correo_empleo_inmediato = form.cleaned_data['correo_empleo_inmediato']
-            tipo_contratacion=form.cleaned_data['tipo_contratacion']
+            tipo_contratacion = form.cleaned_data['tipo_contratacion']
             regimen_juridico = form.cleaned_data['regimen_juridico']
             ingreso_mensual_neto_inicio = form.cleaned_data['ingreso_mensual_neto_inicio']
             horas_laboral_semanales = form.cleaned_data['horas_laboral_semanales']
             duracion_trabajo = form.cleaned_data['duracion_trabajo']
-            coincidencia_estudios_trabajo=form.cleaned_data['coincidencia_estudios_trabajo']
+            coincidencia_estudios_trabajo = form.cleaned_data['coincidencia_estudios_trabajo']
             sector_economico = form.cleaned_data['sector_economico']
             razon_desempleo = form.cleaned_data['razon_desempleo']
-            empleo_inmediato_obj= EmpleoInmediato(matricula=matricula,
-                confirmacion_empleo_inmediato=confirmacion_empleo_inmediato,
-                rol_egresado_empleo=rol_egresado_empleo,
-                puesto_empleo_inmediato=puesto_empleo_inmediato,
-                tamano_empresa_inmediata=tamano_empresa_inmediata,
-                nombre_empleo_inmediato=nombre_empleo_inmediato,
-                nombre_jefe_supervisor=nombre_jefe_supervisor,
-                telefono_empleo_inmediato=telefono_empleo_inmediato,
-                correo_empleo_inmediato=correo_empleo_inmediato,
-                tipo_contratacion=tipo_contratacion,
-                regimen_juridico=regimen_juridico,
-                ingreso_mensual_neto_inicio=ingreso_mensual_neto_inicio,
-                horas_laboral_semanales=horas_laboral_semanales,
-                duracion_trabajo=duracion_trabajo,
-                coincidencia_estudios_trabajo=coincidencia_estudios_trabajo,
-                sector_economico=sector_economico,
-                razon_desempleo=razon_desempleo)
+            empleo_inmediato_obj = EmpleoInmediato(matricula=matricula,
+                                                   confirmacion_empleo_inmediato=confirmacion_empleo_inmediato,
+                                                   rol_egresado_empleo=rol_egresado_empleo,
+                                                   puesto_empleo_inmediato=puesto_empleo_inmediato,
+                                                   tamano_empresa_inmediata=tamano_empresa_inmediata,
+                                                   nombre_empleo_inmediato=nombre_empleo_inmediato,
+                                                   nombre_jefe_supervisor=nombre_jefe_supervisor,
+                                                   telefono_empleo_inmediato=telefono_empleo_inmediato,
+                                                   correo_empleo_inmediato=correo_empleo_inmediato,
+                                                   tipo_contratacion=tipo_contratacion,
+                                                   regimen_juridico=regimen_juridico,
+                                                   ingreso_mensual_neto_inicio=ingreso_mensual_neto_inicio,
+                                                   horas_laboral_semanales=horas_laboral_semanales,
+                                                   duracion_trabajo=duracion_trabajo,
+                                                   coincidencia_estudios_trabajo=coincidencia_estudios_trabajo,
+                                                   sector_economico=sector_economico,
+                                                   razon_desempleo=razon_desempleo)
             empleo_inmediato_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, 'student_module/job_after_grad.html', {'form':form})
+    return render(request, 'student_module/job_after_grad.html', {'form': form})
+
 
 @login_required
-def current_job(request): #Corresponde a model Empresa, form EmpresaForm y en la BD como la tabla 'empresa'
+def current_job(request):  # Corresponde a model Empresa, form EmpresaForm y en la BD como la tabla 'empresa'
 
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -682,15 +706,15 @@ def current_job(request): #Corresponde a model Empresa, form EmpresaForm y en la
             empleo_actual = Empresa.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = EmpresaForm(request.POST)
-            return render(request, "student_module/current_job.html", {"form":form})
+            return render(request, "student_module/current_job.html", {"form": form})
 
         form = EmpresaForm(instance=empleo_actual)
         if empleo_actual:
-            return render(request, 'student_module/current_job.html', {'form':form})
+            return render(request, 'student_module/current_job.html', {'form': form})
         else:
-            return render(request, 'student_module/current_job.html', {'form':form})
+            return render(request, 'student_module/current_job.html', {'form': form})
 
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -698,7 +722,7 @@ def current_job(request): #Corresponde a model Empresa, form EmpresaForm y en la
         form = EmpresaForm(request.POST)
         if form.is_valid():
             matricula = alumno
-            confirmacion_empleo_empresa= form.cleaned_data['confirmacion_empleo_empresa']
+            confirmacion_empleo_empresa = form.cleaned_data['confirmacion_empleo_empresa']
             razon_desempleo_empresa = form.cleaned_data['razon_desempleo_empresa']
             nombre_empresa = form.cleaned_data['nombre_empresa']
             calle_empresa = form.cleaned_data['calle_empresa']
@@ -720,50 +744,52 @@ def current_job(request): #Corresponde a model Empresa, form EmpresaForm y en la
             medio_obtencion_empresa = form.cleaned_data['medio_obtencion_empresa']
             sector_economico = form.cleaned_data['sector_economico']
             empresa_obj = Empresa(matricula=matricula,
-                confirmacion_empleo_empresa=confirmacion_empleo_empresa,
-                razon_desempleo_empresa= razon_desempleo_empresa,
-                nombre_empresa=nombre_empresa,
-                calle_empresa=calle_empresa,
-                colonia_empresa=colonia_empresa,
-                num_empresa=num_empresa,
-                codigo_postal=codigo_postal,
-                id_estado=id_estado,
-                id_municipio=id_municipio,
-                rol_egresado_empresa=rol_egresado_empresa,
-                puesto=puesto,
-                actividad_egresado_empresa=actividad_egresado_empresa,
-                tamanio_empresa=tamanio_empresa,
-                tipo_contratacion=tipo_contratacion,
-                regimen_juridico=regimen_juridico,
-                ingresomensual_neto=ingresomensual_neto,
-                horas_laborales=horas_laborales,
-                duracion_empresa_meses=duracion_empresa_meses,
-                medida_coincidencia_labestudios=medida_coincidencia_labestudios,
-                medio_obtencion_empresa=medio_obtencion_empresa,
-                sector_economico=sector_economico)
+                                  confirmacion_empleo_empresa=confirmacion_empleo_empresa,
+                                  razon_desempleo_empresa=razon_desempleo_empresa,
+                                  nombre_empresa=nombre_empresa,
+                                  calle_empresa=calle_empresa,
+                                  colonia_empresa=colonia_empresa,
+                                  num_empresa=num_empresa,
+                                  codigo_postal=codigo_postal,
+                                  id_estado=id_estado,
+                                  id_municipio=id_municipio,
+                                  rol_egresado_empresa=rol_egresado_empresa,
+                                  puesto=puesto,
+                                  actividad_egresado_empresa=actividad_egresado_empresa,
+                                  tamanio_empresa=tamanio_empresa,
+                                  tipo_contratacion=tipo_contratacion,
+                                  regimen_juridico=regimen_juridico,
+                                  ingresomensual_neto=ingresomensual_neto,
+                                  horas_laborales=horas_laborales,
+                                  duracion_empresa_meses=duracion_empresa_meses,
+                                  medida_coincidencia_labestudios=medida_coincidencia_labestudios,
+                                  medio_obtencion_empresa=medio_obtencion_empresa,
+                                  sector_economico=sector_economico)
             empresa_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, 'student_module/current_job.html', {'form':form})
+    return render(request, 'student_module/current_job.html', {'form': form})
+
 
 @login_required
 def recommendations(request):
-    #Ver comentarios en seleccion_carrera.
+    # Ver comentarios en seleccion_carrera.
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
         try:
-            recomendaciones = DesempenioRecomendaciones.objects.filter(matricula=Student.objects.get(matricula=usuario)).first()
+            recomendaciones = DesempenioRecomendaciones.objects.filter(
+                matricula=Student.objects.get(matricula=usuario)).first()
         except Student.DoesNotExist:
             form = DesempenioRecomendacionesForm(request.POST)
-            return render(request, "student_module/recommendations.html", {"form":form})
+            return render(request, "student_module/recommendations.html", {"form": form})
 
         form = DesempenioRecomendacionesForm(instance=recomendaciones)
         if recomendaciones:
-            return render(request, 'student_module/recommendations.html', {'form':form})
+            return render(request, 'student_module/recommendations.html', {'form': form})
         else:
-            return render(request, 'student_module/recommendations.html', {'form':form})
-    #Ver comentarios en seleccion_carrera.
+            return render(request, 'student_module/recommendations.html', {'form': form})
+    # Ver comentarios en seleccion_carrera.
     if request.method == "POST":
         usuario = request.user
         alumno = Student.objects.filter(matricula=usuario).first()
@@ -777,11 +803,11 @@ def recommendations(request):
             modificaciones_planest = form.cleaned_data['modificaciones_planest']
             opinion_orgainst = form.cleaned_data['opinion_orgainst']
             desempenio_recomendaciones_obj = DesempenioRecomendaciones(matricula=matricula,
-                nivel_satisfaccion=nivel_satisfaccion,
-                grado_exigencia= grado_exigencia,
-                nivel_formacion=nivel_formacion,
-                modificaciones_planest=modificaciones_planest,
-                opinion_orgainst=opinion_orgainst)
+                                                                       nivel_satisfaccion=nivel_satisfaccion,
+                                                                       grado_exigencia=grado_exigencia,
+                                                                       nivel_formacion=nivel_formacion,
+                                                                       modificaciones_planest=modificaciones_planest,
+                                                                       opinion_orgainst=opinion_orgainst)
             desempenio_recomendaciones_obj.save()
             messages.success(request, f'Se guardaron los cambios.')
-    return render(request, 'student_module/recommendations.html', {'form':form})
+    return render(request, 'student_module/recommendations.html', {'form': form})

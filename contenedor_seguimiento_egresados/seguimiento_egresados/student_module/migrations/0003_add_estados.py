@@ -12,8 +12,8 @@ sql_query = ("INSERT INTO `student_module_estados` VALUES (1,'01','Aguascaliente
              "'Tab.',1),(28,'28','Tamaulipas','Tamps.',1),(29,'29','Tlaxcala','Tlax.',1),(30,'30','Veracruz de "
              "Ignacio de la Llave','Ver.',1),(31,'31','Yucatán','Yuc.',1),(32,'32','Zacatecas','Zac.',1)")
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
         ('student_module', '0002_add_licenciaturas'),
     ]

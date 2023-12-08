@@ -845,8 +845,8 @@ sql_query = ("INSERT INTO `student_module_municipios` VALUES (1,'001','Aguascali
              "'Villa González Ortega',1,32),(2465,'054','Villa Hidalgo',1,32),(2466,'055','Villanueva',1,32),(2467,"
              "'056','Zacatecas',1,32),(2468,'057','Trancoso',1,32),(2469,'058','Santa María de la Paz',1,32)")
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
         ('student_module', '0003_add_estados'),
     ]

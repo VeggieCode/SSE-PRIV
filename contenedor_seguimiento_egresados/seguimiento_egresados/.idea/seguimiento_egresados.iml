@@ -18,10 +18,14 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (venv)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="Sistema-de-Seguimiento-de-Egresados-FEI" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
     <option name="myDocStringFormat" value="Plain" />
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="a81c6fd4-71c6-49da-8eea-634664269488" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
