@@ -34,6 +34,9 @@
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="a81c6fd4-71c6-49da-8eea-634664269488" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="c07257f7-259e-42db-ad45-a21654b67ee3" />
+  </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
