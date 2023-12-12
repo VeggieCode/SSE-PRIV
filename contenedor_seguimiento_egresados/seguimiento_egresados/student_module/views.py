@@ -112,7 +112,7 @@ def generate_pdf(request):
                 year, month, day = fecha.split("-")  # separamos cada parte
                 # creamos un diccionario con todos los mese
                 months = {1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio", 7: "Julio",
-                          8: "Agosto"}
+                          8: "Agosto", 9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"}
                 # retornamos el resultado
                 return f"{day} de {months[int(month)]} del {year}"
 
