@@ -181,7 +181,7 @@ class StudentForm(ModelForm):
             'linkedin': 'LinkedIn',
             'calle': 'Calle*',
             'numero_exterior': 'Número exterior*',
-            'numero_interior': 'Número interior*',
+            'numero_interior': 'Número interior',
             'colonia': 'Colonia*',
             'numero': 'Número*',
             'codigo_postal': 'Código Postal*',
