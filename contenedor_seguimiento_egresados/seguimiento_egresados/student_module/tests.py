@@ -1,9 +1,11 @@
 from django.test import TestCase
-from student_module.models import Student
+from student_module.models.student import Student
+
 
 # Create your tests here.
 class StudentModelTest(TestCase):
     def test_student_register(self):
+        Student()
         new_student = Student.objects.create(matricula="S18012191", nombre="Alexis")
         new_student.save()
 

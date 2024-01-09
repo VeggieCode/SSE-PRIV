@@ -3,9 +3,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import render
 from admin_module.models import Coordinador
-from student_module.models import Carrera
-from student_module.models import EmpleoDuranteEstudios
-from student_module.models import Student
+from student_module.models.carrera import Carrera
+from student_module.models.empleo import EmpleoDuranteEstudios
+from student_module.models.student import Student
 
 
 @login_required

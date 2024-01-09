@@ -1,6 +1,7 @@
 import datetime
 import re
 
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
 born_date_validate = RegexValidator(regex=r'^(1\d|[2-3]\d|4[0-5])-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$',
@@ -19,4 +20,12 @@ only_email = RegexValidator(r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z
                             'Sólo se permiten direcciones de e-mail válidas.')
 only_postal_code_mx = RegexValidator(r'^\d{5}$', 'Sólo se permiten códigos postales válidos.')
 only_phone_number_mx = RegexValidator(r'^\d{10}$', 'Sólo se permiten números de teléfono de 10 dígitos.')
-MAX_YEAR = datetime.date.today().year - 4
+
+
+def validator_enrollment(value):
+    year = int(value[1:2]) + 2000
+    today = datetime.date.today()
+    year_currently = today.strftime("%Y")
+
+    if year - year_currently < -3:
+        raise ValidationError('%(value)s no es una matricula valida', params={'value': value}, )

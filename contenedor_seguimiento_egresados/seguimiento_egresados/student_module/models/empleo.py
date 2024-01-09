@@ -1,69 +1,22 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
-import datetime
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator
 from django.db import models
-from django.db.models.deletion import DO_NOTHING
-from student_module.validators import alphanumeric, just_number, only_decimals, just_letters, just_letters_blank, \
-    only_email, only_postal_code_mx, only_phone_number_mx, MAX_YEAR
-
-# OPCIONES PARA PREGUNTAS DE SELECCIÓN
-
-SEXOS = (('', 'Seleccione sexo'), ('M', 'Masculino'),
-         # First one is the value of select option and second is the displayed value in option
-         ('F', 'Femenino'), ('O', 'Prefiero no decirlo'))
-
-ESTADO_CIVIL = (('', 'Seleccione...'), ('Soltero/a', 'Soltero/a'),
-                # First one is the value of select option and second is the displayed value in option
-                ('Casado/a', 'Casado/a'), ('Divorciado/a', 'Divorciado/a'), ('Viudo/a', 'Viudo/a'))
-
-TIPO_INSTITUCION = (('', 'Seleccione el tipo de institución'), ('Universidad Pública', 'Universidad Pública'),
-                    # First one is the value of select option and second is the displayed value in option
-                    ('Universidad Privada', 'Universidad Privada'),
-                    ('Instituto Tecnológico y/o Politécnico Público', 'Instituto Tecnológico y/o Politécnico Público'),
-                    ('Instituto Tecnológico Privado', 'Instituto Tecnológico Privado'), ('Otro', 'Otro'))
-
-TITULADO_CHOICES = (('', 'Seleccione...'), ('Sí', 'Titulado'), ('No', 'No titulado'), ('En proceso', 'En proceso'))
-
-SI_NO_CHOICES = (('Sí', 'Sí'), ('No', 'No'),)
+from django.db.models import DO_NOTHING
+from student_module.validators import just_number, alphanumeric, only_phone_number_mx, only_email, only_postal_code_mx
 
 SI_NO_CHOICES_NUMERIC = ((1, "Sí"), (0, "No"),)
-
-TIPOINSCRIPCION = (('', 'Seleccione...'), ('Tiempo completo', 'Tiempo completo'), ('Tiempo parcial', 'Tiempo parcial'))
-
-TIPO_CONTINUACION_ESTUDIOS = (
-    ('', 'Seleccione el tipo de continuación de estudios...'), ('Cursos cortos ', 'Cursos cortos'),
-    ('Diplomado ', 'Diplomado'), ('Especialización', 'Especialización'), ('Maestría', 'Maestría'),
-    ('Doctorado', 'Doctorado'), ('Otro', 'Otro'))
-
-TIPO_INSTITUCION_CONTINUACION = (('', 'Seleccione el tipo de institución'), ('Pública ', 'Pública'),
-                                 # First one is the value of select option and second is the displayed value in option
-                                 ('Privada', 'Privada'), ('Otro', 'Otro'))
-
 MEDIDA_COINCIDENCIA_ESTUDIOS = (
     ('', 'Seleccione...'), ('Nula coincidencia', 'Nula coincidencia'), ('Baja coincidencia', 'Baja coincidencia'),
     ('Mediana coincidencia', 'Mediana coincidencia'), ('Alta coincidencia', 'Alta coincidencia'))
-
 TIEMPO_CONSEGUIR_EMPLEO = (('', 'Seleccione...'), ('Menos de seis meses', 'Menos de seis meses'),
                            ('De seis meses a un año', 'De seis meses a un año'),
                            ('De 1 año 1 día a 2 años', 'De 1 año 1 día a 2 años'), ('Más de 2 años', 'Más de 2 años'),
                            ('No encontré y seguí en el mismo empleo', 'No encontré y seguí en el mismo empleo'),
                            ('No encontré empleo, quedé desocupado', 'No encontré empleo, quedé desocupado'),
                            ('Otro', 'Otro'))
-
 DEMORA_EMPLEO = (('', 'Seleccione...'), ('Escasa experiencia laboral', 'Escasa experiencia laboral'),
                  ('La carrera es poco conocida', 'La carrera es poco conocida'),
                  ('Su situación personal se lo dificultó', 'Su situación personal se lo dificultó'),
                  ('Tenía ofertas de trabajo poco atractivas', 'Tenía ofertas de trabajo poco atractivas'),
                  ('Otro ', 'Otro'))
-
 MEDIO_EMPLEO = (('', 'Seleccione...'), ('Bolsa de trabajo', 'Bolsa de trabajo'),
                 ('Anuncio en el periódico', 'Anuncio en el periódico'),
                 ('Invitación expresa de una empresa', 'Invitación expresa de una empresa'),  # O institucion
@@ -75,30 +28,26 @@ MEDIO_EMPLEO = (('', 'Seleccione...'), ('Bolsa de trabajo', 'Bolsa de trabajo'),
                 # checar en cuestionario preg 53
                 ('Integración a un negocio familiar', 'Integración a un negocio familiar'),
                 ('Servicio social', 'Servicio social'), ('Otro', 'Otro'))
-
 REQUISITO_FORMAL_EMPLEO = (('', 'Seleccione...'), ('Tener título de licenciatura', 'Tener título de licenciatura'),
                            ('Aprobar los exámenes de selección', 'Aprobar los exámenes de selección'),
                            ('Pasar una entrevista formal', 'Pasar una entrevista formal'))
-
 RAZON_NO_BUSQUEDA_EMPLEO = (('', 'Seleccione...'), ('Ya tenía un trabajo', 'Ya tenía un trabajo'),
                             ('Decidí continuar estudiando', 'Decidí continuar estudiando'),
                             ('Por razones personales', 'Por razones personales'))
-
 RAZON_DESEMPLEO = (('', 'Seleccione...'), (
-'No tengo trabajo porque no encontré, pero sigo buscando', 'No tengo trabajo porque no encontré, pero sigo buscando'), (
-                   'No tengo trabajo porque no encontré y ya no busco',
-                   'No tengo trabajo porque no encontré y ya no busco'),
+    'No tengo trabajo porque no encontré, pero sigo buscando',
+    'No tengo trabajo porque no encontré, pero sigo buscando'), (
+                       'No tengo trabajo porque no encontré y ya no busco',
+                       'No tengo trabajo porque no encontré y ya no busco'),
                    ('Estoy por incorporarme a un trabajo', 'Estoy por incorporarme a un trabajo'), (
-                   'No tengo trabajo, porque decidí continuar estudiando',
-                   'No tengo trabajo, porque decidí continuar estudiando'),
+                       'No tengo trabajo, porque decidí continuar estudiando',
+                       'No tengo trabajo, porque decidí continuar estudiando'),
                    ('No necesito trabajar', 'No necesito trabajar'),
                    ('No tengo trabajo por razones de salud', 'No tengo trabajo por razones de salud'),
                    ('No tengo trabajo porque aún no lo he buscado', 'No tengo trabajo porque aún no lo he buscado'),)
-
 ROL_EGRESADO_EMPLEO = (
     ('', 'Seleccione...'), ('Propietario', 'Propietario'), ('Trabajador Independiente', 'Trabajador Independiente'),
     ('Empleado', 'Empleado'),)
-
 PUESTO_INICIAL = (('', 'Seleccione...'), ('Director general', 'Director general'),
                   ('Dueño o socio de empresa, despacho, rancho', 'Dueño o socio de empresa, despacho, rancho'),
                   ('Profesional independiente', 'Profesional independiente'),
@@ -118,14 +67,11 @@ PUESTO_INICIAL = (('', 'Seleccione...'), ('Director general', 'Director general'
                   ('Vendedor en establecimiento', 'Vendedor en establecimiento'), ('Asistente', 'Asistente'),
                   ('Ayudante', 'Ayudante'), ('Por cuenta propia no profesional', 'Por cuenta propia no profesional'),
                   ('Empleado no profesional', 'Empleado no profesional'), ('Auxiliar', 'Auxiliar'), ('Otro', 'Otro'))
-
 TAMANIO_EMPRESA = (('', 'Seleccione...'), ('Hasta 15 empleados (Micro)', 'Hasta 15 empleados (Micro)'),
                    ('Entre 16 y 100 empleados (Pequeña)', 'Entre 16 y 100 empleados (Pequeña)'),
                    ('Entre 101 y 250 empleados (Mediana)', 'Entre 101 y 250 empleados (Mediana)'),
                    ('Más de 251 empleados (Grande)', 'Más de 251 empleados (Grande)'))
-
 REGIMEN_JURIDICO = (('', 'Seleccione...'), ('Público', 'Público'), ('Privado', 'Privado'))
-
 SECTOR_ECONOMICO = (('', 'Seleccione...'), ('Agrícola-ganadero, silvícola,etc', 'Agrícola-ganadero, silvícola,etc'),
                     ('Industria extractiva', 'Industria extractiva'),
                     ('Industria de la transformación', 'Industria de la transformación'),
@@ -135,7 +81,6 @@ SECTOR_ECONOMICO = (('', 'Seleccione...'), ('Agrícola-ganadero, silvícola,etc'
                     ('Servicios Profesionales y Técnicos', 'Servicios Profesionales y Técnicos'),
                     ('Servicios de Salud', 'Servicios de Salud'), ('Servicios de Gobierno', 'Servicios de Gobierno'),
                     ('Otro', 'Otro'))
-
 DEPARTAMENTOS = (('', 'Seleccione...'), ('Dirección', 'Dirección'), ('Coordinación', 'Coordinación'),
                  ('Dirección de proyectos', 'Dirección de proyectos'),
                  ('Coordinación de Proyectos', 'Coordinación de Proyectos'),
@@ -152,124 +97,16 @@ DEPARTAMENTOS = (('', 'Seleccione...'), ('Dirección', 'Dirección'), ('Coordina
                  ('Actividades de Organización', 'Actividades de Organización'),
                  ('Actividades Administrativas', 'Actividades Administrativas'), ('Publicidad', 'Publicidad'),
                  ('Atención a Clientes', 'Atención a Clientes'), ('Otro', 'Otro'))
-
 TIPO_CONTRATACION = (('', 'Seleccione...'), ('Por tiempo determinado', 'Por tiempo determinado'),
                      ('Por obra determinada', 'Por obra determinada'),
                      ('Por tiempo indeterminado', 'Por tiempo indeterminado'), ('Otro', 'Otro'))
-
 NIVEL_SATISFACCION = (('', 'Seleccione...'), ('Poco satisfecho', 'Poco satisfecho'), ('Satisfecho', 'Satisfecho'),
                       ('Muy satisfecho', 'Muy satisfecho'), ('Totalmente satisfecho', 'Totalmente satisfecho'))
-
 GRADO_EXIGENCIA = (
     ('', 'Seleccione...'), ('Ninguna exigencia', 'Ninguna exigencia '), ('Poca exigencia', 'Poca exigencia'),
     ('Moderada exigencia', 'Moderada exigencia'), ('Mucha exigencia', 'Mucha exigencia'))
-
 NIVEL_FORMACION = (
     ('', 'Seleccione...'), ('Nada', 'Nada'), ('Poco', 'Poco'), ('En parte', 'En parte'), ('Mucho', 'Mucho'))
-
-
-def validate_age_range(value):
-    today = datetime.date.today()
-    age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
-    if age < 20 or age > 40:
-        raise ValidationError('La edad debe estar entre 20 y 40 años.')
-
-
-def validator_enrollment(value):
-    year = int(value[1:2]) + 2000
-    today = datetime.date.today()
-    year_currently = today.strftime("%Y")
-
-    if year - year_currently < -3:
-        raise ValidationError(_('%(value)s no es una matricula valida'), params={'value': value}, )
-
-
-# COMIENZAN MODELOS DE SISTEMA DE SEGUIMIENTO DE EGRESADOS#
-
-class Student(models.Model):
-    # id_alumno = models.IntegerField(primary_key=True)
-    matricula = models.CharField(max_length=9, validators=[alphanumeric])
-    nombre = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters_blank])
-    apellido_paterno = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters])
-    apellido_materno = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters])
-    sexo = models.CharField(max_length=10, choices=SEXOS, blank=False, null=True)
-    fecha_nacimiento = models.DateField(blank=False, null=True, validators=[validate_age_range])
-    fecha_ingreso_lic = models.IntegerField(blank=False, null=True, validators=[MaxValueValidator(MAX_YEAR)])
-    licenciatura_fei = models.CharField(max_length=500, blank=True, null=True)
-    correo = models.CharField(max_length=45, blank=False, null=True, validators=[only_email])
-    correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
-    celular = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=False, null=True)
-    telefono = models.CharField(max_length=10, blank=True, null=True, validators=[only_phone_number_mx])
-    twitter = models.CharField(max_length=45, blank=True, null=True)
-    facebook = models.CharField(max_length=45, blank=True, null=True)
-    linkedin = models.CharField(max_length=45, blank=True, default='')
-    calle = models.CharField(max_length=45, blank=False, null=True)
-    numero_exterior = models.IntegerField(null=True, blank=False)
-    numero_interior = models.IntegerField(null=True, blank=True)
-    colonia = models.CharField(max_length=45, blank=False, null=True)
-    codigo_postal = models.CharField(max_length=5, blank=False, null=True, validators=[only_postal_code_mx])
-    correo_alterno = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
-    pre_egreso_abierto = models.BooleanField(default=False)
-    post_egreso_abierto = models.BooleanField(default=False)
-    nombre_ref_principal = models.CharField(max_length=100, blank=False, null=True)
-    celular_ref_principal = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=False, null=True)
-    nombre_ref_auxiliar = models.CharField(max_length=100, blank=True, null=True)
-    celular_ref_auxiliar = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
-    estado = models.CharField(max_length=50, blank=False, null=True)
-    municipio = models.CharField(max_length=50, blank=False, null=True)
-    localidad = models.CharField(max_length=50, blank=False, null=True)
-    pre_egreso_terminado = models.BooleanField(default=False)
-    pre_egreso_fecha_fin = models.DateField(blank=False, null=True)
-
-
-class SeleccionCarrera(models.Model):
-    # id_seleccion_carrera = models.IntegerField(primary_key=True)
-    primera_opcion_carrera = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
-    eleccion_tipo_institucion = models.CharField(max_length=45, null=True, choices=TIPO_INSTITUCION, blank=True)
-    primera_eleccion_institucion = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
-    primera_eleccion_nombre = models.CharField(max_length=45, blank=True, null=True)
-    razon_eleccion_institucion = models.CharField(max_length=45, blank=True, null=True)
-    razon_eleccion_carrera = models.CharField(max_length=45, blank=True, null=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
-                                  null=True)
-
-
-class Carrera(models.Model):
-    # id_carrera = models.IntegerField(primary_key=True)
-    licenciatura = models.CharField(max_length=100, validators=[just_letters], null=True, blank=True)
-
-    def __str__(self):
-        return self.licenciatura
-
-
-class Licenciatura(models.Model):
-    # id_licenciatura = models.IntegerField(primary_key=True)
-    nombre_campus = models.CharField(max_length=45, validators=[just_letters], null=True, blank=True)
-    nombre_carrera = models.CharField(max_length=500, blank=True, null=True)
-    anio_pestudios = models.CharField(max_length=45, blank=True, null=True)
-    anio_inicio = models.CharField(max_length=25, blank=True, null=True)
-    anio_fin = models.CharField(max_length=25, blank=True, null=True)
-    org_ss = models.CharField(max_length=45, blank=True, null=True)
-    fecha_inicioss = models.DateField(blank=True, null=True)
-    fecha_finss = models.DateField(blank=True, null=True)
-    titulado = models.CharField(max_length=10, choices=TITULADO_CHOICES, null=True, blank=True)
-    promedio_final = models.FloatField(blank=True, null=True, validators=[only_decimals])
-    tipo_inscripcion = models.CharField(max_length=25, choices=TIPOINSCRIPCION, null=True, blank=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
-                                  null=True)
-
-
-class ContinuacionEstudios(models.Model):
-    # id_continuacion_estudios = models.IntegerField(primary_key=True)
-    tipo_estudio_continuacion = models.CharField(max_length=45, choices=TIPO_CONTINUACION_ESTUDIOS, null=True,
-                                                 blank=True)
-    institucion = models.CharField(max_length=45, choices=TIPO_INSTITUCION_CONTINUACION, null=True, blank=True)
-    nombre_programa = models.CharField(max_length=45, blank=True, null=True)
-    conclusion_estudios = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
-    obtencion_grado = models.IntegerField(blank=True, null=True, choices=SI_NO_CHOICES_NUMERIC)
-    duracion_estudios_meses = models.IntegerField(blank=True, null=True, validators=[just_number])
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
-                                  null=True)
 
 
 class EmpleoDuranteEstudios(models.Model):
@@ -357,52 +194,5 @@ class DesempenioRecomendaciones(models.Model):
     nivel_formacion = models.CharField(max_length=45, choices=NIVEL_FORMACION, null=True, blank=True)
     modificaciones_planest = models.CharField(max_length=45, blank=True, null=True)
     opinion_orgainst = models.CharField(max_length=45, blank=True, null=True)
-    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula', validators=[alphanumeric],
-                                  null=True)
-
-
-class Estados(models.Model):
-    # id_estado = models.AutoField(primary_key=True)
-    clave = models.CharField(max_length=25, blank=True, null=True)
-    nombre = models.CharField(max_length=255, blank=True, null=True)
-    abrev = models.CharField(max_length=25, blank=True, null=True)
-    activo = models.IntegerField()
-
-    def __str__(self):
-        return self.nombre
-
-
-class Municipios(models.Model):
-    # id_municipio = models.AutoField(primary_key=True)
-    id_estado = models.ForeignKey('Estados', on_delete=models.CASCADE, db_column='id_estado', validators=[alphanumeric],
-                                  null=True)
-    clave = models.CharField(max_length=10)
-    nombre = models.CharField(max_length=100)
-    activo = models.IntegerField()
-
-    def __str__(self):
-        return self.nombre
-
-
-class Localidades(models.Model):
-    # id_localidad = models.AutoField(primary_key=True)
-    municipio = models.ForeignKey('Municipios', on_delete=DO_NOTHING, db_column='id_municipio',
+    matricula = models.ForeignKey('Student', on_delete=DO_NOTHING, db_column='matricula',
                                   validators=[alphanumeric], null=True)
-    clave = models.CharField(max_length=4)
-    nombre = models.CharField(max_length=100)
-    mapa = models.IntegerField()
-    ambito = models.CharField(max_length=1)
-    latitud = models.CharField(max_length=20)
-    longitud = models.CharField(max_length=20)
-    lat = models.DecimalField(max_digits=10, decimal_places=7)
-    lng = models.DecimalField(max_digits=10, decimal_places=7)
-    altitud = models.CharField(max_length=15)
-    carta = models.CharField(max_length=10)
-    poblacion = models.IntegerField()
-    masculino = models.IntegerField()
-    femenino = models.IntegerField()
-    viviendas = models.IntegerField()
-    activo = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.nombre

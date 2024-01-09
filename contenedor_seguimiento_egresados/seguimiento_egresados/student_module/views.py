@@ -1,37 +1,17 @@
-from numbers import Number
-from django.shortcuts import render
-from admin_module.models import Coordinador
-from seguimiento_egresados.utils import render_to_pdf
-from student_module.forms import SignupUserForm
-from .forms import CustomAuthenticationForm
-from django.contrib.auth.views import LoginView
+from io import BytesIO
+
+import pdfrw
+from django.contrib import messages
 from django.contrib.auth import logout
-from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
-from django.contrib import messages
-from django.shortcuts import redirect, render
-from .forms import *
-from django.contrib import messages
-from django.forms.models import model_to_dict
-from django.urls import reverse_lazy
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
     PasswordResetCompleteView
-from django.urls import reverse_lazy
-from .forms import CustomPasswordResetForm, CustomSetPasswordForm
-from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.http import JsonResponse
-from django.conf import settings
+from django.shortcuts import redirect
 from django.shortcuts import render
-from django.http import HttpResponse
-from io import BytesIO
-from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-from datetime import datetime
-from django.views.generic import View
-from django.http import HttpResponse
+from django.urls import reverse_lazy
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
@@ -79,8 +59,16 @@ from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.pdfbase.ttfonts import TTFont
 import textwrap
 
-from .models import Student, Municipios, Estados, Carrera, SeleccionCarrera, Licenciatura, ContinuacionEstudios, \
-    EmpleoDuranteEstudios, BusquedaEmpleo, EmpleoInmediato, Empresa, DesempenioRecomendaciones
+from admin_module.models import Coordinador
+from .forms import *
+from .forms import CustomPasswordResetForm, CustomSetPasswordForm
+from .models.carrera import Carrera
+from .models.continuacion_estudios import ContinuacionEstudios
+from .models.empleo import EmpleoDuranteEstudios, BusquedaEmpleo, EmpleoInmediato, Empresa, DesempenioRecomendaciones
+from .models.licenciatura import Licenciatura
+from .models.seleccion_carrera import SeleccionCarrera
+from .models.student import Student
+from .models.ubicacion import Estados, Municipios
 
 
 @login_required
@@ -130,7 +118,7 @@ def generate_pdf(request):
                 y += 12  # Distancia vertical entre líneas
 
             second_text = (f"\nSe extiende la presente a petición de la interesada y para los fines legales que a ésta "
-                           f"convenga a la fecha de {formato_fecha(datetime.now())}, en la ciudad de Xalapa, "
+                           f"convenga a la fecha de {formato_fecha(datetime.datetime.now())}, en la ciudad de Xalapa, "
                            f"Veracruz. ")
 
             margin_second_text = 125  # Establece el tamaño del margen
@@ -578,7 +566,7 @@ def job_during_school(request):
             if employee_confirmation is not None:
                 student.pre_egreso_terminado = validate_student_form(request)
                 if student.pre_egreso_terminado:
-                    student.pre_egreso_fecha_fin = datetime.now()
+                    student.pre_egreso_fecha_fin = datetime.datetime.now()
                 student.save()
             messages.success(request, f'Se guardaron los cambios.')
     return redirect('student_module:finish')
