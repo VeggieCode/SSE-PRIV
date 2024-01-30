@@ -22,7 +22,7 @@ def validate_age_range(value):
 
 
 class Student(models.Model):
-    # id_alumno = models.IntegerField(primary_key=True)
+
     matricula = models.CharField(max_length=9, validators=[alphanumeric])
     nombre = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters_blank])
     apellido_paterno = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters])
@@ -55,3 +55,6 @@ class Student(models.Model):
     localidad = models.CharField(max_length=50, blank=False, null=True)
     pre_egreso_terminado = models.BooleanField(default=False)
     pre_egreso_fecha_fin = models.DateField(blank=False, null=True)
+
+    def full_name(self):
+        return self.nombre + ' ' + self.apellido_paterno + ' ' + self.apellido_materno
