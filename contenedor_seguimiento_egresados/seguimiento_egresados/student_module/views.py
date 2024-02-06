@@ -258,11 +258,11 @@ def logout_view(request):
 @login_required
 def student_info(request):
     estados = Estados.objects.all()
-    full_name = return_full_name(request)
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
         usuario = request.user
+        full_name = return_full_name(request)
         try:
             alumno = Student.objects.filter(matricula=usuario).first()
             if alumno is None:
@@ -282,6 +282,7 @@ def student_info(request):
 
     if request.method == 'POST':
         usuario = request.user
+        full_name = return_full_name(request)
         alumno = Student.objects.filter(matricula=usuario).first()
         estados = Estados.objects.all()
         form = StudentForm(request.POST)
