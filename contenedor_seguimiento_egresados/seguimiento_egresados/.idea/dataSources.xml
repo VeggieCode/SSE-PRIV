@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="control_egresados@localhost" uuid="b84b7a48-64d2-4b84-8d8a-ee094f160a1e">
+    <data-source source="LOCAL" name="@localhost" uuid="b84b7a48-64d2-4b84-8d8a-ee094f160a1e">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/control_egresados</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="container@localhost" uuid="a9d705b2-fd26-4308-8ba1-78c8fa5ab455">
