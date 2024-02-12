@@ -70,9 +70,9 @@
                                 <br>
                                 <br>
                                 <div class="row">
-                                    <p>Selecciona la carrera a consultar: </p>
+                                    <p><label for="carreraSelect">Selecciona el elemento a consultar: </label></p>
                                     <select class="form-control custom-select" id="carreraSelect"
-                                            onchange="filterTable()">
+                                                                               onchange="filterTable()">
                                         <option value="" selected>Todas las carreras</option>
                                         {% for degree in degrees %}
                                             <option value="{{ degree.licenciatura }}">{{ degree.licenciatura }}</option>
@@ -82,9 +82,9 @@
                                 <br>
                                 <br>
                                 <div class="row">
-                                    <p>Selecciona el estatus a consultar: </p>
+                                    <p><label for="estatusSelect">Selecciona el estatus a consultar: </label></p>
                                     <select class="form-select custom-select" id="estatusSelect"
-                                            onchange="filterTable()">
+                                                                               onchange="filterTable()">
                                         <option value="" selected>Todos</option>
                                         <option value="Pendiente">Pendiente</option>
                                         <option value="Concluido">Concluido</option>
@@ -94,9 +94,9 @@
                                 <br>
                                 <br>
                                 <div class="row">
-                                    <p>Selecciona el estatus a consultar: </p>
+                                    <p><label for="estatusSelect">Selecciona el estatus a consultar: </label></p>
                                     <select class="form-select custom-select" id="estatusSelect"
-                                            onchange="filterTableStatus()">
+                                                                               onchange="filterTableStatus()">
                                         <option value="" selected>Todos</option>
                                         <option value="Pendiente">Pendiente</option>
                                         <option value="Concluido">Concluido</option>
@@ -109,8 +109,8 @@
                         <div class="col-9 my-5 pad-content">
                             <div class="row">
                                 <div class="input-group col-11">
-                                    <input type="search" id="busqueda" name="search" class="form-control rounded col-8"
-                                           placeholder="Buscar por matrícula o nombre"/>
+                                    <label for="busqueda"></label><input type="search" id="busqueda" name="search" class="form-control rounded col-8"
+                                                                         placeholder="Buscar por matrícula o nombre"/>
                                     <button type="submit" class="btn btn-primary col-1">
                                         <i class="fas fa-search"></i>
                                     </button>

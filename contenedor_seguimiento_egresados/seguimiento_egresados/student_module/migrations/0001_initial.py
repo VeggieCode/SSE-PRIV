@@ -178,7 +178,7 @@ class Migration(migrations.Migration):
                                                    ('O', 'Prefiero no decirlo')], max_length=10, null=True)),
                 (
                     'fecha_nacimiento',
-                    models.DateField(null=True, validators=[student_module.models.validate_age_range])),
+                    models.DateField(null=True, validators=[student_module.models.student.validate_age_range])),
                 ('fecha_ingreso_lic',
                  models.IntegerField(null=True, validators=[django.core.validators.MaxValueValidator(2019)])),
                 ('licenciatura_fei', models.CharField(blank=True, max_length=500, null=True)),

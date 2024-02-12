@@ -1,25 +1,30 @@
-from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm, UserCreationForm, PasswordResetForm
+import datetime
+
+from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm, UserCreationForm, PasswordResetForm, User
+from django.core.validators import RegexValidator
 from django.forms import ModelForm
 from django.forms.widgets import DateInput, TextInput
 from django.utils.translation import gettext_lazy as _
-
-from . import models
+from django import forms
+from .models import Student, SeleccionCarrera, Carrera, Licenciatura, ContinuacionEstudios, SI_NO_CHOICES_NUMERIC
+from .models.empleo import EmpleoDuranteEstudios, RAZON_NO_BUSQUEDA_EMPLEO, BusquedaEmpleo, EmpleoInmediato, Empresa, \
+    DesempenioRecomendaciones
 
 MATRICULA = 'Matrícula'
 
 
-class MatriculaInput(models.forms.MultiWidget):
+class MatriculaInput(forms.MultiWidget):
     def __init__(self, attrs=None):
         widgets = [
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': '[0-9]'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            models.forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': '[0-9]'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
         ]
         super().__init__(widgets, attrs)
 
@@ -34,53 +39,53 @@ class MatriculaInput(models.forms.MultiWidget):
 
 
 class SignupUserForm(UserCreationForm):
-    matricula_validator = models.RegexValidator(
+    matricula_validator = RegexValidator(
         r'[Ss](1[4-9]|[2-9][0-9])\d{6}$',
         'Por favor ingrese una matrícula válida'
     )
 
-    username = models.forms.CharField(required=True, widget=MatriculaInput(
+    username = forms.CharField(required=True, widget=MatriculaInput(
         attrs={'placeholder': '', 'class': 'form-control prueba', 'autocomplete': 'username'}),
                                       validators=[matricula_validator])
     username.label = ""
-    first_name = models.forms.CharField(max_length=30, required=True,
-                                        widget=models.forms.TextInput(
+    first_name = forms.CharField(max_length=30, required=True,
+                                        widget=forms.TextInput(
                                             attrs={'placeholder': '', 'class': 'form-control'}))
     first_name.label = 'Nombre(s):'
 
-    last_name = models.forms.CharField(max_length=30, required=True,
-                                       widget=models.forms.TextInput(
+    last_name = forms.CharField(max_length=30, required=True,
+                                       widget=forms.TextInput(
                                            attrs={'placeholder': '', 'class': 'form-control'}))
     last_name.label = 'Apellido paterno:'
 
-    apellido_materno = models.forms.CharField(max_length=30, required=True,
-                                              widget=models.forms.TextInput(
+    apellido_materno = forms.CharField(max_length=30, required=True,
+                                              widget=forms.TextInput(
                                                   attrs={'placeholder': '', 'class': 'form-control'}))
     apellido_materno.label = 'Apellido materno:'
 
-    email = models.forms.EmailField(widget=models.forms.TextInput(attrs={'placeholder': 'rafaelhernandez@ejemplo.com'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'rafaelhernandez@ejemplo.com'}))
     email.label = 'Correo electrónico personal:'
-    licenciatura_fei = models.forms.ChoiceField(
-        widget=models.forms.Select,
+    licenciatura_fei = forms.ChoiceField(
+        widget=forms.Select,
         choices=[],
         label='Licenciatura')
     try:
-        licenciatura_fei = models.forms.ChoiceField(
-            widget=models.forms.Select,
-            choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in models.Carrera.objects.all()],
+        licenciatura_fei = forms.ChoiceField(
+            widget=forms.Select,
+            choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()],
             label='Licenciatura')
     except:
         pass
-    password1 = models.forms.CharField(
-        widget=models.forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
     password1.label = 'Contraseña:'
 
-    password2 = models.forms.CharField(
-        widget=models.forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
     password2.label = 'Confirmar contraseña:'
 
     class Meta:
-        model = models.User
+        model = User
         fields = ['username', 'email', 'password1', 'password2', 'licenciatura_fei', 'first_name', 'last_name',
                   'apellido_materno']
 
@@ -110,10 +115,10 @@ class SignupUserForm(UserCreationForm):
 
 
 class CustomPasswordResetForm(PasswordResetForm):
-    email = models.forms.EmailField(
+    email = forms.EmailField(
         label=_("Email"),
         max_length=254,
-        widget=models.forms.EmailInput(attrs={'autocomplete': 'email', 'class': 'form-control'}),
+        widget=forms.EmailInput(attrs={'autocomplete': 'email', 'class': 'form-control'}),
         error_messages={
             'required': _("Por favor escribe un correo correcto"),
             'invalid': _("Por favor escribe un correo incorrecto"),
@@ -122,37 +127,37 @@ class CustomPasswordResetForm(PasswordResetForm):
 
 
 class CustomSetPasswordForm(SetPasswordForm):
-    new_password1 = models.forms.CharField(
+    new_password1 = forms.CharField(
         label=_("Nueva contraseña"),
-        widget=models.forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
         strip=False,
         help_text=_("Tu contraseña debe tener al menos 8 caracteres"),
         validators=[],
     )
-    new_password2 = models.forms.CharField(
+    new_password2 = forms.CharField(
         label=_("Confirmación de nueva contraseña"),
         strip=False,
-        widget=models.forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'class': 'form-control'}),
     )
 
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = models.forms.CharField(label='Matrícula:', max_length=254,
-                                      widget=models.forms.TextInput(attrs={'placeholder': '', 'class': 'form-control'}))
-    password = models.forms.CharField(label="Contraseña:",
-                                      widget=models.forms.PasswordInput(
+    username = forms.CharField(label='Matrícula:', max_length=254,
+                                      widget=forms.TextInput(attrs={'placeholder': '', 'class': 'form-control'}))
+    password = forms.CharField(label="Contraseña:",
+                                      widget=forms.PasswordInput(
                                           attrs={'placeholder': '', 'class': 'form-control'}))
 
 
 class CrearUsuarioForm(UserCreationForm):
     class Meta:
-        model = models.User
+        model = User
         fields = ['username', 'email', 'password1', 'password2']
 
 
 class StudentForm(ModelForm):
     class Meta:
-        model = models.Student
+        model = Student
         fields = ['nombre', 'apellido_paterno', 'apellido_materno', 'sexo',
                   'fecha_nacimiento', 'fecha_ingreso_lic', 'correo', 'correo_uv', 'celular', 'telefono', 'twitter',
                   'facebook', 'linkedin', 'calle', 'colonia', 'numero_exterior', 'numero_interior', 'codigo_postal',
@@ -176,7 +181,7 @@ class StudentForm(ModelForm):
             'linkedin': 'LinkedIn',
             'calle': 'Calle*',
             'numero_exterior': 'Número exterior*',
-            'numero_interior': 'Número interior*',
+            'numero_interior': 'Número interior',
             'colonia': 'Colonia*',
             'numero': 'Número*',
             'codigo_postal': 'Código Postal*',
@@ -189,12 +194,12 @@ class StudentForm(ModelForm):
             'celular_ref_auxiliar': 'Celular'
         }
 
-        max_year = models.datetime.datetime.now().year - 4
-        max_born_date = str(models.datetime.date.today() - models.datetime.timedelta(days=365 * 20))
-        min_born_date = str(models.datetime.date.today() - models.datetime.timedelta(days=365 * 40))
+        max_year = datetime.datetime.now().year - 4
+        max_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 20))
+        min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
         widgets = {
-            'estado': models.forms.Select(choices=[]),
-            'municipio': models.forms.Select(choices=[]),
+            'estado': forms.Select(choices=[]),
+            'municipio': forms.Select(choices=[]),
             'nombre': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'apellido_paterno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'apellido_materno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
@@ -224,19 +229,19 @@ class StudentForm(ModelForm):
         }
 
 
-class SeleccionCarreraForm(models.forms.ModelForm):
-    primera_eleccion_institucion = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+class SeleccionCarreraForm(forms.ModelForm):
+    primera_eleccion_institucion = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿La institución en que usted cursó sus estudios de licenciatura fue la primera que eligió?')
 
-    primera_opcion_carrera = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+    primera_opcion_carrera = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿La carrera que usted cursó fue su primera elección?')
 
     class Meta:
-        model = models.SeleccionCarrera
+        model = SeleccionCarrera
         exclude = ('matricula',)
         fields = ('primera_eleccion_institucion', 'eleccion_tipo_institucion', 'razon_eleccion_institucion',
                   'primera_opcion_carrera', 'primera_eleccion_nombre',
@@ -262,9 +267,9 @@ class SeleccionCarreraForm(models.forms.ModelForm):
         }
 
 
-class LicenciaturaForm(models.forms.ModelForm):
+class LicenciaturaForm(forms.ModelForm):
     class Meta:
-        model = models.Licenciatura
+        model = Licenciatura
         fields = ('nombre_campus', 'nombre_carrera', 'anio_pestudios', 'anio_inicio', 'anio_fin', 'org_ss',
                   'fecha_inicioss', 'fecha_finss', 'titulado', 'promedio_final', 'tipo_inscripcion')
         labels = {
@@ -282,7 +287,7 @@ class LicenciaturaForm(models.forms.ModelForm):
             'tipo_inscripcion': 'Durante la mayor parte de su carrera estuvo usted inscrito como alumno de:',
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
             'nombre_campus': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'anio_pestudios': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'anio_inicio': DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -294,19 +299,19 @@ class LicenciaturaForm(models.forms.ModelForm):
         }
 
 
-class ContinuacionEstudiosForm(models.forms.ModelForm):
-    conclusion_estudios = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+class ContinuacionEstudiosForm(forms.ModelForm):
+    conclusion_estudios = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿Concluyó usted estos estudios?')
 
-    obtencion_grado = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+    obtencion_grado = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿Obtuvo usted el grado o diploma?')
 
     class Meta:
-        model = models.ContinuacionEstudios
+        model = ContinuacionEstudios
         fields = (
             'tipo_estudio_continuacion', 'institucion', 'nombre_programa', 'conclusion_estudios', 'obtencion_grado',
             'duracion_estudios_meses')
@@ -321,20 +326,20 @@ class ContinuacionEstudiosForm(models.forms.ModelForm):
             'duracion_estudios_meses': 'En meses, ¿cuánto duraron los estudios?',
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
             'nombre_programa': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'duracion_estudios_meses': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
         }
 
 
-class EmpleoDuranteEstudiosForm(models.forms.ModelForm):
-    confirmacion_empleo = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+class EmpleoDuranteEstudiosForm(forms.ModelForm):
+    confirmacion_empleo = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿Trabajó usted durante el transcurso de sus estudios en la licenciatura?')
 
     class Meta:
-        model = models.EmpleoDuranteEstudios
+        model = EmpleoDuranteEstudios
         fields = ('confirmacion_empleo', 'coincidencia_estudios_trabajo', 'horas_laboradas_semanales')
         labels = {
             'matricula': MATRICULA,
@@ -343,32 +348,32 @@ class EmpleoDuranteEstudiosForm(models.forms.ModelForm):
             'horas_laboradas_semanales': 'Número de horas en promedio que laboraba a la semana:'
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
             'horas_laboradas_semanales': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
         }
 
 
-class BusquedaEmpleoForm(models.forms.ModelForm):
-    confirmacion_empleo_egreso = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+class BusquedaEmpleoForm(forms.ModelForm):
+    confirmacion_empleo_egreso = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿Tenía usted empleo al concluir sus estudios de licenciatura? (Recuerde que por estudios concluidos '
               'entendemos haber cubierto el total de los créditos de cursos).')
 
-    confirmacion_busqueda_empleo = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+    confirmacion_busqueda_empleo = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿Al concluir sus estudios buscó usted activamente trabajo? (Aunque ya estuviera trabajando)')
 
-    razon_no_busqueda = models.forms.ChoiceField(
+    razon_no_busqueda = forms.ChoiceField(
         label='¿Cuál es la principal razón por la que no buscó empleo? (Sólo en caso de no haber buscado empleo al '
               'concluir sus estudios de licenciatura)',
-        widget=models.forms.Select,
-        choices=models.RAZON_NO_BUSQUEDA_EMPLEO,
+        widget=forms.Select,
+        choices=RAZON_NO_BUSQUEDA_EMPLEO,
         required=False)
 
     class Meta:
-        model = models.BusquedaEmpleo
+        model = BusquedaEmpleo
         fields = ('confirmacion_empleo_egreso', 'confirmacion_busqueda_empleo', 'tiempo_obtencion_empleo',
                   'opinion_demora_empleo',
                   'medio_obtencion_empleo', 'requisito_formal', 'razon_no_busqueda')
@@ -392,18 +397,18 @@ class BusquedaEmpleoForm(models.forms.ModelForm):
                                   'buscado empleo al concluir sus estudios de licenciatura)',
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
         }
 
 
-class EmpleoInmediatoForm(models.forms.ModelForm):
-    confirmacion_empleo_inmediato = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+class EmpleoInmediatoForm(forms.ModelForm):
+    confirmacion_empleo_inmediato = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='De acuerdo a las condiciones antes mencionadas, ¿tuvo usted un trabajo?')
 
     class Meta:
-        model = models.EmpleoInmediato
+        model = EmpleoInmediato
         fields = ('confirmacion_empleo_inmediato', 'razon_desempleo', 'rol_egresado_empleo', 'puesto_empleo_inmediato',
                   'tamano_empresa_inmediata',
                   'nombre_empleo_inmediato', 'nombre_jefe_supervisor', 'telefono_empleo_inmediato',
@@ -436,7 +441,7 @@ class EmpleoInmediatoForm(models.forms.ModelForm):
 
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
             'ingreso_mensual_neto_inicio': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'horas_laboral_semanales': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'duracion_trabajo': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
@@ -447,21 +452,21 @@ class EmpleoInmediatoForm(models.forms.ModelForm):
         }
 
 
-class EmpresaForm(models.forms.ModelForm):
-    confirmacion_empleo_empresa = models.forms.ChoiceField(
-        widget=models.forms.RadioSelect,
-        choices=models.SI_NO_CHOICES_NUMERIC,
+class EmpresaForm(forms.ModelForm):
+    confirmacion_empleo_empresa = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SI_NO_CHOICES_NUMERIC,
         label='¿Trabaja usted actualmente? (En caso de responder negativamente, sólo conteste la siguiente pregunta y '
               'omita el resto)')
 
-    razon_desempleo_empresa = models.forms.ChoiceField(
+    razon_desempleo_empresa = forms.ChoiceField(
         label='Señale la razón que usted considere más importante por la cual no se encuentra trabajando actualmente:',
-        widget=models.forms.Select,
-        choices=models.RAZON_NO_BUSQUEDA_EMPLEO,
+        widget=forms.Select,
+        choices=RAZON_NO_BUSQUEDA_EMPLEO,
         required=False)
 
     class Meta:
-        model = models.Empresa
+        model = Empresa
         fields = (
             'confirmacion_empleo_empresa', 'razon_desempleo_empresa', 'nombre_empresa', 'calle_empresa',
             'colonia_empresa',
@@ -498,7 +503,7 @@ class EmpresaForm(models.forms.ModelForm):
             'sector_economico': 'Señale el sector económico de la empresa o institución en que trabaja (vea NOTA):',
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
             'nombre_empresa': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'calle_empresa': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'colonia_empresa': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
@@ -510,9 +515,9 @@ class EmpresaForm(models.forms.ModelForm):
         }
 
 
-class DesempenioRecomendacionesForm(models.forms.ModelForm):
+class DesempenioRecomendacionesForm(forms.ModelForm):
     class Meta:
-        model = models.DesempenioRecomendaciones
+        model = DesempenioRecomendaciones
         fields = ('nivel_satisfaccion', 'grado_exigencia', 'nivel_formacion', 'modificaciones_planest',
                   'opinion_orgainst')
         labels = {
@@ -528,7 +533,7 @@ class DesempenioRecomendacionesForm(models.forms.ModelForm):
                                 'licenciatura?',
         }
         widgets = {
-            'matricula': models.forms.HiddenInput(),
+            'matricula': forms.HiddenInput(),
             'modificaciones_planest': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'opinion_orgainst': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
         }

@@ -13,7 +13,7 @@
 
     <div class="row-2 col-center">
         <div class="col-6 my-5 img-principal center-middle col-display">
-            <img src="{% static 'assets/img/logo_sse.png' %}" width="360px" height="343px">
+            <img alt="logo sistema seguimiento egresados" src="{% static 'assets/img/logo_sse.png' %}" width="360px" height="343px" >
         </div>
         <div class="col-6 my-5 center-middle form-block">
             <form method="POST" action="{% url 'admin_module:loginadmin'%}">
@@ -36,7 +36,7 @@
                             <a href="{% url 'student_module:password_reset'%}">¿Olvidaste tu contraseña?</a>
                         </div>
                         <br>
-                        <button class="btn submit-button btn-block" type="submit", name="guardar">Iniciar sesión</button>
+                        <button class="btn submit-button btn-block" type="submit" name="guardar">Iniciar sesión</button>
                         {% endbuttons %}
                         <div class="subtitulo-principal">
                             <a href="{% url 'student_module:login'%}">Iniciar sesión como alumno</a>

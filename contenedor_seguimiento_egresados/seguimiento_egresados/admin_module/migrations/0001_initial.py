@@ -22,7 +22,8 @@ class Migration(migrations.Migration):
                 ('carrera_asignada', models.CharField(blank=True, max_length=100, null=True)),
                 ('correo', models.CharField(blank=True, max_length=45, null=True)),
                 ('coordinador_general', models.BooleanField()),
-                ('usuario', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('usuario', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                              to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]
