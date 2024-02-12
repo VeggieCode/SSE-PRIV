@@ -2,11 +2,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from student_module.models import Student
+LOGIN_VIEWNAME: str = 'student_module:login'
 
-
-# TODO: verficiar que se esté creando una instancia Student y Coordinador tras hacer un create User
-# https://overiq.com/django-1-11/django-authentication-framework-basics/
 
 class TestStudentViews(TestCase):
     def setUp(self) -> None:
@@ -15,7 +12,7 @@ class TestStudentViews(TestCase):
         self.client = Client()
 
     def test_login_view_GET(self):
-        response = self.client.get(reverse('student_module:login'))
+        response = self.client.get(reverse(LOGIN_VIEWNAME))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response=response, template_name='student_module/login.html')
 
@@ -25,7 +22,6 @@ class TestStudentViews(TestCase):
             'password': 'beethoven123'
         }
         response = self.client.post(reverse('student_module:login'), credentials, follow=True)
-        print(response)
         self.assertEqual(response.status_code, 200)
 
     def test_student_info_GET(self):

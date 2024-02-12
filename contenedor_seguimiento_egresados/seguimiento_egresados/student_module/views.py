@@ -177,6 +177,7 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'student_module/password_reset_complete.html'
 
 
+# TODO: Refactor
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
