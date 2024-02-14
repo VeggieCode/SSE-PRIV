@@ -47,9 +47,10 @@ class SignupUserForm(UserCreationForm):
     )
 
     username = forms.CharField(required=True, widget=MatriculaInput(
-        attrs={'placeholder': '', 'class': 'form-control prueba', 'autocomplete': 'username'}),
+        attrs={'placeholder': '', 'class': 'form-control', 'autocomplete': 'username'}),
                                       validators=[matricula_validator])
-    username.label = ""
+    username.label = ''
+
     first_name = forms.CharField(max_length=30, required=True,
                                         widget=forms.TextInput(
                                             attrs={'placeholder': '', 'class': 'form-control'}))
