@@ -13,8 +13,8 @@
                         <div class="col">
                             {% csrf_token %}
                             <p>Matrícula:*</p>
-                            {% bootstrap_form form %}
-                            
+                            {% bootstrap_field form.username form_group_class='input-group'%}
+                            {% bootstrap_form form exclude='username'%}
                             {% buttons %}
                             <button class="btn btn-outline-info" type="submit" name="guardar">Completar registro</button>
                             <a href="{% url 'student_module:login'%}" class="btn btn-secondary">  Regresar </a>

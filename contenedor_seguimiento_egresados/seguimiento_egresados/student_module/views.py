@@ -180,6 +180,13 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == 'POST':
+            # Si el formulario fue enviado por POST, mostramos el mensaje de error
+            context['show_alert'] = True
+        return context
+
     def form_valid(self, form):
         # Obtener el usuario autenticado
         user = form.get_user()
@@ -194,14 +201,6 @@ class CustomLoginView(LoginView):
         self.request.session.flush()  # Limpia los datos de sesión
         self.request.session.modified = True
         return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.method == 'POST':
-            # Si el formulario fue enviado por POST, mostramos el mensaje de error
-            context['show_alert'] = True
-        return context
-
 
 def municipios_por_estado(request, id_estado):
     municipios = Municipios.objects.filter(id_estado=id_estado).values('id', 'nombre').order_by('nombre')
@@ -341,7 +340,6 @@ def signup(request):
                              licenciatura_fei=form.cleaned_data.get('licenciatura_fei'),
                              correo=form.cleaned_data.get('email'))
             alumno.save()
-
             messages.success(request, 'Usuario registrado con éxito. Ahora puedes iniciar sesión.')
             return redirect('student_module:login')
     else:
