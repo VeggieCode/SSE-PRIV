@@ -10,6 +10,8 @@ from .models import Student, SeleccionCarrera, Carrera, Licenciatura, Continuaci
 from .models.empleo import EmpleoDuranteEstudios, RAZON_NO_BUSQUEDA_EMPLEO, BusquedaEmpleo, EmpleoInmediato, Empresa, \
     DesempenioRecomendaciones
 
+NUMBER = '[0-9]'
+
 MATRICULA = 'Matrícula'
 
 
@@ -17,14 +19,14 @@ class MatriculaInput(forms.MultiWidget):
     def __init__(self, attrs=None):
         widgets = [
             forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': '[0-9]'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
+            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
         ]
         super().__init__(widgets, attrs)
 
@@ -45,9 +47,10 @@ class SignupUserForm(UserCreationForm):
     )
 
     username = forms.CharField(required=True, widget=MatriculaInput(
-        attrs={'placeholder': '', 'class': 'form-control prueba', 'autocomplete': 'username'}),
+        attrs={'placeholder': '', 'class': 'form-control', 'autocomplete': 'username'}),
                                       validators=[matricula_validator])
-    username.label = ""
+    username.label = ''
+
     first_name = forms.CharField(max_length=30, required=True,
                                         widget=forms.TextInput(
                                             attrs={'placeholder': '', 'class': 'form-control'}))
@@ -69,13 +72,10 @@ class SignupUserForm(UserCreationForm):
         widget=forms.Select,
         choices=[],
         label='Licenciatura')
-    try:
-        licenciatura_fei = forms.ChoiceField(
-            widget=forms.Select,
-            choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()],
-            label='Licenciatura')
-    except:
-        pass
+    licenciatura_fei = forms.ChoiceField(
+        widget=forms.Select,
+        choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()],
+        label='Licenciatura')
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
     password1.label = 'Contraseña:'
@@ -242,10 +242,9 @@ class SeleccionCarreraForm(forms.ModelForm):
 
     class Meta:
         model = SeleccionCarrera
-        exclude = ('matricula',)
-        fields = ('primera_eleccion_institucion', 'eleccion_tipo_institucion', 'razon_eleccion_institucion',
+        fields = ['primera_eleccion_institucion', 'eleccion_tipo_institucion', 'razon_eleccion_institucion',
                   'primera_opcion_carrera', 'primera_eleccion_nombre',
-                  'razon_eleccion_carrera')
+                  'razon_eleccion_carrera']
         labels = {
             # 'matricula': MATRICULA,
             'primera_eleccion_institucion': '¿La institución en que usted cursó sus estudios de licenciatura fue la '
