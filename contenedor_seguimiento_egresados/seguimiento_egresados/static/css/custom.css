@@ -1,9 +1,15 @@
 h3, .h3 {
-    font-family: "Almarai";
+    font-family: "Almarai", serif;
     color: white;
     font-size: 15px;
     text-transform: none;
     margin-top: 0.5rem;
+}
+
+.prueba {
+    display: inline-block;
+    width: 30px; /* Opcional, ajusta el ancho de los campos según tus necesidades */
+    margin-right: 5px; /* Opcional, agrega un espacio entre los campos */
 }
 
 .titulo-navbar {
@@ -141,7 +147,7 @@ body {
 
 .uv-navbar {
     color: white;
-    font-family: "Almarai";
+    font-family: "Almarai", serif;
     position: absolute;
     top: 0px;
     font-size: 15px;
