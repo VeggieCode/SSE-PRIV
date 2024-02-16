@@ -72,10 +72,14 @@ class SignupUserForm(UserCreationForm):
         widget=forms.Select,
         choices=[],
         label='Licenciatura')
-    licenciatura_fei = forms.ChoiceField(
-        widget=forms.Select,
-        choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()],
-        label='Licenciatura')
+
+    try:
+        licenciatura_fei = forms.ChoiceField(
+            widget=forms.Select,
+            choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()],
+            label='Licenciatura')
+    except:
+        pass
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
     password1.label = 'Contraseña:'
