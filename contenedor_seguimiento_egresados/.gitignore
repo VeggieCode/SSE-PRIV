@@ -1,5 +1,6 @@
 #DB
 data
+bd.env
 
 # Django #
 *.log
@@ -100,6 +101,7 @@ celerybeat-schedule.*
 *.sage.py
 
 # Environments
+settings.env
 .env
 .venv
 env/
