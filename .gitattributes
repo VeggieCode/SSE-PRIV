@@ -1,0 +1,4 @@
+# Auto detect text files and perform LF normalization
+*.sh text eol=lf
+*.env text eol=lf
+*.yml text eol=lf
