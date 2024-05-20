@@ -1,5 +1,5 @@
 #DB
-./data/
+data
 
 # Django #
 *.log
