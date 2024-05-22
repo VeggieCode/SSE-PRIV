@@ -7,7 +7,7 @@ pymysql.version_info = (1, 4, 3, "final", 0)
 pymysql.install_as_MySQLdb()
 
 
-dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/dev.env"), 'dev.env')
+dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.dev.env"), 'settings.dev.env')
 
 load_dotenv(dotenv_path)
 
