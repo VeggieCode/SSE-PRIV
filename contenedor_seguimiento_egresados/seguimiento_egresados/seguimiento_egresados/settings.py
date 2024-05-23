@@ -74,6 +74,8 @@ INSTALLED_APPS = [
     'student_module',
 
     'admin_module.apps.AdminModuleConfig',
+    "core.apps.CoreConfig"
+
 ]
 
 MIDDLEWARE = [
