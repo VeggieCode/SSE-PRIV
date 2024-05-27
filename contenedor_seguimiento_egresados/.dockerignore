@@ -2,7 +2,7 @@
 /staticfiles
 
 ### Idea
-.idea
+.idea/
 
 ### Django template
 *.log
