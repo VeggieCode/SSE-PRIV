@@ -1,0 +1,1082 @@
+---
+openapi: 3.0.0
+info:
+  title: seguimiento-egresados
+  description: The API for Follow up graduates system
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/KariVI/Seguimiento_Egresados/1.0.0
+  description: SwaggerHub API Seguimiento Egresados
+paths:
+  /student:
+    get:
+      tags:
+      - Student
+      description: returns all registered students
+      operationId: getStudents
+      parameters:
+      - name: skip
+        in: query
+        description: number of records to skip
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: max number of records to return
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: All the devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uri
+                  example: http://10.0.0.225:8080
+    post:
+      tags:
+      - Student
+      summary: Crear un nuevo estudiante
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+        required: true
+      responses:
+        "200":
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /student/{enrollment}:
+    get:
+      tags:
+      - Student
+      summary: Obtener estudiante por matrícula
+      parameters:
+      - name: enrollment
+        in: path
+        description: Matrícula única del estudiante
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        "404":
+          description: Estudiante no encontrado
+    put:
+      tags:
+      - Student
+      summary: Actualizar información de un estudiante
+      description: Actualiza la información de un usuario existente en la base de datos.
+      parameters:
+      - name: enrollment
+        in: path
+        description: Matrícula para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: student
+        in: query
+        description: Datos actualizados del usuario
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/Student'
+      responses:
+        "200":
+          description: Información del estudiante actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        "404":
+          description: No se encontró un estudiante con la matrícula especificado
+  /user:
+    get:
+      tags:
+      - User
+      summary: Lista de usuarios
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: No se encontraron usuarios
+    post:
+      tags:
+      - User
+      summary: Crear un nuevo usuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/{username}:
+    get:
+      tags:
+      - User
+      summary: Obtener usuario por nombre de usuario
+      parameters:
+      - name: username
+        in: path
+        description: Nombre de usuario único del usuario
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: Usuario no encontrado
+    put:
+      tags:
+      - User
+      summary: Actualizar información de un usuario
+      description: Actualiza la información de un usuario existente en la base de datos.
+      parameters:
+      - name: username
+        in: path
+        description: Nombre del usuario para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: user
+        in: query
+        description: Datos actualizados del usuario
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          description: Información del usuario actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: No se encontró un usuario con el nombre de usuario especificado
+    delete:
+      tags:
+      - User
+      summary: Eliminar un  usuario
+      description: Elimina un usuario especificado por el id
+      parameters:
+      - name: username
+        in: path
+        description: Nombre del usuario a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: El usuario fue eliminado exitosamente
+        "404":
+          description: No se encontró el usuario por el nombre
+  /emailData:
+    get:
+      tags:
+      - EmailData
+      summary: Lista de datos de correo electronico
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailData'
+        "404":
+          description: No se encontraron los datos de correo electronico
+    post:
+      tags:
+      - EmailData
+      summary: Crear un nuevo dato de correo electronico
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailData'
+        required: true
+      responses:
+        "200":
+          description: Datos de correo electronico creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailData'
+  /emailData/{id}:
+    get:
+      tags:
+      - EmailData
+      summary: Obtener los datos del correo por id
+      parameters:
+      - name: id
+        in: path
+        description: Id del correo
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailData'
+        "404":
+          description: Datos del correo no encontrada
+    put:
+      tags:
+      - EmailData
+      summary: Actualizar información del correo
+      description: Actualiza la información de un correo existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id del correo para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: emaildata
+        in: query
+        description: Datos actualizados del correo
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/EmailData'
+      responses:
+        "200":
+          description: Información del correo actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailData'
+        "404":
+          description: No se encontró un correo con el id especificado
+    delete:
+      tags:
+      - EmailData
+      summary: Eliminar un correo
+      description: Eliminar un correo especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: El correo fue eliminado exitosamente
+        "404":
+          description: No se encontró el correo
+  /degree:
+    get:
+      tags:
+      - Degree
+      summary: Lista de Licenciaturas
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+        "404":
+          description: No se encontraron las licenciaturas
+    post:
+      tags:
+      - Degree
+      summary: Crear una nueva licenciatura
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Degree'
+        required: true
+      responses:
+        "200":
+          description: Licenciatura creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+  /degree/{id}:
+    get:
+      tags:
+      - Degree
+      summary: Obtener la licenciatura por id
+      parameters:
+      - name: id
+        in: path
+        description: Id de la licenciatura
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+        "404":
+          description: Licenciatura no encontrada
+    put:
+      tags:
+      - Degree
+      summary: Actualizar información de una licenciatura
+      description: Actualiza la información de una licenciatura existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id de la licenciatura para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: degree
+        in: query
+        description: Datos actualizados de la licenciatura
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/Degree'
+      responses:
+        "200":
+          description: Información de la licenciatura actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+        "404":
+          description: No se encontró una licenciatura con el id especificado
+    delete:
+      tags:
+      - Degree
+      summary: Eliminar una licenciatura
+      description: Eliminar una licenciatura especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: La licenciatura fue eliminada exitosamente
+        "404":
+          description: No se encontró la licenciatura
+  /contact:
+    get:
+      tags:
+      - Contact
+      summary: Lista de contactos
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        "404":
+          description: No se encontraron los contactos
+    post:
+      tags:
+      - Contact
+      summary: Crear un contacto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+        required: true
+      responses:
+        "200":
+          description: Contacto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+  /contact/{id}:
+    get:
+      tags:
+      - Contact
+      summary: Obtener los contactos por id
+      parameters:
+      - name: id
+        in: path
+        description: Id del contacto
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        "404":
+          description: Contacto no encontrado
+    put:
+      tags:
+      - Contact
+      summary: Actualizar información de un datos del contacto
+      description: Actualiza la información de un contacto existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id del contacto para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: contact
+        in: query
+        description: Datos actualizados del contacto
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/Contact'
+      responses:
+        "200":
+          description: Información del contacto actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        "404":
+          description: No se encontró los datos del contacto con el id especificado
+    delete:
+      tags:
+      - Contact
+      summary: Eliminar el contacto sociales
+      description: Eliminar un contacto especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Los datos del contacto fueron eliminado exitosamente
+        "404":
+          description: No se encontraron los datos del contacto
+  /phonedata:
+    get:
+      tags:
+      - PhoneData
+      summary: Lista de telefonos
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneData'
+        "404":
+          description: No se encontraron los telefonos
+    post:
+      tags:
+      - PhoneData
+      summary: Crear un nuevo telefono
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneData'
+        required: true
+      responses:
+        "200":
+          description: Telefono creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneData'
+  /phonedata/{id}:
+    get:
+      tags:
+      - Degree
+      summary: Obtener el telefono por id
+      parameters:
+      - name: id
+        in: path
+        description: Id de la telefono
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+        "404":
+          description: Telefono no encontrado
+    put:
+      tags:
+      - PhoneData
+      summary: Actualizar información de un telefono
+      description: Actualiza la información de un telefono existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id del telefono para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: degree
+        in: query
+        description: Datos actualizados del telefono
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/PhoneData'
+      responses:
+        "200":
+          description: Información del telefono actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneData'
+        "404":
+          description: No se encontró un telefono con el id especificado
+    delete:
+      tags:
+      - PhoneData
+      summary: Eliminar un telefono
+      description: Eliminar un telefono especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: El telefono fue eliminado exitosamente
+        "404":
+          description: No se encontró el telefono
+  /socialnetdata:
+    get:
+      tags:
+      - SocialNetData
+      summary: Lista de redes sociales
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialNetData'
+        "404":
+          description: No se encontraron las redes sociales
+    post:
+      tags:
+      - SocialNetData
+      summary: Crear un nuevo redes sociales
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SocialNetData'
+        required: true
+      responses:
+        "200":
+          description: Datos de redes sociales creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialNetData'
+  /socialnetdata/{id}:
+    get:
+      tags:
+      - SocialNetData
+      summary: Obtener los datos de las redes sociales por id
+      parameters:
+      - name: id
+        in: path
+        description: Id de la datos de las redes sociales
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialNetData'
+        "404":
+          description: Datos de las redes sociales no encontrado
+    put:
+      tags:
+      - SocialNetData
+      summary: Actualizar información de un datos de las redes sociales
+      description: Actualiza la información de un datos de las redes sociales existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id del datos de las redes sociales para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: degree
+        in: query
+        description: Datos actualizados de las redes sociales
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/SocialNetData'
+      responses:
+        "200":
+          description: Información del datos de las redes sociales actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialNetData'
+        "404":
+          description: No se encontró los datos de las redes sociales con el id especificado
+    delete:
+      tags:
+      - SocialNetData
+      summary: Eliminar los datos de las redes sociales
+      description: Eliminar un telefono especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Los datos de las redes sociales fueron eliminado exitosamente
+        "404":
+          description: No se encontraron los datos de las redes sociales
+  /personalreference:
+    get:
+      tags:
+      - PersonalReference
+      summary: Lista de referencias personales
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalReference'
+        "404":
+          description: No se encontraron las referencias personales
+    post:
+      tags:
+      - PersonalReference
+      summary: Crear una nueva referencia personal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalReference'
+        required: true
+      responses:
+        "200":
+          description: Referencia personal creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalReference'
+  /personalreference/{id}:
+    get:
+      tags:
+      - PersonalReference
+      summary: Obtener una referencia personal por id
+      parameters:
+      - name: id
+        in: path
+        description: Id de la referencia personal
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalReference'
+        "404":
+          description: Referencia personal no encontrada
+    put:
+      tags:
+      - PersonalReference
+      summary: Actualizar información de una referencia personal
+      description: Actualiza la información de un referencia personal existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id de la referencia personal para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: personalreference
+        in: query
+        description: Datos actualizados de la referencia personal
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/PersonalReference'
+      responses:
+        "200":
+          description: Información de la referencia personal actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalReference'
+        "404":
+          description: No se encontró una referencia personal con el id especificado
+    delete:
+      tags:
+      - PersonalReference
+      summary: Eliminar una referencia personal
+      description: Eliminar una referencia personal especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: La referencia personal fue eliminado exitosamente
+        "404":
+          description: No se encontró la referencia personal
+  /location:
+    get:
+      tags:
+      - Location
+      summary: Lista de locaciones
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        "404":
+          description: No se encontraron las ubicaciones
+    post:
+      tags:
+      - Location
+      summary: Crear una nueva ubicación
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Location'
+        required: true
+      responses:
+        "200":
+          description: Ubicación creada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+  /location/{id}:
+    get:
+      tags:
+      - Location
+      summary: Obtener una ubicación por id
+      parameters:
+      - name: id
+        in: path
+        description: Id de la ubicación
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        "404":
+          description: Referencia personal no encontrada
+    put:
+      tags:
+      - Location
+      summary: Actualizar información de una ubicación
+      description: Actualiza la información de una ubicación existente en la base de datos.
+      parameters:
+      - name: id
+        in: path
+        description: id de la ubicación para actualizar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: location
+        in: query
+        description: Datos actualizados de la ubicación
+        required: true
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/Location'
+      responses:
+        "200":
+          description: Información de la ubicación actualizada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        "404":
+          description: No se encontró una ubicación con el id especificado
+    delete:
+      tags:
+      - Location
+      summary: Eliminar una ubicación
+      description: Eliminar una ubicación especificada por el id
+      parameters:
+      - name: id
+        in: path
+        description: Id a eliminar
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: La ubicación fue eliminado exitosamente
+        "404":
+          description: No se encontró la ubicación
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    Degree:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        description:
+          type: string
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        enrollment:
+          type: string
+          example: s18015023
+        name:
+          type: string
+        mother_lastname:
+          type: string
+        father_lastname:
+          type: string
+        sex:
+          type: string
+        born_year:
+          type: integer
+          format: int64
+        join_date:
+          type: string
+          example: 11/02/2000
+        degreeId:
+          $ref: '#/components/schemas/Degree'
+        userId:
+          $ref: '#/components/schemas/User'
+    EmailData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        typeEmail:
+          type: string
+          example: Alterno
+    PhoneData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        phone:
+          type: string
+        typePhone:
+          type: string
+          example: Telefono
+    SocialNetData:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        socialNet:
+          type: string
+        typeSocialNet:
+          type: string
+          example: Linkedin
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        studentId:
+          $ref: '#/components/schemas/Student'
+        emailId:
+          $ref: '#/components/schemas/EmailData'
+        phoneId:
+          $ref: '#/components/schemas/PhoneData'
+        socialNetId:
+          $ref: '#/components/schemas/SocialNetData'
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        street:
+          type: string
+        number_outside:
+          type: string
+        number_inside:
+          type: string
+        cologne:
+          type: string
+        postal_code:
+          type: integer
+        local:
+          type: string
+        municipality:
+          type: string
+        state:
+          type: string
+        studentId:
+          $ref: '#/components/schemas/Student'
+    PersonalReference:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        fullname:
+          type: string
+        phone:
+          type: string
+        priority:
+          type: string
+        studentId:
+          $ref: '#/components/schemas/Student'
