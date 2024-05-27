@@ -158,18 +158,27 @@ USE_I18N = True
 
 USE_TZ = True
 
+if PATH_PREFIX and not PATH_PREFIX.endswith('/'):
+    PATH_PREFIX += '/'
+    STATIC_URL = '/{prefix}static/static/'.format(prefix=PATH_PREFIX)
+else:
+    STATIC_URL = '/static/static/'
+    MEDIA_URL = '/static/media/'
+
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = '/static/'
-
-if PATH_PREFIX:
-    STATIC_URL = f'/{PATH_PREFIX}static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+# STATIC_URL = '/static/'
+#
+# if PATH_PREFIX:
+#     STATIC_URL = f'/{PATH_PREFIX}static/'
+#
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "static"),
+# )
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

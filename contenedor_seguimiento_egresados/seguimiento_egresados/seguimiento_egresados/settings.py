@@ -1,15 +1,14 @@
 from pathlib import Path
 import pymysql
-from dotenv import load_dotenv
 import os
 
 pymysql.version_info = (1, 4, 3, "final", 0)
 pymysql.install_as_MySQLdb()
 
-
-dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env"), 'settings.env')
-
-load_dotenv(dotenv_path)
+# Commented because is actually using docker compose envs.
+# dotenv_path = os.path.join(os.path.dirname("seguimiento_egresados/settings.env"), 'settings.env')
+#
+# load_dotenv(dotenv_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,23 +28,21 @@ DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
 DJANGO_SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL")
 DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
-PATH_PREFIX = os.environ.get('PATH_PREFIX', '')
-
-if PATH_PREFIX and not PATH_PREFIX.endswith('/'):
-    PATH_PREFIX += '/'
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = ['*',  'localhost']
+# WHEN DEBUG MODE IS FALSE OR PRODUCTION environment the list of allowed hosts should be provided
+# In development mode is it not necessary to provide ALLOWED HOSTS and can produce errors.
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
+if ALLOWED_HOSTS_ENV:
+    ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
@@ -71,10 +68,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'bootstrap4',
+    'core',
     'student_module',
-
     'admin_module.apps.AdminModuleConfig',
-    "core.apps.CoreConfig"
 
 ]
 
@@ -162,11 +158,17 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+PATH_PREFIX = os.environ.get('PATH_PREFIX', '')
 
-STATIC_URL = '/static/'
+if PATH_PREFIX and not PATH_PREFIX.endswith('/'):
+    PATH_PREFIX += '/'
+    STATIC_URL = '/{prefix}static/static/'.format(prefix=PATH_PREFIX)
+else:
+    STATIC_URL = '/static/static/'
+    MEDIA_URL = '/static/media/'
 
-if PATH_PREFIX:
-    STATIC_URL = f'/{PATH_PREFIX}static/'
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
@@ -178,10 +180,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-AUTHENTICATION_BACKENDS = [    'django.contrib.auth.backends.ModelBackend',]
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',]
 
-PASSWORD_HASHERS = [    'django.contrib.auth.hashers.PBKDF2PasswordHasher',]
+PASSWORD_HASHERS = ['django.contrib.auth.hashers.PBKDF2PasswordHasher',]
 
-LOGIN_REDIRECT_URL ='student_module:home'
+LOGIN_REDIRECT_URL = 'student_module:home'
 
 LOGIN_URL = 'student_module:login'
