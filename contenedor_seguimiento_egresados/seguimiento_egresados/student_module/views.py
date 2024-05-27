@@ -1,6 +1,9 @@
+import textwrap
+from datetime import datetime
 from io import BytesIO
 
 import pdfrw
+
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -13,55 +16,11 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
-import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-import os
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-import pdfrw
-from io import BytesIO
-from datetime import datetime
-import io
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-import pdfkit
-from docx import Document
-from docx.enum.text import WD_UNDERLINE
-from docx.enum.style import WD_STYLE_TYPE
-from docx.shared import Pt
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
-from docx2pdf import convert
-import pydocx
-from io import BytesIO
-from reportlab.pdfgen import canvas
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import ImageReader
-from reportlab.platypus import SimpleDocTemplate, XPreformatted, Paragraph
-from reportlab.lib.styles import ParagraphStyle
-import mammoth
-from io import BytesIO
-from xhtml2pdf import pisa
-import PyPDF2
-import re
-from reportlab.lib.pagesizes import letter, A4
-from reportlab.lib.units import mm
-from reportlab.pdfgen import canvas
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
-from reportlab.lib.enums import TA_JUSTIFY
-from reportlab.pdfbase.ttfonts import TTFont
-import textwrap
 
-from admin_module.models import Coordinador
-from .forms import *
-from .forms import CustomPasswordResetForm, CustomSetPasswordForm
+from .forms import CustomPasswordResetForm, CustomSetPasswordForm, CustomAuthenticationForm, StudentForm, \
+    SignupUserForm, SeleccionCarreraForm, LicenciaturaForm, ContinuacionEstudiosForm, EmpleoDuranteEstudiosForm, \
+    EmpleoInmediatoForm, BusquedaEmpleoForm, EmpresaForm, DesempenioRecomendacionesForm
 from .models.carrera import Carrera
 from .models.continuacion_estudios import ContinuacionEstudios
 from .models.empleo import EmpleoDuranteEstudios, BusquedaEmpleo, EmpleoInmediato, Empresa, DesempenioRecomendaciones
@@ -69,6 +28,7 @@ from .models.licenciatura import Licenciatura
 from .models.seleccion_carrera import SeleccionCarrera
 from .models.student import Student
 from .models.ubicacion import Estados, Municipios
+from admin_module.models import Coordinador
 
 
 @login_required
@@ -190,6 +150,7 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         # Obtener el usuario autenticado
         user = form.get_user()
+        ## Test if is correct
         try:
             coordinator = Coordinador.objects.get(usuario=user)
         except Coordinador.DoesNotExist:
@@ -796,5 +757,5 @@ def recommendations(request):
                                                                        modificaciones_planest=modificaciones_planest,
                                                                        opinion_orgainst=opinion_orgainst)
             desempenio_recomendaciones_obj.save()
-            messages.success(request, f'Se guardaron los cambios.')
+            messages.success(request, 'Se guardaron los cambios.')
     return render(request, 'student_module/recommendations.html', {'form': form})
