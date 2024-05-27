@@ -30,7 +30,7 @@ services:
     restart: always
     volumes:
       - ./nginx/templates:/etc/nginx/templates
-      - ./seguimiento_egresados/static:/static
+      - ./seguimiento_egresados/staticfiles:/static
     depends_on:
       - seguimiento_egresados
     environment:
