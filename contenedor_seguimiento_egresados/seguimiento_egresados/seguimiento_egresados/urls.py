@@ -23,14 +23,19 @@ from student_module.views import CustomPasswordResetCompleteView, CustomPassword
 handler404= views.error_404_view
 handler500= views.custom_error_view
 
+prefix = settings.PATH_PREFIX
+
 urlpatterns = ([
-    path('%s' % settings.PATH_PREFIX, CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
-    path('%sadmin/clearcache/' % settings.PATH_PREFIX, include('clearcache.urls')),
-    path('%sadmin/' % settings.PATH_PREFIX, admin.site.urls, name='admin'),
-    path('', include('student_module.urls')),
-    path('', include('admin_module.urls')),
-    path('%spassword-reset/' % settings.PATH_PREFIX, CustomPasswordResetView.as_view(), name='password_reset'),
-    path('%spassword-reset/done/' % settings.PATH_PREFIX, CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('%spassword-reset/confirm/<uidb64>/<token>/' % settings.PATH_PREFIX, CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('%spassword-reset/complete/' % settings.PATH_PREFIX, CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
-]) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path(prefix, CustomLoginView.as_view(template_name="student_module/login.html"), name="login"),
+    path('{prefix}admin/clearcache/'.format(prefix=prefix), include('clearcache.urls')),
+    path('{prefix}admin/'.format(prefix=prefix), admin.site.urls, name='admin'),
+    path(prefix, include('student_module.urls')),
+    path(prefix, include('admin_module.urls')),
+    path('{prefix}password-reset/'.format(prefix=prefix), CustomPasswordResetView.as_view(), name='password_reset'),
+    path('{prefix}password-reset/done/'.format(prefix=prefix), CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('{prefix}password-reset/confirm/<uidb64>/<token>/'.format(prefix=prefix), CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('{prefix}password-reset/complete/'.format(prefix=prefix), CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+])
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
