@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+    seguimiento_egresados:
+        build:
+            context: ./seguimiento_egresados
+        ports:
+            - "8000:8000"
+        volumes:
+            -   ./seguimiento_egresados:/code
+            -   ./staticfiles/web:/vol/web
+        command: >
+            sh -c "python manage.py wait_for_db &&
+                python manage.py migrate &&
+                python manage.py runserver 0.0.0.0:8000 --settings=seguimiento_egresados.settings_dev"
+        environment:
+            - SECRET_KEY=devkey
+            - DEBUG=1
+            - DB_NAME=control_egresados
+            - DB_TEST_NAME=test_control_egresados
+            - DB_USER=adminsistemaegresados
+            - DB_PASSWORD=&s00ftecHA
+            - DB_HOST=bd_seguimiento_egresados
+            - DB_PORT=3306
+        depends_on:
+            - bd_seguimiento_egresados
+
+    bd_seguimiento_egresados:
+        image: mysql
+        restart: unless-stopped
+        env_file:
+            - bd.env
+        ports:
+            - '4000:3306'
+        volumes:
+            - ./data:/var/lib/mysql
+            - ./scripts_sql:/scripts
