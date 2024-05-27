@@ -12,3 +12,7 @@ tab_width = 4
 [{*.bash,*.sh,*.zsh}]
 indent_size = 2
 tab_width = 2
+
+[{*.yml,*.yaml}]
+indent_size = 2
+tab_width = 2
