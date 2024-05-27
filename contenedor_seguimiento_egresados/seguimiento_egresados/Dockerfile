@@ -1,36 +1,23 @@
 FROM python:3.9
 
-RUN mkdir /dependencias
-COPY requeriments.txt /dependencias
-RUN pip install -r /dependencias/requeriments.txt
-
-ENV EMAIL_PORT=""
-ENV EMAIL_HOST=""
-ENV EMAIL_HOST_USER=""
-ENV EMAIL_HOST_PASSWORD=""
-ENV DEFAULT_FROM_EMAIL=""
-ENV SERVER_EMAIL=""
-ENV SECRET_KEY=""
-ENV DB_NAME=""
-ENV DB_USER=""
-ENV DB_PASSWORD=""
-ENV DB_HOST=""
-ENV DB_PORT=3306
-ENV DJANGO_SUPERUSER_USERNAME=""
-ENV DJANGO_SUPERUSER_EMAIL=""
-ENV DJANGO_SUPERUSER_PASSWORD=""
-ENV PATH_PREFIX=""
+ENV PATH="/scripts:${PATH}"
+COPY requeriments.txt /requeriments.txt
+RUN pip install -r /requeriments.txt
 
 RUN mkdir /code
 COPY . /code
 WORKDIR /code
+COPY ./scripts /scripts
 
-RUN chmod +x run.sh
+RUN chmod +x /scripts/*
 
-RUN useradd -s /bin/bash desarrollador
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
 
-RUN chown -R desarrollador /code
+RUN useradd desarrollador
+RUN chown -R desarrollador:desarrollador /vol
+RUN chmod -R 755 /vol/web
 
 USER desarrollador
 
-CMD ["/bin/bash","/code/run.sh"]
+CMD ["entrypoint.sh"]
