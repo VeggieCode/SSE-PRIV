@@ -9,7 +9,7 @@ server {
     listen 80;
     server_name localhost;
 
-    location ${PATH_PREFIX}/static/ {
+    location /${PATH_PREFIX}/static/ {
         alias /vol/static/;
     }
 
