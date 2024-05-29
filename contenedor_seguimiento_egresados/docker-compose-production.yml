@@ -8,8 +8,6 @@ services:
         restart: always
         volumes:
             - static_data:/vol/web
-        #env_file:
-        #    -   ./seguimiento_egresados/seguimiento_egresados/settings.env
         environment:
             - DB_HOST=bd_seguimiento_egresados
             - DB_NAME=${DB_NAME}
@@ -24,17 +22,15 @@ services:
     bd_seguimiento_egresados:
         image: mysql
         restart: always
-        #env_file:
-        #    - bd.env
         environment:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             - MYSQL_DATABASE=${DB_NAME}
             - MYSQL_USER=${DB_USER}
             - MYSQL_PASSWORD=${DB_PASSWORD}
         ports:
-            - '4000:3306'
+            - '${DB_FORWARD_PORT}:3306'
         volumes:
-            - ./data:/var/lib/mysql
+            - sse_mysql-data:/var/lib/mysql
             - ./scripts_sql:/scripts
 
     proxy:
@@ -48,6 +44,7 @@ services:
         environment:
             - PATH_PREFIX=${PATH_PREFIX}
         ports:
-            - '8000:80'
+            - '${PROXY_FORWARD_PORT:-80}:80'
 volumes:
     static_data:
+    sse_mysql-data:
