@@ -2,8 +2,8 @@
 
 set -e
 
-python manage.py wait_for_db
-python manage.py collectstatic --noinput
-python manage.py migrate
+python -u manage.py wait_for_db
+python -u manage.py collectstatic --noinput
+python -u manage.py migrate
 
 gunicorn --bind :8000 seguimiento_egresados.wsgi:application --reload

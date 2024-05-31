@@ -7,7 +7,7 @@ services:
             context: ./seguimiento_egresados
         restart: always
         volumes:
-            - static_data:/vol/web
+            - ./staticfiles:/vol/web
         environment:
             - DB_HOST=bd_seguimiento_egresados
             - DB_NAME=${DB_NAME}
@@ -20,31 +20,25 @@ services:
             - bd_seguimiento_egresados
 
     bd_seguimiento_egresados:
-        image: mysql
+        image: mysql:8.4.0
         restart: always
         environment:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             - MYSQL_DATABASE=${DB_NAME}
             - MYSQL_USER=${DB_USER}
             - MYSQL_PASSWORD=${DB_PASSWORD}
-        ports:
-            - '${DB_FORWARD_PORT}:3306'
         volumes:
-            - sse_mysql-data:/var/lib/mysql
-            - ./scripts_sql:/scripts
+            - ./data:/var/lib/mysql
 
     proxy:
         image: nginx
         restart: always
         volumes:
             - ./nginx/templates:/etc/nginx/templates
-            - static_data:/vol/static
+            - ./staticfiles:/vol/static
         depends_on:
             - seguimiento_egresados
         environment:
             - PATH_PREFIX=${PATH_PREFIX}
         ports:
             - '${PROXY_FORWARD_PORT:-80}:80'
-volumes:
-    static_data:
-    sse_mysql-data:
