@@ -16,8 +16,8 @@ class Command(BaseCommand):
             try:
                 self.check(databases=['default'])
                 is_db_up = True
-            except (PyMySQLError, OperationalError) as e:
-                self.stdout.write('Database unavailable waiting 1 second. error : {}'.format(e))
-                time.sleep(1)
+            except (PyMySQLError, OperationalError):
+                self.stdout.write('Database unavailable waiting 5 second.')
+                time.sleep(5)
 
         self.stdout.write(self.style.SUCCESS('Database up!'))
