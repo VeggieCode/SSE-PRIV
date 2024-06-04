@@ -7,24 +7,26 @@
             <div class="subtitulo-pag">
                 Registro de alumno
             </div>
-            <br>
-                <form method="POST" action="{% url 'student_module:signup'%}">
-                    <div class="form-group row">
-                        <div class="col">
-                            {% csrf_token %}
-                            <p>Matrícula:*</p>
-                            {% bootstrap_field form.username form_group_class='input-group'%}
-                            {% bootstrap_form form exclude='username'%}
-                            {% buttons %}
-                            <button class="btn btn-outline-info" type="submit" name="guardar">Completar registro</button>
-                            <a href="{% url 'student_module:login'%}" class="btn btn-secondary">  Regresar </a>
+            <form method="POST" action="{% url 'student_module:signup' %}">
+                <div class="form-group row">
+                    <div class="col">
+                        {% csrf_token %}
+                        <p>Matrícula:*</p>
+                        {% bootstrap_field form.username form_group_class='input-group' %}
+                        {% bootstrap_form form exclude='username' %}
+                        {% buttons %}
+                            <button class="btn btn-outline-info" type="submit" name="guardar">Completar registro
+                            </button>
+                            <a href="{% url 'student_module:login' %}" class="btn btn-secondary"> Regresar </a>
                             <div class="aviso">
                                 <br>
-                                Al momento de registrarte en el sistema estás aceptando el <a href="{% url 'student_module:privacy_notice'%}" target="_blank"> aviso de privacidad</a>
+                                Al momento de registrarte en el sistema estás aceptando el <a
+                                href="{% url 'student_module:privacy_notice' %}" target="_blank"> aviso de
+                                privacidad</a>
                             </div>
-                            {% endbuttons %}
-                        </div>
+                        {% endbuttons %}
                     </div>
+                </div>
             </form>
         </div>
     </div>
