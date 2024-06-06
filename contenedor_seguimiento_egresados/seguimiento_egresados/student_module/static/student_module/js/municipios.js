@@ -1,13 +1,12 @@
 $(document).ready(function() {
-    // Obtener una referencia a los elementos del DOM
     var selectEstado = document.getElementById("estado");
-    console.log(selectEstado);
+    let prefix = '/sse'
     var selectMunicipio = document.getElementById("municipio");
     // Cuando se selecciona un estado, cargar los municipios correspondientes
     selectEstado.addEventListener("change", function() {
         var estadoId = this.value;
         if (estadoId) {
-        var url = "/municipios/" + estadoId + "/";
+        let url = `${prefix}/municipios/${estadoId}/`;
 
         fetch(url)
         .then(response => response.json())

@@ -5,7 +5,7 @@ p{
 }
 
 h3, .h3 {
-    font-family: "Arial";
+    font-family: "Arial", serif;
     color: white;
     font-size: 15px;
     text-transform: none;
@@ -19,7 +19,7 @@ h3, .h3 {
 }
 
 .titulo-navbar {
-    padding: 0rem 1rem;
+    padding: 0 1rem;
 }
 
 .img-navbar {
