@@ -41,33 +41,35 @@ class MatriculaInput(forms.MultiWidget):
 
 
 class SignupUserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'licenciatura_fei', 'first_name', 'last_name',
+                  'apellido_materno']
+
     matricula_validator = RegexValidator(
         r'[Ss](1[4-9]|[2-9][0-9])\d{6}$',
         'Por favor ingrese una matrícula válida'
     )
 
-    username = forms.CharField(required=True, widget=MatriculaInput(
+    username = forms.CharField(label='', required=True, widget=MatriculaInput(
         attrs={'placeholder': '', 'class': 'form-control', 'autocomplete': 'username'}),
-                                      validators=[matricula_validator])
-    username.label = ''
+                               validators=[matricula_validator])
 
-    first_name = forms.CharField(max_length=30, required=True,
-                                        widget=forms.TextInput(
-                                            attrs={'placeholder': '', 'class': 'form-control'}))
-    first_name.label = 'Nombre(s):'
+    first_name = forms.CharField(label='Nombre(s)', max_length=30, required=True,
+                                 widget=forms.TextInput(
+                                     attrs={'placeholder': '', 'class': 'form-control'}))
 
-    last_name = forms.CharField(max_length=30, required=True,
-                                       widget=forms.TextInput(
-                                           attrs={'placeholder': '', 'class': 'form-control'}))
-    last_name.label = 'Apellido paterno:'
+    last_name = forms.CharField(label='Apellido paterno:', max_length=30, required=True,
+                                widget=forms.TextInput(
+                                    attrs={'placeholder': '', 'class': 'form-control'}))
 
     apellido_materno = forms.CharField(max_length=30, required=True,
-                                              widget=forms.TextInput(
-                                                  attrs={'placeholder': '', 'class': 'form-control'}))
+                                       widget=forms.TextInput(
+                                           attrs={'placeholder': '', 'class': 'form-control'}))
     apellido_materno.label = 'Apellido materno:'
 
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'rafaelhernandez@ejemplo.com'}))
-    email.label = 'Correo electrónico personal:'
+    email = forms.EmailField(label='Correo electrónico personal:', widget=forms.TextInput(attrs={'placeholder': ''}))
+
     licenciatura_fei = forms.ChoiceField(
         widget=forms.Select,
         choices=[],
@@ -81,17 +83,10 @@ class SignupUserForm(UserCreationForm):
     except:
         pass
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
-    password1.label = 'Contraseña:'
+        label='Contraseña:', widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
 
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
-    password2.label = 'Confirmar contraseña:'
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2', 'licenciatura_fei', 'first_name', 'last_name',
-                  'apellido_materno']
+    password2 = forms.CharField(label='Confirmar contraseña:',
+                                widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
 
     def clean_username(self):
         # Get the username value entered by the user
@@ -147,10 +142,10 @@ class CustomSetPasswordForm(SetPasswordForm):
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(label='Matrícula:', max_length=254,
-                                      widget=forms.TextInput(attrs={'placeholder': '', 'class': 'form-control'}))
+                               widget=forms.TextInput(attrs={'placeholder': '', 'class': 'form-control'}))
     password = forms.CharField(label="Contraseña:",
-                                      widget=forms.PasswordInput(
-                                          attrs={'placeholder': '', 'class': 'form-control'}))
+                               widget=forms.PasswordInput(
+                                   attrs={'placeholder': '', 'class': 'form-control'}))
 
 
 class CrearUsuarioForm(UserCreationForm):
@@ -168,69 +163,69 @@ class StudentForm(ModelForm):
                   'estado', 'municipio', 'localidad', 'nombre_ref_principal', 'celular_ref_principal',
                   'nombre_ref_auxiliar', 'celular_ref_auxiliar']
 
-        labels = {
-            'matricula': MATRICULA,
-            'nombre': 'Nombre*',
-            'apellido_paterno': 'Apellido paterno*',
-            'apellido_materno': 'Apellido materno*',
-            'sexo': 'Sexo*',
-            'fecha_nacimiento': 'Fecha de nacimiento*',
-            'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
-            'correo': 'Correo electronico*',
-            'correo_uv': 'Correo electronico alterno',
-            'celular': 'Celular*',
-            'telefono': 'Teléfono',
-            'twitter': 'Twitter',
-            'facebook': 'Facebook',
-            'linkedin': 'LinkedIn',
-            'calle': 'Calle*',
-            'numero_exterior': 'Número exterior*',
-            'numero_interior': 'Número interior',
-            'colonia': 'Colonia*',
-            'numero': 'Número*',
-            'codigo_postal': 'Código Postal*',
-            'estado': 'Estado',
-            'municipio': 'Municipio',
-            'localidad': 'Localidad',
-            'nombre_ref_principal': 'Nombre completo* ',
-            'celular_ref_principal': 'Celular* ',
-            'nombre_ref_auxiliar': 'Nombre completo ',
-            'celular_ref_auxiliar': 'Celular'
-        }
+    labels = {
+        'matricula': MATRICULA,
+        'nombre': 'Nombre*',
+        'apellido_paterno': 'Apellido paterno*',
+        'apellido_materno': 'Apellido materno*',
+        'sexo': 'Sexo*',
+        'fecha_nacimiento': 'Fecha de nacimiento*',
+        'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
+        'correo': 'Correo electronico*',
+        'correo_uv': 'Correo electronico alterno',
+        'celular': 'Celular*',
+        'telefono': 'Teléfono',
+        'twitter': 'Twitter',
+        'facebook': 'Facebook',
+        'linkedin': 'LinkedIn',
+        'calle': 'Calle*',
+        'numero_exterior': 'Número exterior*',
+        'numero_interior': 'Número interior',
+        'colonia': 'Colonia*',
+        'numero': 'Número*',
+        'codigo_postal': 'Código Postal*',
+        'estado': 'Estado',
+        'municipio': 'Municipio',
+        'localidad': 'Localidad',
+        'nombre_ref_principal': 'Nombre completo* ',
+        'celular_ref_principal': 'Celular* ',
+        'nombre_ref_auxiliar': 'Nombre completo ',
+        'celular_ref_auxiliar': 'Celular'
+    }
 
-        max_year = datetime.datetime.now().year - 4
-        max_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 20))
-        min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
-        widgets = {
-            'estado': forms.Select(choices=[]),
-            'municipio': forms.Select(choices=[]),
-            'nombre': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'apellido_paterno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'apellido_materno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            # 'min':min_born_date ,'max': max_born_date
-            'fecha_nacimiento': DateInput(attrs={'class': 'form-control', 'type': 'date', }),
-            'fecha_ingreso_lic': TextInput(
-                attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '2014', 'max': max_year}),
-            'correo': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'correo_uv': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'celular': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'telefono': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'facebook': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'twitter': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'linkedin': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'calle': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'numero_exterior': TextInput(
-                attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
-            'numero_interior': TextInput(
-                attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
-            'colonia': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'codigo_postal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'localidad': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'nombre_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'celular_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-            'celular_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        }
+    max_year = datetime.datetime.now().year - 4
+    max_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 20))
+    min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
+    widgets = {
+        'estado': forms.Select(choices=[]),
+        'municipio': forms.Select(choices=[]),
+        'nombre': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'apellido_paterno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'apellido_materno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        # 'min':min_born_date ,'max': max_born_date
+        'fecha_nacimiento': DateInput(attrs={'class': 'form-control', 'type': 'date', }),
+        'fecha_ingreso_lic': TextInput(
+            attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '2014', 'max': max_year}),
+        'correo': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'correo_uv': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'celular': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'telefono': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'facebook': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'twitter': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'linkedin': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'calle': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'numero_exterior': TextInput(
+            attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
+        'numero_interior': TextInput(
+            attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
+        'colonia': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'codigo_postal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'localidad': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'nombre_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'celular_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        'celular_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+    }
 
 
 class SeleccionCarreraForm(forms.ModelForm):
@@ -435,7 +430,8 @@ class EmpleoInmediatoForm(forms.ModelForm):
                                        'empresa/institución:',
             'tipo_contratacion': 'Señale el tipo de contratación que usted tenía:',
             'regimen_juridico': 'El régimen jurídico de la empresa/institución en que trabajaba era',
-            'ingreso_mensual_neto_inicio': 'Indique su ingreso mensual neto al inicio (incluyendo bonos y prestaciones)',
+            'ingreso_mensual_neto_inicio': 'Indique su ingreso mensual neto al inicio (incluyendo bonos y '
+                                           'prestaciones)',
             'horas_laboral_semanales': 'Número de horas en promedio que laboraba a la semana',
             'duracion_trabajo': 'Su duración en el trabajo (en meses) fue',
             'coincidencia_estudios_trabajo': '¿En qué medida coincidía su actividad laboral con los estudios de '
