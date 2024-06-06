@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import home, logout_view, detail_student
+
 from .views import CustomLoginView
-from django.conf import settings
+from .views import home, logout_view, detail_student
 
 app_name = 'admin_module'
 

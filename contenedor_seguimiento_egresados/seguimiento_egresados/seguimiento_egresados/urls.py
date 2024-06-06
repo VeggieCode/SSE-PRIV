@@ -20,8 +20,8 @@ from django.conf import settings
 from . import views
 from student_module.views import CustomPasswordResetCompleteView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetView, CustomLoginView
 
-handler404= views.error_404_view
-handler500= views.custom_error_view
+handler404 = views.error_404_view
+handler500 = views.custom_error_view
 
 prefix = settings.PATH_PREFIX
 
