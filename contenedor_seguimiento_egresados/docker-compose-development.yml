@@ -8,11 +8,10 @@ services:
             - "8000:8000"
         volumes:
             -   ./seguimiento_egresados:/code
-            -   ./staticfiles/web:/vol/web
         command: >
             sh -c "python manage.py wait_for_db &&
                 python manage.py migrate &&
-                python manage.py runserver 0.0.0.0:8000 --settings=seguimiento_egresados.settings_dev"
+                python manage.py runserver 0.0.0.0:8000"
         environment:
             - SECRET_KEY=devkey
             - DEBUG=1
@@ -28,10 +27,14 @@ services:
     bd_seguimiento_egresados:
         image: mysql
         restart: unless-stopped
-        env_file:
-            - bd.env
         ports:
             - '4000:3306'
+        environment:
+          - MYSQL_ROOT_PASSWORD=&s00ftecHAroot
+          - MYSQL_DATABASE=control_egresados
+          - MYSQL_USER=adminsistemaegresados
+          - MYSQL_PASSWORD=&s00ftecHA
         volumes:
-            - ./data:/var/lib/mysql
-            - ./scripts_sql:/scripts
+            - sse_db_dev:/var/lib/mysql
+volumes:
+  sse_db_dev:
