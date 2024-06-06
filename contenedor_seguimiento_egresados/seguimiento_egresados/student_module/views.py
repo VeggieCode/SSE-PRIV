@@ -1,8 +1,10 @@
+import os.path
 import textwrap
 from datetime import datetime
 from io import BytesIO
 
 import pdfrw
+from django.conf import settings
 
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -30,6 +32,8 @@ from .models.student import Student
 from .models.ubicacion import Estados, Municipios
 from admin_module.models import Coordinador
 
+STUDENT_INFO_TEMPLATE = 'student_module/student_info.html'
+
 
 @login_required
 def generate_pdf(request):
@@ -39,7 +43,7 @@ def generate_pdf(request):
     full_name = alumno.nombre + ' ' + alumno.apellido_paterno + ' ' + alumno.apellido_materno
 
     # Abre el archivo PDF existente y crea un objeto PdfReader
-    existing_pdf_path = 'student_module/static/assets/docs/constancia_template.pdf'
+    existing_pdf_path = os.path.join(settings.BASE_DIR, 'static', 'assets', 'docs', 'constancia_template.pdf')
     with open(existing_pdf_path, 'rb') as f:
         existing_pdf = pdfrw.PdfReader(f)
 
@@ -78,7 +82,7 @@ def generate_pdf(request):
                 y += 12  # Distancia vertical entre líneas
 
             second_text = (f"\nSe extiende la presente a petición de la interesada y para los fines legales que a ésta "
-                           f"convenga a la fecha de {formato_fecha(datetime.datetime.now())}, en la ciudad de Xalapa, "
+                           f"convenga a la fecha de {formato_fecha(datetime.now())}, en la ciudad de Xalapa, "
                            f"Veracruz. ")
 
             margin_second_text = 125  # Establece el tamaño del margen
@@ -103,13 +107,13 @@ def generate_pdf(request):
             output_pdf.addpage(page)
 
     # Guarda el archivo PDF nuevo en un archivo en el sistema de archivos
-    with open('student_module/static/assets/docs/constancia_template_f.pdf', 'wb') as f:
+    with open(os.path.join(settings.BASE_DIR, 'static', 'assets', 'docs', 'constancia_template_f.pdf'), 'wb') as f:
         output_pdf.write(f)
 
     # Crea la respuesta HTTP con encabezado PDF para descargar el archivo nuevo
     response = HttpResponse(content_type='application/octet-stream')
     response['Content-Disposition'] = 'attachment; filename="constanciaFinalizacion.pdf"'
-    with open('student_module/static/assets/docs/constancia_template_f.pdf', 'rb') as f:
+    with open(os.path.join(settings.BASE_DIR, 'static', 'assets', 'docs', 'constancia_template_f.pdf'), 'rb') as f:
         response.write(f.read())
 
     return response
@@ -216,8 +220,10 @@ def logout_view(request):
 
 
 @login_required
-def student_info(request):
+def student_info(request) -> object:
     estados = Estados.objects.all()
+    prefix = 'sse'
+
     if request.method == 'GET':
         storage = messages.get_messages(request)
         storage.used = True
@@ -229,16 +235,16 @@ def student_info(request):
                 raise Student.DoesNotExist
         except Student.DoesNotExist:
             form = StudentForm(request.POST)
-            context = {'full_name': full_name, 'form': form}
-            return render(request, 'student_module/student_info.html', context)
+            context = {'full_name': full_name, 'form': form, 'prefix': prefix}
+            return render(request, STUDENT_INFO_TEMPLATE, context)
 
         form = StudentForm(instance=alumno)
-        context = {'full_name': full_name, 'form': form, 'estados': estados}
+        context = {'full_name': full_name, 'form': form, 'estados': estados, 'prefix': prefix}
         if alumno:
             form.fields['codigo_postal'].widget.attrs['maxlength'] = '5'
-            return render(request, 'student_module/student_info.html', context)
+            return render(request, STUDENT_INFO_TEMPLATE, context)
         else:
-            return render(request, 'student_module/student_info.html', context)
+            return render(request, STUDENT_INFO_TEMPLATE, context)
 
     if request.method == 'POST':
         usuario = request.user
@@ -246,7 +252,7 @@ def student_info(request):
         alumno = Student.objects.filter(matricula=usuario).first()
         estados = Estados.objects.all()
         form = StudentForm(request.POST)
-        context = {'full_name': full_name, 'form': form, 'estados': estados}
+        context = {'full_name': full_name, 'form': form, 'estados': estados, 'prefix': prefix}
         if alumno:
             if form.is_valid():
                 alumno.nombre = form.cleaned_data.get('nombre')
@@ -279,7 +285,7 @@ def student_info(request):
                 return redirect('student_module:job_during_school')
             else:
                 errors = form.errors
-                context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados}
+                context = {'full_name': full_name, 'form': form, 'errors': errors, 'estados': estados, 'prefix': prefix}
                 return render(request, "student_module/student_info.html", context)
         else:
             messages.error(request, 'No se guardaron los cambios.')
@@ -526,9 +532,9 @@ def job_during_school(request):
             if employee_confirmation is not None:
                 student.pre_egreso_terminado = validate_student_form(request)
                 if student.pre_egreso_terminado:
-                    student.pre_egreso_fecha_fin = datetime.datetime.now()
+                    student.pre_egreso_fecha_fin = datetime.now()
                 student.save()
-            messages.success(request, f'Se guardaron los cambios.')
+            messages.success(request, 'Se guardaron los cambios.')
     return redirect('student_module:finish')
 
 
