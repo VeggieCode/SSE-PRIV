@@ -12,7 +12,7 @@
         <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}" />
         <link rel="apple-touch-icon" href="{% static 'assets/img/favicon.ico' %}" color="#000000" />
         <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+        <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
         <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
         <script src="{% static 'student_module/js/autotab.js' %}"></script>
         <!-- Google fonts-->
@@ -59,9 +59,7 @@
                 {% endif %}
                 {% block content %}
                 {% endblock %}
-            </section>
-            
-                <!-- </div> -->
+            </section>             
                 <!-- Bootstrap core JS-->
                 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>

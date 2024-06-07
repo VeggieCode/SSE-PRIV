@@ -59,6 +59,7 @@ CORS_ORIGIN_WHITELIST = [
 # Application definition
 
 INSTALLED_APPS = [
+    'fontawesomefree',
     'clearcache',
     'django.contrib.admin',
     'django.contrib.auth',
