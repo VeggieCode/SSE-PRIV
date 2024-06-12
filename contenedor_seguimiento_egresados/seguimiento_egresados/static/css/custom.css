@@ -205,7 +205,4 @@ body {
     .navbar {
         justify-content: space-around;
     }
-    .d-lg-block {
-        display: block !important;
-    }
-  }
+}
