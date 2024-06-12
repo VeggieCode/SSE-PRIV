@@ -21,6 +21,7 @@ services:
             - DB_PASSWORD=&s00ftecHA
             - DB_HOST=bd_seguimiento_egresados
             - DB_PORT=3306
+            - PATH_PREFIX=sse
         depends_on:
             - bd_seguimiento_egresados
 
