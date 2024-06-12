@@ -16,6 +16,8 @@ RUN mkdir -p /vol/web/static
 
 RUN useradd desarrollador
 RUN chown -R desarrollador /code
+RUN chown -R desarrollador:desarrollador /vol
+RUN chmod -R 755 /vol/web
 
 USER desarrollador
 
