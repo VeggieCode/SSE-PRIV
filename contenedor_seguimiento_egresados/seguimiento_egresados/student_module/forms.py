@@ -162,70 +162,69 @@ class StudentForm(ModelForm):
                   'facebook', 'linkedin', 'calle', 'colonia', 'numero_exterior', 'numero_interior', 'codigo_postal',
                   'estado', 'municipio', 'localidad', 'nombre_ref_principal', 'celular_ref_principal',
                   'nombre_ref_auxiliar', 'celular_ref_auxiliar']
+        labels = {
+            'matricula': MATRICULA,
+            'nombre': 'Nombre*',
+            'apellido_paterno': 'Apellido paterno*',
+            'apellido_materno': 'Apellido materno*',
+            'sexo': 'Sexo*',
+            'fecha_nacimiento': 'Fecha de nacimiento*',
+            'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
+            'correo': 'Correo electronico*',
+            'correo_uv': 'Correo electronico alterno',
+            'celular': 'Celular*',
+            'telefono': 'Teléfono',
+            'twitter': 'Twitter',
+            'facebook': 'Facebook',
+            'linkedin': 'LinkedIn',
+            'calle': 'Calle*',
+            'numero_exterior': 'Número exterior*',
+            'numero_interior': 'Número interior',
+            'colonia': 'Colonia*',
+            'numero': 'Número*',
+            'codigo_postal': 'Código Postal*',
+            'estado': 'Estado',
+            'municipio': 'Municipio',
+            'localidad': 'Localidad',
+            'nombre_ref_principal': 'Nombre completo* ',
+            'celular_ref_principal': 'Celular* ',
+            'nombre_ref_auxiliar': 'Nombre completo ',
+            'celular_ref_auxiliar': 'Celular'
+        }
 
-    labels = {
-        'matricula': MATRICULA,
-        'nombre': 'Nombre*',
-        'apellido_paterno': 'Apellido paterno*',
-        'apellido_materno': 'Apellido materno*',
-        'sexo': 'Sexo*',
-        'fecha_nacimiento': 'Fecha de nacimiento*',
-        'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
-        'correo': 'Correo electronico*',
-        'correo_uv': 'Correo electronico alterno',
-        'celular': 'Celular*',
-        'telefono': 'Teléfono',
-        'twitter': 'Twitter',
-        'facebook': 'Facebook',
-        'linkedin': 'LinkedIn',
-        'calle': 'Calle*',
-        'numero_exterior': 'Número exterior*',
-        'numero_interior': 'Número interior',
-        'colonia': 'Colonia*',
-        'numero': 'Número*',
-        'codigo_postal': 'Código Postal*',
-        'estado': 'Estado',
-        'municipio': 'Municipio',
-        'localidad': 'Localidad',
-        'nombre_ref_principal': 'Nombre completo* ',
-        'celular_ref_principal': 'Celular* ',
-        'nombre_ref_auxiliar': 'Nombre completo ',
-        'celular_ref_auxiliar': 'Celular'
-    }
-
-    max_year = datetime.datetime.now().year - 4
-    max_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 20))
-    min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
-    widgets = {
-        'estado': forms.Select(choices=[]),
-        'municipio': forms.Select(choices=[]),
-        'nombre': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'apellido_paterno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'apellido_materno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        # 'min':min_born_date ,'max': max_born_date
-        'fecha_nacimiento': DateInput(attrs={'class': 'form-control', 'type': 'date', }),
-        'fecha_ingreso_lic': TextInput(
-            attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '2014', 'max': max_year}),
-        'correo': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'correo_uv': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'celular': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'telefono': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'facebook': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'twitter': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'linkedin': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'calle': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'numero_exterior': TextInput(
-            attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
-        'numero_interior': TextInput(
-            attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
-        'colonia': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'codigo_postal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'localidad': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'nombre_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'celular_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-        'celular_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
-    }
+        max_year = datetime.datetime.now().year - 4
+        max_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 20))
+        min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
+        widgets = {
+            'estado': forms.Select(choices=[]),
+            'municipio': forms.Select(choices=[]),
+            'nombre': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'apellido_paterno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'apellido_materno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            # 'min':min_born_date ,'max': max_born_date
+            'fecha_nacimiento': DateInput(attrs={'class': 'form-control', 'type': 'date', }),
+            'fecha_ingreso_lic': TextInput(
+                attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '2014', 'max': max_year}),
+            'correo': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'correo_uv': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'celular': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'telefono': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'facebook': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'twitter': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'linkedin': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'calle': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'numero_exterior': TextInput(
+                attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
+            'numero_interior': TextInput(
+                attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '1'}),
+            'colonia': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'codigo_postal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'localidad': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'nombre_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'celular_ref_principal': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'nombre_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+            'celular_ref_auxiliar': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
+        }
 
 
 class SeleccionCarreraForm(forms.ModelForm):
