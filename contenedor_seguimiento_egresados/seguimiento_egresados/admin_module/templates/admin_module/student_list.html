@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="{% static 'assets/img/favicon.ico' %}" color="#000000"/>
     <!-- Font Awesome icons (free version)-->
     <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css"> -->
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/pdfgen.js' %}"></script>
     <!-- Google fonts-->
@@ -73,7 +73,7 @@
                                 <div class="row">
                                     <p><label for="carreraSelect">Selecciona el elemento a consultar: </label></p>
                                     <select class="form-control custom-select" id="carreraSelect"
-                                                                               onchange="filterTable()">
+                                            onchange="filterTable()">
                                         <option value="" selected>Todas las carreras</option>
                                         {% for degree in degrees %}
                                             <option value="{{ degree.licenciatura }}">{{ degree.licenciatura }}</option>
@@ -85,7 +85,7 @@
                                 <div class="row">
                                     <p><label for="estatusSelect">Selecciona el estatus a consultar: </label></p>
                                     <select class="form-select custom-select" id="estatusSelect"
-                                                                               onchange="filterTable()">
+                                            onchange="filterTable()">
                                         <option value="" selected>Todos</option>
                                         <option value="Pendiente">Pendiente</option>
                                         <option value="Concluido">Concluido</option>
@@ -97,7 +97,7 @@
                                 <div class="row">
                                     <p><label for="estatusSelect">Selecciona el estatus a consultar: </label></p>
                                     <select class="form-select custom-select" id="estatusSelect"
-                                                                               onchange="filterTableStatus()">
+                                            onchange="filterTableStatus()">
                                         <option value="" selected>Todos</option>
                                         <option value="Pendiente">Pendiente</option>
                                         <option value="Concluido">Concluido</option>
@@ -112,15 +112,16 @@
                                 <div class="input-group col-11">
                                     <label for="busqueda"></label>
                                     <input type="search" id="busqueda" name="search" class="form-control rounded col-8"
-                                                                         placeholder="Buscar por matrícula o nombre"/>
-                                    <button type="submit" class="btn btn-primary col-1">
+                                           placeholder="Buscar por matrícula o nombre"/>
+                                    <button id="search_submit" type="submit" class="btn btn-primary col-1">
                                         <i class="fa-solid fa-search"></i>
                                     </button>
                                 </div>
                             </div>
                             <br>
 
-                            <table id="student-table" class="table table-hover paginated" aria-label="lista de estudiantes">
+                            <table id="student-table" class="table table-hover paginated"
+                                   aria-label="lista de estudiantes">
                                 <thead>
                                 <tr>
                                     <th scope="col" class="bg-primary text-white">Matrícula</th>
@@ -149,21 +150,21 @@
                                 </tbody>
                             </table>
                             <div class="pagination">
-                            <span class="step-links">
-                                {% if students.has_previous %}
-                                    <a href="?page=1">&laquo; Primera</a>
-                                    <a href="?page={{ students.previous_page_number }}">Anterior</a>
-                                {% endif %}
+                                <span class="step-links">
+                                    {% if students.has_previous %}
+                                        <a href="?page=1">&laquo; Primera</a>
+                                        <a href="?page={{ students.previous_page_number }}">Anterior</a>
+                                    {% endif %}
 
-                                <span class="current-page">
-                                    Página {{ students.number }} de {{ students.paginator.num_pages }}
+                                    <span class="current-page">
+                                        Página {{ students.number }} de {{ students.paginator.num_pages }}
+                                    </span>
+
+                                    {% if students.has_next %}
+                                        <a href="?page={{ students.next_page_number }}">Siguiente</a>
+                                        <a href="?page={{ students.paginator.num_pages }}">Última &raquo;</a>
+                                    {% endif %}
                                 </span>
-
-                                {% if students.has_next %}
-                                    <a href="?page={{ students.next_page_number }}">Siguiente</a>
-                                    <a href="?page={{ students.paginator.num_pages }}">Última &raquo;</a>
-                                {% endif %}
-                            </span>
                             </div>
                         </div>
                     </div>
@@ -178,10 +179,13 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
             <!-- Core theme JS-->
             <script src="{% static 'js/scripts.js' %}"></script>
-            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
             <script>
+                /**
+                 * Add event listener to input 'busqueda' that is triggered when user stop typing and after that
+                 * chanc
+                 */
                 $(document).ready(function () {
                     $("#busqueda").on("keyup", function () {
                         const value = $(this).val().toLowerCase();
@@ -189,6 +193,13 @@
                             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                         });
                     });
+
+                    $("#search_submit").on("click", function () {
+                        const value = $(this).val().toLowerCase();
+                        $("table tbody tr").filter(function () {
+                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                        });
+                    })
                 });
             </script>
 
@@ -226,9 +237,6 @@
                     }
                 }
 
-            </script>
-
-            <script>
                 function filterTable() {
                     const selectedDegree = document.getElementById("carreraSelect").value;
                     const selectedStatus = document.getElementById("estatusSelect").value;
