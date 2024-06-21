@@ -1,4 +1,3 @@
-# first we declare our upstream server, which is our Gunicorn application
 upstream front_end_wsgi {
     # docker will automatically resolve this to the correct address
     server seguimiento_egresados:8000;
