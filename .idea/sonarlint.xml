@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="fileExclusions">
+      <list>
+        <option value="DIRECTORY:contenedor_seguimiento_egresados/data" />
+        <option value="DIRECTORY:contenedor_seguimiento_egresados/nginx" />
+        <option value="DIRECTORY:contenedor_seguimiento_egresados/scripts_sql" />
+        <option value="DIRECTORY:contenedor_seguimiento_egresados/seguimiento_egresados/static/admin/js/vendor" />
+      </list>
+    </option>
+  </component>
+</project>
