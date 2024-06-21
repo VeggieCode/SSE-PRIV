@@ -43,11 +43,11 @@ def home(request):
 def get_students(request):
     user = request.user
     coordinator = Coordinador.objects.get(usuario=user)
-    object_list = Student.objects.filter(licenciatura_fei=coordinator.carrera_asignada)
+    student_list = Student.objects.filter(licenciatura_fei=coordinator.carrera_asignada)
     if coordinator.coordinador_general:
-        object_list = Student.objects.all()
+        student_list = Student.objects.all()
 
-    return object_list
+    return student_list
 
 
 def detail_student(request, enrollment):
