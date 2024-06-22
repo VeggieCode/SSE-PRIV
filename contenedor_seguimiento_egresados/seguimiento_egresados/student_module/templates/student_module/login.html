@@ -3,42 +3,46 @@
 {% load static %}
 
 {% block content %}
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/custom.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet"/>
     <div class="row-2 col-center">
         <div class="col-6 my-5 img-principal center-middle col-display">
-            <img src="{% static 'assets/img/logo_sse.png' %}" width="360px" height="343px">
+            <img src="{% static 'assets/img/logo_sse.png' %}" alt="Gorro universitario y rollo representativo."
+                 width="360px" height="343px"/>
         </div>
         <div class="col-6 my-5 center-middle form-block">
-            <form method="POST" action="{% url 'student_module:login'%}">
+            <form method="POST" action="{% url 'student_module:login' %}">
                 <div class="titulo-principal" width="50">
                     Seguimiento de Egresados
                 </div>
                 <div class="subtitulo-principal" width="50">
-                    
+
                 </div>
-               
+
                 <br>
                 <div class="form-login form-group row-form">
                     <div class="col">
                         {% csrf_token %}
                         {% bootstrap_form form %}
                         {% buttons %}
-                        <div>
-                            <a href="{% url 'student_module:password_reset'%}">¿Olvidaste tu contraseña?</a>
-                        </div>
-                        <br>
-                        <button class="btn submit-button btn-block" type="submit", name="guardar">Iniciar sesión</button>
+                            <div>
+                                <a href="{% url 'student_module:password_reset' %}">¿Olvidaste tu contraseña?</a>
+                            </div>
+                            <br>
+                            <button class="btn submit-button btn-block" type="submit" name="guardar">Iniciar sesión
+                            </button>
                         {% endbuttons %}
                         <div class="subtitulo-principal">
-                            <a href="{% url 'student_module:signup'%}">Registro de alumno</a>
+                            <a href="{% url 'student_module:signup' %}">Registro de alumno</a>
                         </div>
                         <div class="subtitulo-principal">
-                            <a href="{% url 'student_module:privacy_notice'%}" target="_blank">Aviso de Privacidad</a>
+                            <a href="#" data-toggle="modal"
+                               data-target="#privacyNoticeModal">Aviso de Privacidad</a>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    {% include 'seguimiento_egresados/modal_privacy_notice.html' %}
 {% endblock %}
