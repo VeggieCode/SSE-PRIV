@@ -2,7 +2,7 @@ FROM python:3.9
 
 ENV PATH="/scripts:${PATH}"
 COPY requeriments.txt /requeriments.txt
-RUN pip install -r /requeriments.txt
+RUN pip3 install -r /requeriments.txt
 
 RUN mkdir /code
 COPY . /code
