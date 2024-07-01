@@ -5,7 +5,7 @@ services:
         build:
             context: ./seguimiento_egresados
         ports:
-            - "8000:8000"
+            - "${APP_FORWARD_PORT:-80}:8000"
         volumes:
             -   ./seguimiento_egresados:/code
         command: >
@@ -22,19 +22,25 @@ services:
             - DB_HOST=bd_seguimiento_egresados
             - DB_PORT=3306
             - PATH_PREFIX=sse
+            - EMAIL_PORT=${EMAIL_PORT}
+            - EMAIL_HOST=smtp.gmail.com
+            - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+            - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+            - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+            - SERVER_EMAIL=${SERVER_EMAIL}
         depends_on:
             - bd_seguimiento_egresados
 
     bd_seguimiento_egresados:
-        image: mysql
+        image: mysql:8.4
         restart: unless-stopped
         ports:
-            - '4000:3306'
+          - '4060:3306'
         environment:
-          - MYSQL_ROOT_PASSWORD=&s00ftecHAroot
-          - MYSQL_DATABASE=control_egresados
-          - MYSQL_USER=adminsistemaegresados
-          - MYSQL_PASSWORD=&s00ftecHA
+          - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+          - MYSQL_DATABASE=${DB_NAME}
+          - MYSQL_USER=${DB_USER}
+          - MYSQL_PASSWORD=${DB_PASSWORD}
         volumes:
             - sse_db_dev:/var/lib/mysql
 volumes:

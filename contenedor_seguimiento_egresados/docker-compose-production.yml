@@ -21,7 +21,7 @@ services:
 
     bd_seguimiento_egresados:
         image: mysql:8.4
-        restart: always
+        restart: unless-stopped
         environment:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
             - MYSQL_DATABASE=${DB_NAME}
@@ -32,7 +32,7 @@ services:
 
     proxy:
         image: nginx
-        restart: always
+        restart: unless-stopped
         volumes:
             - ./nginx/templates:/etc/nginx/templates
             - ./staticfiles:/vol/static

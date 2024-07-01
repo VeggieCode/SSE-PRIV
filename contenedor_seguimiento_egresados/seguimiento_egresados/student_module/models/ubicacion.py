@@ -5,7 +5,6 @@ from student_module.validators import alphanumeric
 
 
 class Estados(models.Model):
-    # id_estado = models.AutoField(primary_key=True)
     clave = models.CharField(max_length=25, blank=True, null=True)
     nombre = models.CharField(max_length=255, blank=True, null=True)
     abrev = models.CharField(max_length=25, blank=True, null=True)
@@ -16,7 +15,6 @@ class Estados(models.Model):
 
 
 class Municipios(models.Model):
-    # id_municipio = models.AutoField(primary_key=True)
     id_estado = models.ForeignKey('Estados', on_delete=models.CASCADE, db_column='id_estado', validators=[alphanumeric],
                                   null=True)
     clave = models.CharField(max_length=10)
@@ -28,7 +26,6 @@ class Municipios(models.Model):
 
 
 class Localidades(models.Model):
-    # id_localidad = models.AutoField(primary_key=True)
     municipio = models.ForeignKey('Municipios', on_delete=DO_NOTHING, db_column='id_municipio',
                                   validators=[alphanumeric], null=True)
     clave = models.CharField(max_length=4)

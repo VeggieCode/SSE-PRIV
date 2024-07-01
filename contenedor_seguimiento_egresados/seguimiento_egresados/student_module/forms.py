@@ -1,12 +1,14 @@
 import datetime
 
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm, UserCreationForm, PasswordResetForm, User
 from django.core.validators import RegexValidator
 from django.forms import ModelForm
 from django.forms.widgets import DateInput, TextInput
 from django.utils.translation import gettext_lazy as _
 from django import forms
-from .models import Student, SeleccionCarrera, Carrera, Licenciatura, ContinuacionEstudios, SI_NO_CHOICES_NUMERIC
+from .models import Student, SeleccionCarrera, Carrera, Licenciatura, ContinuacionEstudios, SI_NO_CHOICES_NUMERIC, \
+    Estados
 from .models.empleo import EmpleoDuranteEstudios, RAZON_NO_BUSQUEDA_EMPLEO, BusquedaEmpleo, EmpleoInmediato, Empresa, \
     DesempenioRecomendaciones
 
@@ -155,6 +157,9 @@ class CrearUsuarioForm(UserCreationForm):
 
 
 class StudentForm(ModelForm):
+    estado = forms.ModelChoiceField(queryset=Estados.objects.all(), required=True,
+                                    widget=forms.Select(attrs={'class': 'form-select selectpicker form-control'}))
+
     class Meta:
         model = Student
         fields = ['nombre', 'apellido_paterno', 'apellido_materno', 'sexo',
@@ -196,13 +201,11 @@ class StudentForm(ModelForm):
         max_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 20))
         min_born_date = str(datetime.date.today() - datetime.timedelta(days=365 * 40))
         widgets = {
-            'estado': forms.Select(choices=[]),
-            'municipio': forms.Select(choices=[]),
             'nombre': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'apellido_paterno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             'apellido_materno': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),
             # 'min':min_born_date ,'max': max_born_date
-            'fecha_nacimiento': DateInput(attrs={'class': 'form-control', 'type': 'date', }),
+            'fecha_nacimiento': DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'fecha_ingreso_lic': TextInput(
                 attrs={'type': 'number', 'placeholder': '', 'class': 'form-control', 'min': '2014', 'max': max_year}),
             'correo': TextInput(attrs={'placeholder': '', 'class': 'form-control'}),

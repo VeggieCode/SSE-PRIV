@@ -1,7 +1,7 @@
 /** The variable municipiosEndpoint should be defined in script tag inside the template that is using this script. */
 $(document).ready(function () {
     // Obtener una referencia a los elementos del DOM
-    var selectEstado = document.getElementById("estado");
+    var selectEstado = document.getElementById("id_estado");
     var selectMunicipio = document.getElementById("municipio");
     // Cuando se selecciona un estado, cargar los municipios correspondientes
     selectEstado.addEventListener("change", function () {
