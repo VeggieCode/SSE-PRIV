@@ -72,18 +72,9 @@ class SignupUserForm(UserCreationForm):
 
     email = forms.EmailField(label='Correo electrónico personal:', widget=forms.TextInput(attrs={'placeholder': ''}))
 
-    licenciatura_fei = forms.ChoiceField(
-        widget=forms.Select,
-        choices=[],
-        label='Licenciatura')
-
-    try:
-        licenciatura_fei = forms.ChoiceField(
-            widget=forms.Select,
-            choices=[(carrera.licenciatura, carrera.licenciatura) for carrera in Carrera.objects.all()],
-            label='Licenciatura')
-    except:
-        pass
+    licenciatura_fei = forms.ModelChoiceField(widget=forms.Select,
+                                              label='Licenciatura', queryset=Carrera.objects.all(),
+                                              empty_label='Seleccione una licenciatura')
     password1 = forms.CharField(
         label='Contraseña:', widget=forms.PasswordInput(attrs={'placeholder': '', 'class': 'form-control'}))
 
@@ -126,6 +117,14 @@ class CustomPasswordResetForm(PasswordResetForm):
         }
     )
 
+    def save(
+        self,
+        *args,
+        **kwargs
+    ):
+        kwargs['from_email'] = settings.DEFAULT_FROM_EMAIL
+        super().save(*args, **kwargs)
+
 
 class CustomSetPasswordForm(SetPasswordForm):
     new_password1 = forms.CharField(
@@ -157,8 +156,13 @@ class CrearUsuarioForm(UserCreationForm):
 
 
 class StudentForm(ModelForm):
-    estado = forms.ModelChoiceField(queryset=Estados.objects.all(), required=True,
+    estado = forms.ModelChoiceField(queryset=Estados.objects.all(), required=True, empty_label='Selecciona un estado',
                                     widget=forms.Select(attrs={'class': 'form-select selectpicker form-control'}))
+    fecha_nacimiento = forms.DateField(
+        widget=forms.DateInput(
+            attrs={'class': 'form-control', 'placeholder': 'DD/MM/YYYY', 'type': 'date'},
+        ),
+    )
 
     class Meta:
         model = Student
@@ -175,8 +179,8 @@ class StudentForm(ModelForm):
             'sexo': 'Sexo*',
             'fecha_nacimiento': 'Fecha de nacimiento*',
             'fecha_ingreso_lic': 'Año de ingreso a la licenciatura',
-            'correo': 'Correo electronico*',
-            'correo_uv': 'Correo electronico alterno',
+            'correo': 'Correo electrónico*',
+            'correo_uv': 'Correo electrónico alterno',
             'celular': 'Celular*',
             'telefono': 'Teléfono',
             'twitter': 'Twitter',
