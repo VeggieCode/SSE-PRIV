@@ -20,11 +20,6 @@ h3, .h3 {
     padding-bottom: 0;
 }
 
-body {
-    padding-left: 0;
-    height: 100vh;
-}
-
 .img-principal {
     justify-content: center;
 }
@@ -32,12 +27,6 @@ body {
 .img-sse {
     justify-content: center;
 }
-
-@media only screen and (max-width: 1080px) {
-    .img-sse {
-        display: none;
-    }
-  }
 
 .center-middle {
     display: flex;
