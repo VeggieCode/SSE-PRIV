@@ -7,7 +7,7 @@ services:
             context: ./seguimiento_egresados
         restart: always
         volumes:
-            - ./staticfiles:/vol/web
+            - ./seguimiento_egresados/staticfiles:/vol/web
         environment:
             - DB_HOST=bd_seguimiento_egresados
             - DB_NAME=${DB_NAME}
@@ -16,6 +16,12 @@ services:
             - SECRET_KEY=${SECRET_KEY}
             - ALLOWED_HOSTS=${ALLOWED_HOSTS}
             - PATH_PREFIX=${PATH_PREFIX}
+            - EMAIL_PORT=${EMAIL_PORT}
+            - EMAIL_HOST=${EMAIL_HOST}
+            - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+            - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+            - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+            - SERVER_EMAIL=${SERVER_EMAIL}
         depends_on:
             - bd_seguimiento_egresados
 
@@ -35,7 +41,7 @@ services:
         restart: unless-stopped
         volumes:
             - ./nginx/templates:/etc/nginx/templates
-            - ./staticfiles:/vol/static
+            - ./seguimiento_egresados/staticfiles:/vol/static
         depends_on:
             - seguimiento_egresados
         environment:
