@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+{% load bootstrap4 %}
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}"/>
+    <link rel="apple-touch-icon" href="{% static 'assets/img/favicon.ico' %}" color="#000000"/>
+    {% block title %}<title>Sistema de Seguimiento de Egresados FEI</title>{% endblock title %}
+    <!-- Font Awesome icons (free version)-->
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300&display=swap" rel="stylesheet"
+          type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    {% bootstrap_css %}
+    {% block extra_css %}{% endblock extra_css %}
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg fixed-top justify-content-between navbar-dark bg-primary">
+        <a
+            class="navbar-brand text-truncate js-scroll-trigger" href="{% url 'student_module:login' %}">
+            {% comment %}<img class="img-fluid img-profile rounded-circle mx-auto d-inline-block align-top"
+                 src="{% static 'assets/img/icono_fei.ico' %}" width="30" height="30" alt="..."/>{% endcomment %}
+            Sistema de Seguimiento de Egresados FEI
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Coordinación<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_module:loginadmin' %}" title="Iniciar coordinador">
+                        Iniciar sesión como coordinador
+                        <img class="d-sm-none" src="{% static 'assets/img/keys.png' %}" width="25px" height="25px"
+                             alt="Iniciar sesión como coordinador">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main role="main" class="container mt-5">
+    <div class="row justify-content-around">
+        {% comment %}{% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}{% endcomment %}
+        {% block content %}
+
+        {% endblock content %}
+    </div>
+</main>
+
+<!-- Bootstrap core JS-->
+{% bootstrap_jquery %}
+{% bootstrap_javascript %}
+<!-- Third party plugin JS-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+<span _ngcontent-c2="" class="bottom_banner_login"><p _ngcontent-c2="">© 2024 Universidad Veracruzana. Todos los derechos reservados</p></span>
+</body>
+</html>

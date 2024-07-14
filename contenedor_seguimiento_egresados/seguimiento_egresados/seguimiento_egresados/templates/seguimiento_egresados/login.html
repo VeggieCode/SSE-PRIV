@@ -1,0 +1,57 @@
+{% extends 'seguimiento_egresados/main.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% block extra_css %}
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+
+
+{% block title %}
+    <title>Login (general)</title>
+{% endblock %}
+{% block content %}
+    <div class="col-md-6 d-none d-md-block align-content-center">
+        {% block login_logo %}
+            <img class="img-fluid" src="{% static 'assets/img/logo_sse.png' %}"
+                 alt="Gorro universitario y rollo representativo."
+                 width="360px" height="343px"/>
+        {% endblock %}
+    </div>
+    <div class="col-md-6 my-5 form-block">
+        <header>
+            <p>
+                <h1 class="text-muted text-center">{% block login_title %}title{% endblock %}</h1>
+            </p>
+            <p>
+                <h2 class="text-muted text-center">{% block login_subtitle %}subtitle{% endblock %}</h2>
+            </p>
+        </header>
+        {% block login_form %}
+            <form method="POST" action="{% url 'student_module:login' %}">
+                <div class="form-login form-group row-form">
+                    <div class="col">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        {% buttons %}
+                            <div>
+                                <a href="{% url 'student_module:password_reset' %}">¿Olvidaste tu contraseña?</a>
+                            </div>
+                            <br>
+                            <button class="btn submit-button btn-block" type="submit" name="guardar">Iniciar sesión
+                            </button>
+                        {% endbuttons %}
+                        <div class="subtitulo-principal">
+                            <a class="text-center" href="{% url 'student_module:signup' %}">Registro de alumno</a>
+                        </div>
+                        <div class="subtitulo-principal text-center">
+                            <a class="text-center" href="#" data-toggle="modal"
+                               data-target="#privacyNoticeModal">Aviso de Privacidad</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endblock login_form %}
+    </div>
+    {% include 'seguimiento_egresados/modal_privacy_notice.html' %}
+{% endblock %}
