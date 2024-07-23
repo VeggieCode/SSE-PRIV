@@ -1,9 +1,6 @@
-h3, .h3 {
+.h3 {
     font-family: "Almarai", serif;
-    color: white;
-    font-size: 15px;
     text-transform: none;
-    margin-top: 0.5rem;
 }
 
 .prueba {
@@ -14,6 +11,10 @@ h3, .h3 {
 
 .titulo-navbar {
     padding: 0rem 1rem;
+}
+
+.bg-primary {
+  background-color: #18529d !important;
 }
 
 .img-navbar {
@@ -34,7 +35,7 @@ h3, .h3 {
 }
 
 .titulo-principal {
-    font-size: 45px;
+    font-size: 2rem;
 }
 
 .subtitulo-principal {
@@ -63,16 +64,16 @@ h3, .h3 {
 
 .row-1 {
     height: 8vh;
-    margin-right: 0%;
-    margin-left: 0%;
+    margin-right: 0;
+    margin-left: 0;
     display: flex;
     flex-wrap: wrap;
 }
 
 .row-2 {
     height: 92vh;
-    margin-right: 0%;
-    margin-left: 0%;
+    margin-right: 0;
+    margin-left: 0;
     display: flex;
     flex-wrap: wrap;
     padding-bottom: 8%;
@@ -102,7 +103,7 @@ h3, .h3 {
 
 .bottom_banner_login[_ngcontent-c2] {
     position: fixed;
-    bottom: 0px;
+    bottom: 0;
     right: 20px;
     color: #666;
     font-size: 15px;
