@@ -23,14 +23,17 @@ def validate_age_range(value):
 
 class Student(models.Model):
 
-    matricula = models.CharField(max_length=9, validators=[alphanumeric])
+    matricula = models.CharField(max_length=9, blank=False, validators=[alphanumeric], unique=True)
+
     nombre = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters_blank])
     apellido_paterno = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters])
     apellido_materno = models.CharField(max_length=45, blank=False, null=True, validators=[just_letters])
     sexo = models.CharField(max_length=10, choices=SEXOS, blank=False, null=True)
     fecha_nacimiento = models.DateField(blank=False, null=True, validators=[validate_age_range])
+
     fecha_ingreso_lic = models.IntegerField(blank=False, null=True, validators=[MaxValueValidator(MAX_YEAR)])
     licenciatura_fei = models.CharField(max_length=500, blank=True, null=True)
+
     correo = models.CharField(max_length=45, blank=False, null=True, validators=[only_email])
     correo_uv = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
     celular = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=False, null=True)
@@ -38,23 +41,27 @@ class Student(models.Model):
     twitter = models.CharField(max_length=45, blank=True, null=True)
     facebook = models.CharField(max_length=45, blank=True, null=True)
     linkedin = models.CharField(max_length=45, blank=True, default='')
+
     calle = models.CharField(max_length=45, blank=False, null=True)
     numero_exterior = models.IntegerField(null=True, blank=False)
     numero_interior = models.IntegerField(null=True, blank=True)
     colonia = models.CharField(max_length=45, blank=False, null=True)
     codigo_postal = models.CharField(max_length=5, blank=False, null=True, validators=[only_postal_code_mx])
     correo_alterno = models.CharField(max_length=45, blank=True, null=True, validators=[only_email])
+
     pre_egreso_abierto = models.BooleanField(default=False)
     post_egreso_abierto = models.BooleanField(default=False)
+    pre_egreso_terminado = models.BooleanField(default=False)
+    pre_egreso_fecha_fin = models.DateField(blank=False, null=True)
+
     nombre_ref_principal = models.CharField(max_length=100, blank=False, null=True)
     celular_ref_principal = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=False, null=True)
     nombre_ref_auxiliar = models.CharField(max_length=100, blank=True, null=True)
     celular_ref_auxiliar = models.CharField(max_length=10, validators=[only_phone_number_mx], blank=True, null=True)
+
     estado = models.CharField(max_length=50, blank=False, null=True)
     municipio = models.CharField(max_length=50, blank=False, null=True)
     localidad = models.CharField(max_length=50, blank=False, null=True)
-    pre_egreso_terminado = models.BooleanField(default=False)
-    pre_egreso_fecha_fin = models.DateField(blank=False, null=True)
 
     def full_name(self):
         return self.nombre + ' ' + self.apellido_paterno + ' ' + self.apellido_materno
