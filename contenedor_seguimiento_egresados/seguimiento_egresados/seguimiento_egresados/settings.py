@@ -69,7 +69,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'bootstrap4',
     'core',
-    'student_module',
+    'student_module.apps.StudentModuleConfig',
     'admin_module.apps.AdminModuleConfig',
 
 ]
