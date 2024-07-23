@@ -11,35 +11,10 @@ from .models import Student, SeleccionCarrera, Carrera, Licenciatura, Continuaci
     Estados
 from .models.empleo import EmpleoDuranteEstudios, RAZON_NO_BUSQUEDA_EMPLEO, BusquedaEmpleo, EmpleoInmediato, Empresa, \
     DesempenioRecomendaciones
-
-NUMBER = '[0-9]'
+from .widgets import MatriculaInput
+from django.core.exceptions import ValidationError
 
 MATRICULA = 'Matrícula'
-
-
-class MatriculaInput(forms.MultiWidget):
-    def __init__(self, attrs=None):
-        widgets = [
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab'}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-            forms.TextInput(attrs={'maxlength': '1', 'class': 'autotab', 'pattern': NUMBER}),
-        ]
-        super().__init__(widgets, attrs)
-
-    def decompress(self, value):
-        if value:
-            return [value[i:i + 1] for i in range(0, 9)]
-        return [None, None, None, None, None, None, None, None, None]
-
-    def value_from_datadict(self, data, files, name):
-        values = [data.get(name + '_%s' % i, '')[:1] for i in range(0, 9)]
-        return ''.join(values)
 
 
 class SignupUserForm(UserCreationForm):
@@ -53,7 +28,7 @@ class SignupUserForm(UserCreationForm):
         'Por favor ingrese una matrícula válida'
     )
 
-    username = forms.CharField(label='', required=True, widget=MatriculaInput(
+    username = forms.CharField(label='Matricula:', required=True, widget=MatriculaInput(
         attrs={'placeholder': '', 'class': 'form-control', 'autocomplete': 'username'}),
                                validators=[matricula_validator])
 
@@ -93,6 +68,8 @@ class SignupUserForm(UserCreationForm):
 
     def clean_matricula(self):
         matricula = self.cleaned_data.get('matricula')
+        if Student.objects.filter(matricula=matricula).exists():
+            raise ValidationError("Está matricula ya está siendo utilizada")
         return matricula
 
     def save(self, commit=True):

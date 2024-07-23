@@ -29,3 +29,6 @@ def validator_enrollment(value):
 
     if year - year_currently < -3:
         raise ValidationError('%(value)s no es una matricula valida', params={'value': value}, )
+
+
+NUMBER = '[0-9]'
